@@ -1,0 +1,122 @@
+---
+title: OTP
+description: OtpStart and OtpVerify — the two presentational steps of the one-time-code sign-in flow
+---
+
+The one-time-code flow is split into two **presentational** components in `src/shared/components/otp`. Neither knows about dialogs, routing or the auth API: each renders one step and reports what the user did through a callback. The caller decides where they live — today that is the full-screen `AuthOverlay`, but the same two components would work inside a drawer, a card on a page, or a checkout step.
+
+| Component | Job | Reports |
+| --- | --- | --- |
+| `OtpStart` | Heading, description, a phone-or-email input with validation, submit | `onSubmit({ type, value })` |
+| `OtpVerify` | Heading, six-digit code input, resend link, continue | `onVerify(code)`, `onResend()` |
+
+Sequencing them is a separate concern handled by the `useOtpFlow` hook (see [the full flow](#full-flow)).
+
+## OtpStart
+
+Type a phone number or an email address. Validation runs on blur and on submit; the button stays disabled until the value is valid. The submitted payload is echoed under the form.
+
+<ComponentPreview name="otp-start" />
+
+```tsx
+import { OtpStart } from "@shared/components/otp";
+
+<OtpStart
+  title="Become a Toyota iD member today"
+  description="Unlock a smarter, more personalized experience."
+  hint="Already a member? Sign in below"
+  onSubmit={({ type, value }) => startOtp(type, value)}
+/>
+```
+
+### Dark surface
+
+The auth overlay renders the step over a photo, so it passes `surface="dark"`. That sets `data-surface="dark"` on the root and swaps the input to a white, borderless field.
+
+<ComponentPreview name="otp-start-dark" />
+
+### Props
+
+<TypeTable
+  type={{
+    title: { type: "string", required: true },
+    description: { type: "string", required: true },
+    hint: { description: "Optional line between description and input.", type: "string" },
+    onSubmit: {
+      description: "Called with the detected channel once the input is valid.",
+      type: "(payload: { type: 'email' | 'phone'; value: string }) => void",
+      required: true,
+    },
+    buttonLabel: { type: "string", default: '"Continue"' },
+    autoFocus: { description: "Focus the input on mount (e.g. when a modal opens).", type: "boolean", default: "false" },
+    surface: { description: "Adaptive colour scheme; pass \"dark\" over images/overlays.", type: '"light" | "dark"' },
+    className: { type: "string" },
+  }}
+/>
+
+## OtpVerify
+
+Six-digit code input (`InputOTP` from `@ucmp/ui`, digits only, `autocomplete="one-time-code"`). Continue is enabled once all six digits are present; Resend clears the code and calls `onResend`.
+
+<ComponentPreview name="otp-verify" />
+
+```tsx
+import { OtpVerify } from "@shared/components/otp";
+
+<OtpVerify
+  identifier="(***) ***-1234"
+  onVerify={(code) => verifyOtp(code)}
+  onResend={() => resendOtp()}
+/>
+```
+
+### Props
+
+<TypeTable
+  type={{
+    identifier: { description: "Masked channel shown in the description.", type: "string", required: true },
+    onVerify: { type: "(code: string) => void", required: true },
+    onResend: { type: "() => void" },
+    title: { type: "string", default: '"Enter verification code"' },
+    description: { description: "`{identifier}` is replaced with the identifier prop.", type: "string", default: '"Please enter the code sent to {identifier}."' },
+    continueLabel: { type: "string", default: '"Continue"' },
+    resendPrompt: { type: "string", default: "\"Didn't get a code? \"" },
+    resendLabel: { type: "string", default: '"Resend"' },
+    surface: { type: '"light" | "dark"' },
+    className: { type: "string" },
+  }}
+/>
+
+## Full flow
+
+`useOtpFlow()` (from `@features/auth`) owns the step and remembers the channel from step one so step two can show it masked. It has no opinion about the container — this demo renders it in a plain box; `AuthOverlay` renders the same thing full-screen.
+
+<ComponentPreview name="otp-flow" defaultDevice="mobile" />
+
+```tsx
+import { useOtpFlow } from "@features/auth";
+import { OtpStart, OtpVerify } from "@shared/components/otp";
+
+function SignIn() {
+  const flow = useOtpFlow();
+  return flow.step === "start" ? (
+    <OtpStart title="Sign in" description="…" onSubmit={flow.submitChannel} />
+  ) : (
+    <OtpVerify identifier={flow.identifier} onVerify={(code) => finish(code)} />
+  );
+}
+```
+
+<Callout title="Where the real flow lives">
+`GuardedLink` → `useAuth().showOtpOverlay()` → `AuthProvider` → `AuthOverlay`, which renders exactly these two components inside a full-screen Base UI dialog. See [GuardedLink](/docs/design-system/guarded-link).
+</Callout>
+
+## Source
+
+<include lang="tsx" meta='title="src/shared/components/otp/otp-start.tsx"'>
+  ../../../src/shared/components/otp/otp-start.tsx
+</include>
+
+<include lang="tsx" meta='title="src/shared/components/otp/otp-verify.tsx"'>
+  ../../../src/shared/components/otp/otp-verify.tsx
+</include>

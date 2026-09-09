@@ -1,0 +1,71 @@
+---
+title: GuardedLink
+description: A next/link that gates navigation behind the OTP overlay — how the Profile link works
+---
+
+`GuardedLink` (`src/features/auth/components/guarded-link.tsx`) is a drop-in replacement for `next/link` that hard-gates a destination. On a plain left-click it checks whether the visitor meets an assurance requirement; if not, it prevents navigation and raises the OTP overlay, then resumes the navigation once the code is verified.
+
+It is used in exactly one place today — the **Profile** item in the navigation bar — which is what the demo below reproduces.
+
+## Try it
+
+Flip the demo visitor between *anonymous* and *verified*, then click **Go to profile**. Anonymous opens the real full-screen overlay (`OtpStart` → `OtpVerify`) inside the preview frame; verified navigates to `/profile` as a normal link. Switch to **Mobile** to see the overlay at phone width.
+
+<ComponentPreview name="guarded-link" defaultDevice="mobile" />
+
+<Callout type="info" title="Demo cookie">
+The toggle writes the same non-httpOnly `demo-skip-auth` cookie that `/demo-settings` uses; `useAuth().meetsRequirement` reads it on each click. In the real flow this check is backed by the visitor's `authMetadata`.
+</Callout>
+
+## Usage
+
+This is the navigation bar's Profile entry, verbatim: the link is passed to `Button` through Base UI's `render` prop so it picks up the nav button styling.
+
+```tsx
+import { GuardedLink } from "@features/auth";
+import { Button } from "@ucmp/ui";
+
+<Button aria-label="Profile" render={<GuardedLink acr={1} href="/profile" />}>
+  <IconProfile />
+</Button>
+```
+
+## How the gate works
+
+<Steps>
+<Step>
+### Requirement check
+`useAuth().meetsRequirement({ acr, evidence })` compares the visitor's assurance level (0 anonymous, 1 OTP, 2 passkey) and evidence against the link's requirement. Modified clicks (cmd/ctrl/shift/middle) are always passed through to the browser.
+</Step>
+<Step>
+### Raise the overlay
+When gated, the click is prevented and `showOtpOverlay({ title, description, onVerified })` stores the request in `AuthProvider`, which opens `AuthOverlay`.
+</Step>
+<Step>
+### Resume
+`AuthOverlay` runs `OtpStart` → `OtpVerify` via `useOtpFlow`. On verify it calls `onVerified`, which does `router.push(href)` and upgrades the profile tier with the `setProfileTier` server action; the overlay holds for a beat so the destination can paint, then fades out.
+</Step>
+</Steps>
+
+## Props
+
+Everything `next/link` accepts, plus:
+
+<TypeTable
+  type={{
+    acr: { description: "Required assurance level: 0 anonymous, 1 OTP, 2 passkey.", type: "0 | 1 | 2", required: true },
+    evidence: { description: "Proofs that must all be present.", type: '("otp" | "passkey")[]' },
+    title: { description: "Overlay heading.", type: "string", default: '"Become a Toyota iD member today"' },
+    description: { description: "Overlay copy under the heading.", type: "string" },
+  }}
+/>
+
+## Source
+
+<include lang="tsx" meta='title="src/features/auth/components/guarded-link.tsx"'>
+  ../../../src/features/auth/components/guarded-link.tsx
+</include>
+
+<include lang="tsx" meta='title="src/features/auth/components/auth-overlay.tsx"'>
+  ../../../src/features/auth/components/auth-overlay.tsx
+</include>

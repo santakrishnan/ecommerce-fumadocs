@@ -1,0 +1,14 @@
+---
+title: Welcome
+description: Living documentation for the UCMP app's shared components
+---
+
+This site documents the **app-level components** of the UCMP web app — the composites built from `@ucmp/ui` primitives that feature teams reuse — with live, interactive demos rendered from the real source.
+
+It runs *inside* `apps/web`, so every demo uses the app's real theme, fonts, providers and auth context. The routes only exist in development (and in `pnpm build:docs`); a plain `pnpm build` ships none of it.
+
+<Cards>
+  <Card href="/docs/design-system" title="How it works" description="Where components, demos and pages live, and how to add one." />
+  <Card href="/docs/design-system/otp" title="OTP" description="OtpStart and OtpVerify — the two steps of the one-time-code flow." />
+  <Card href="/docs/design-system/guarded-link" title="GuardedLink" description="How the Profile link gates navigation behind the OTP overlay." />
+</Cards>

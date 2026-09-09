@@ -1,0 +1,20 @@
+/*
+  Documentation-only stylesheet, imported by `src/app/docs/layout.docs.tsx`.
+
+  It is a second, self-contained Tailwind compilation so that Fumadocs' CSS
+  never reaches the product bundle (docs routes are development-only):
+  - the theme is imported in `reference` mode, so no design tokens are
+    re-emitted (the app's globals.css owns `:root`), utilities simply refer to
+    the same variables at runtime;
+  - `source(none)` turns off automatic content scanning; only the explicit
+    `@source` entries below and Fumadocs' own inline sources generate CSS.
+*/
+@import "tailwindcss/theme.css" theme(reference);
+@import "tailwindcss/utilities.css" source(none);
+
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+@source "./components";
+@source "./mdx-components.tsx";
+@source "../app/docs";

@@ -1,7 +1,18 @@
+import { createMDX } from "fumadocs-mdx/next";
 import type { NextConfig } from "next";
 import { clientEnvSchema, serverEnvSchema } from "./src/config/env-schema";
 
 const isProduction = process.env.NODE_ENV === "production";
+
+/**
+ * Design-system documentation routes (`/docs`, `/preview`, `/api/docs-search`)
+ * are files named `page.docs.tsx` / `route.docs.ts`. They only become routes
+ * when the `docs.*` extensions are in `pageExtensions`:
+ *   - always in `next dev`
+ *   - in `next build` only with ENABLE_DOCS=true (`pnpm build:docs`)
+ * A plain `pnpm build` ships the product without any docs code or content.
+ */
+const docsEnabled = !isProduction || process.env.ENABLE_DOCS === "true";
 
 const fullEnvSchema = serverEnvSchema.merge(clientEnvSchema);
 const parsedEnv = fullEnvSchema.safeParse(process.env);
@@ -16,6 +27,7 @@ if (!parsedEnv.success) {
 }
 
 const nextConfig: NextConfig = {
+  pageExtensions: docsEnabled ? ["docs.tsx", "docs.ts", "tsx", "ts"] : ["tsx", "ts"],
   cacheComponents: true,
   partialPrefetching: true,
   cacheLife: {
@@ -96,4 +108,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Inlined at build time so app code can hide docs entry points when absent.
+nextConfig.env = { ...nextConfig.env, NEXT_PUBLIC_DOCS_ENABLED: String(docsEnabled) };
+
+export default docsEnabled ? createMDX()(nextConfig) : nextConfig;

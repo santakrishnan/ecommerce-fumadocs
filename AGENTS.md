@@ -30,11 +30,14 @@ pnpm dev                          # http://localhost:3000
 | `pnpm fix` | Auto-fix formatting (Ultracite) |
 | `pnpm type-check` | TypeScript check |
 | `pnpm ui:add <name>` | Add a shadcn component to `packages/ui` (Base UI variant via `style: "base-vega"`) |
+| `pnpm build:docs` | Build `web` **with** the design-system docs (`ENABLE_DOCS=true`); plain `pnpm build` excludes them |
 
 ## Monorepo structure
 
 ```
 apps/web/                     # Next.js 16 app
+apps/web/content/docs/        # Design-system docs (MDX) — served at /docs in dev only
+apps/web/src/docs/            # Fumadocs wiring, ComponentPreview, demo registry
 packages/ui/                  # @ucmp/ui — Base UI primitives, shadcn-style
 packages/ui-theme/            # @ucmp/ui-theme — Tailwind v4 multi-brand tokens
 packages/shared/              # @ucmp/shared — providers, hooks, utils
@@ -206,6 +209,9 @@ The theme imports base internally. To add a brand, copy `themes/default/`, edit 
 ThemeProvider → QueryProvider → {children}
 ```
 Use `composeProviders(...)` to flatten the nesting.
+
+### Design-system docs (Fumadocs, development-only)
+App-level components (`src/shared/components/*`, `features/*/components`) are documented at `/docs` with live demos rendered from the real source. Route files are named `page.docs.tsx` / `route.docs.ts`; `next.config.ts` only registers the `docs.*` page extensions in `next dev` or when `ENABLE_DOCS=true`, so `pnpm build` ships no docs code, MDX or previews. To document a component: add a demo wrapper in `src/docs/demos/`, register it in `src/docs/demos/index.ts`, write `content/docs/design-system/<name>.mdx` using `<ComponentPreview name="…" />` and `<include>` for the source. Primitives in `@ucmp/ui` stay in Storybook. See `/docs/design-system` when running `pnpm dev`.
 
 ### Features = screaming architecture
 Each subfolder of `apps/web/src/features/` is self-contained: `components/`, `hooks/`, `services/`, `data/`, `lib/`, `__tests__/`, `__fixtures__/`, `index.ts`. Only re-export from `index.ts` what other code should consume.

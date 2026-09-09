@@ -1,0 +1,80 @@
+---
+title: Overview
+description: How the design-system docs are wired into apps/web
+---
+
+## Layers
+
+| Layer | Location | Documented where |
+| --- | --- | --- |
+| **Primitives** | `packages/ui` (`@ucmp/ui`) — shadcn-shaped, Base UI underneath | Storybook (`pnpm storybook`) |
+| **App components** | `apps/web/src/shared/components/*` and `features/*/components` | **This site** |
+
+Primitives stay in Storybook, which is good at isolated states and visual regression. App components are documented here because they depend on app context — aliases like `@shared/*`, the auth provider, cookies, server actions — that a Storybook sandbox would have to mock. Running the docs inside the app means the demos *are* the real components in the real environment.
+
+## Where things live
+
+```
+apps/web/
+  content/docs/                 MDX pages + meta.json (what the docs say)
+  src/docs/
+    source.ts                   Fumadocs source: content/docs → /docs/*
+    mdx-components.tsx          tags MDX may use (Tabs, TypeTable, ComponentPreview…)
+    docs.css                    docs-only Tailwind compilation (never in the product build)
+    components/                 ComponentPreview, device switcher, preview shell
+    demos/                      one file per component + index.ts registry
+  src/app/
+    docs/layout.docs.tsx        Fumadocs shell   ┐
+    docs/[[...slug]]/page.docs.tsx               │ *.docs.* files are routes
+    preview/[name]/page.docs.tsx                 │ only when docs are enabled
+    api/docs-search/route.docs.ts                ┘
+```
+
+## Development-only by design
+
+Route files use the `.docs.tsx` / `.docs.ts` extension. `next.config.ts` adds those extensions to `pageExtensions` only when `NODE_ENV !== "production"` or `ENABLE_DOCS=true`, and only then wraps the config with Fumadocs' MDX plugin.
+
+| Command | Docs routes |
+| --- | --- |
+| `pnpm dev` | included |
+| `pnpm build` | **excluded** — no docs code, MDX or previews in the output |
+| `pnpm --filter web build:docs` | included (`ENABLE_DOCS=true`) |
+
+`NEXT_PUBLIC_DOCS_ENABLED` is inlined at build time for any app code that wants to hide docs entry points. `ENABLE_DOCS` is part of Turborepo's build cache key.
+
+## Responsive previews
+
+`<ComponentPreview name="…">` renders a registered demo in an **iframe** pointed at `/preview/<name>` with Mobile (390px), Tablet (768px) and Desktop presets plus a custom width. Because the demo is a real document, Tailwind's viewport variants respond and portaled UI — including the auth overlay — stays inside the frame. `mode="inline"` renders in-page instead, which only works for container-query-based components.
+
+## Adding a component
+
+<Steps>
+<Step>
+### Build it from primitives
+
+Keep it presentational: data and handlers come in through props (`OtpStart` takes `onSubmit`; the shell — dialog, overlay, page — is the caller's job).
+</Step>
+<Step>
+### Write a demo
+
+Add a `"use client"` wrapper in `src/docs/demos/<name>.tsx` with fixture data and fake handlers, and register it in `src/docs/demos/index.ts`:
+
+```ts
+export const demos = {
+  // …
+  "my-component": MyComponentDemo,
+};
+```
+</Step>
+<Step>
+### Document it
+
+Create `content/docs/design-system/<name>.mdx`, add it to `meta.json`, and use `<ComponentPreview name="my-component" />` plus `<include>` to embed the real source:
+
+```mdx
+<include lang="tsx" meta='title="src/shared/components/my-component.tsx"'>
+  ../../../src/shared/components/my-component.tsx
+</include>
+```
+</Step>
+</Steps>

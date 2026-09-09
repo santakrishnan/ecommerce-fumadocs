@@ -21,6 +21,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "build:docs": "pnpm --filter web build:docs",
     "start": "turbo start",
     "lint": "turbo lint",
     "format": "ultracite fix",
