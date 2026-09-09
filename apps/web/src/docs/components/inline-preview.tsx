@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "utils";
 import { type DemoName, demos } from "../demos";
 import { type DeviceId, PreviewStage, PreviewToolbar, useViewport } from "./preview-toolbar";
+import { type ColorMode, ThemeControls } from "./theme-controls";
 
 export interface InlinePreviewProps {
   className?: string;
@@ -22,6 +23,7 @@ export function InlinePreview({ className, defaultDevice = "desktop", name }: In
   const { containerRef, customWidth, device, deviceId, scale, viewportWidth } = viewport;
   const [reloadKey, setReloadKey] = useState(0);
   const [contentHeight, setContentHeight] = useState(0);
+  const [mode, setMode] = useState<ColorMode>("light");
   const frameRef = useRef<HTMLDivElement>(null);
 
   const Demo = demos[name];
@@ -49,6 +51,7 @@ export function InlinePreview({ className, defaultDevice = "desktop", name }: In
         "not-prose my-4 overflow-hidden rounded-xl border border-fd-border bg-fd-background",
         className
       )}
+      data-color-mode={mode}
       data-device={deviceId}
       data-mode="inline"
     >
@@ -57,7 +60,9 @@ export function InlinePreview({ className, defaultDevice = "desktop", name }: In
         mode="container"
         onReload={() => setReloadKey((k) => k + 1)}
         viewport={viewport}
-      />
+      >
+        <ThemeControls mode={mode} onModeChange={setMode} />
+      </PreviewToolbar>
 
       <PreviewStage ref={containerRef}>
         <div
@@ -67,7 +72,9 @@ export function InlinePreview({ className, defaultDevice = "desktop", name }: In
           <div
             className={cn(
               "@container/preview flex origin-top-left flex-col items-center justify-center rounded-lg border border-fd-border bg-background p-6 text-foreground shadow-sm",
-              framed && "ring-4 ring-fd-foreground/5"
+              framed && "ring-4 ring-fd-foreground/5",
+              // `.dark` scopes the theme's dark token set to this frame only.
+              mode === "dark" && "dark"
             )}
             key={reloadKey}
             ref={frameRef}

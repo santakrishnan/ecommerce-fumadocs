@@ -46,6 +46,17 @@ Route files use the `.docs.tsx` / `.docs.ts` extension. `next.config.ts` adds th
 
 `<ComponentPreview name="…">` renders a registered demo in an **iframe** pointed at `/preview/<name>` with Mobile (390px), Tablet (768px) and Desktop presets plus a custom width. Because the demo is a real document, Tailwind's viewport variants respond and portaled UI — including the auth overlay — stays inside the frame. `mode="inline"` renders in-page instead, which only works for container-query-based components.
 
+## Theme controls — the exact tokens
+
+Previews are rendered by the app itself, so they use the real `@ucmp/ui-theme` tokens, the real fonts and the real `data-surface` variants — nothing is re-declared for the docs. The toolbar exposes the two theme axes so a component can be checked against each token set:
+
+- **Light / Dark** toggles the theme's `.dark` token set. In iframe mode it is applied to the preview document only; in inline mode to the frame only. The docs page never changes.
+- **Brand** (iframe mode) lists every folder in `packages/ui-theme/themes`. The app compiles one brand; choosing another layers that brand's *override files* (`overrides/`, `light.css`, `dark.css`) on top, served from the theme folder by the dev-only route `/preview-brand/<brand>` — so the values are always the ones in the theme package, never a copy.
+
+<Callout type="warn" title="Brand preview is an approximation of a brand build">
+It rewrites the brand's `@theme` blocks to `:root` and applies them over the default brand. Tokens the brand redefines take effect; anything a brand adds that needs *new* Tailwind utilities (a token name that doesn't exist in the default theme) will not, because utilities are generated at build time. For a definitive check, build the app with that brand imported in `globals.css`.
+</Callout>
+
 ## Adding a component
 
 <Steps>

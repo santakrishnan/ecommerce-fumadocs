@@ -11,12 +11,51 @@ export interface PreviewHeightMessage {
   type: typeof PREVIEW_HEIGHT_MESSAGE;
 }
 
+const BRAND_LINK_ID = "docs-preview-brand";
+
 /**
- * Wraps a demo rendered inside the `/preview/[name]` iframe and reports its
- * content height to the parent document so the frame can grow with the demo.
+ * Applies the theme requested by the parent preview through the iframe URL:
+ * `?mode=dark` toggles the `.dark` class (the theme's dark token set) on this
+ * document only, and `?brand=<name>` links that brand's override stylesheet
+ * served by `/preview-brand/[brand]`. Neither touches the parent page.
+ */
+function applyThemeFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const root = document.documentElement;
+
+  root.classList.toggle("dark", params.get("mode") === "dark");
+
+  const brand = params.get("brand");
+  const existing = document.getElementById(BRAND_LINK_ID);
+  if (!brand || brand === "default") {
+    existing?.remove();
+    root.removeAttribute("data-brand");
+    return;
+  }
+  root.dataset.brand = brand;
+  const href = `/preview-brand/${encodeURIComponent(brand)}`;
+  if (existing instanceof HTMLLinkElement && existing.getAttribute("href") === href) {
+    return;
+  }
+  existing?.remove();
+  const link = document.createElement("link");
+  link.id = BRAND_LINK_ID;
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.append(link);
+}
+
+/**
+ * Wraps a demo rendered inside the `/preview/[name]` iframe: applies the
+ * requested theme and reports the content height to the parent so the frame
+ * can grow with the demo.
  */
 export function PreviewShell({ children, name }: { children: ReactNode; name: string }) {
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    applyThemeFromUrl();
+  }, []);
 
   useEffect(() => {
     const el = ref.current;

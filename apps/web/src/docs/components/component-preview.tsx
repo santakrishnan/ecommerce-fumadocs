@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "utils";
+import { listBrands } from "../brands";
 import type { DemoName } from "../demos";
 import { DevicePreview } from "./device-preview";
 import { InlinePreview } from "./inline-preview";
@@ -42,7 +43,14 @@ export function ComponentPreview({
     if (mode === "inline") {
       return <InlinePreview className={className} defaultDevice={defaultDevice} name={name} />;
     }
-    return <DevicePreview className={className} defaultDevice={defaultDevice} name={name} />;
+    return (
+      <DevicePreview
+        brands={listBrands()}
+        className={className}
+        defaultDevice={defaultDevice}
+        name={name}
+      />
+    );
   }
 
   return (

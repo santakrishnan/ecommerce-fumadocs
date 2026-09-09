@@ -12,8 +12,11 @@ import {
   toolbarButton,
   useViewport,
 } from "./preview-toolbar";
+import { type ColorMode, ThemeControls } from "./theme-controls";
 
 export interface DevicePreviewProps {
+  /** Brand themes offered by the toolbar (from packages/ui-theme/themes). */
+  brands?: string[];
   className?: string;
   defaultDevice?: DeviceId;
   name: DemoName;
@@ -25,16 +28,33 @@ export interface DevicePreviewProps {
  * behave exactly as on a device of the selected width. Wider presets are
  * scaled down to fit the docs column.
  */
-export function DevicePreview({ className, defaultDevice = "desktop", name }: DevicePreviewProps) {
+export function DevicePreview({
+  brands,
+  className,
+  defaultDevice = "desktop",
+  name,
+}: DevicePreviewProps) {
   const viewport = useViewport(defaultDevice);
   const { containerRef, customWidth, device, deviceId, scale, viewportWidth } = viewport;
 
   const [heights, setHeights] = useState<Record<number, number>>({});
   const [loaded, setLoaded] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
+  const [mode, setMode] = useState<ColorMode>("light");
+  const [brand, setBrand] = useState(brands?.[0] ?? "default");
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const src = `/preview/${name}`;
+  // The iframe applies mode/brand from its URL (see PreviewShell), so a change
+  // simply reloads it with new params — the docs page itself is unaffected.
+  const query = new URLSearchParams();
+  if (mode === "dark") {
+    query.set("mode", "dark");
+  }
+  if (brand !== "default") {
+    query.set("brand", brand);
+  }
+  const search = query.toString();
+  const src = `/preview/${name}${search ? `?${search}` : ""}`;
 
   useEffect(() => {
     const onMessage = (event: MessageEvent<PreviewHeightMessage>) => {
@@ -71,10 +91,25 @@ export function DevicePreview({ className, defaultDevice = "desktop", name }: De
         "not-prose my-4 overflow-hidden rounded-xl border border-fd-border bg-fd-background",
         className
       )}
+      data-brand={brand}
+      data-color-mode={mode}
       data-device={deviceId}
       data-mode="iframe"
     >
       <PreviewToolbar height={viewportHeight} mode="iframe" onReload={reload} viewport={viewport}>
+        <ThemeControls
+          brand={brand}
+          brands={brands}
+          mode={mode}
+          onBrandChange={(next) => {
+            setBrand(next);
+            setLoaded(false);
+          }}
+          onModeChange={(next) => {
+            setMode(next);
+            setLoaded(false);
+          }}
+        />
         <a
           aria-label="Open preview in a new tab"
           className={cn(toolbarButton, "size-7 justify-center px-0")}
@@ -104,7 +139,7 @@ export function DevicePreview({ className, defaultDevice = "desktop", name }: De
               framed && "ring-4 ring-fd-foreground/5",
               loaded ? "opacity-100" : "opacity-0"
             )}
-            key={reloadKey}
+            key={`${reloadKey}:${src}`}
             onLoad={() => setLoaded(true)}
             ref={iframeRef}
             src={src}
