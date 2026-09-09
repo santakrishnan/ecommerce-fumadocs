@@ -1,0 +1,628 @@
+/*
+  App Global Styles
+
+  The theme handles all design tokens (colors, typography, etc.)
+  This file is only for app-specific customizations.
+*/
+
+/* Import the UI package's styles (chains in Tailwind, the default theme,
+   UI keyframes, and the @source declaration for the UI components). */
+@import "@ucmp/ui/styles.css";
+
+/*
+  App font family override.
+
+  The base theme defines `--font-app-sans` as a fallback. The app loads its
+  brand font via `next/font` in `src/config/fonts.ts` and exposes it through
+  the `--font-app-sans` CSS variable on `<html>`.
+*/
+@theme inline {
+  --font-sans: var(--font-app-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Geist Mono", monospace;
+}
+
+/*
+  Custom font-weight utility for ToyotaType "Book" (350).
+  Standard Tailwind only ships 100–900 in multiples of 100.
+  Use `font-book` wherever the design calls for the Book weight.
+*/
+@utility font-book {
+  font-weight: 350;
+}
+
+/* Scrollbar gutter prevents layout shift when scrollbar appears/disappears */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Smooth scroll only for anchor links */
+html:has(:target) {
+  scroll-behavior: smooth;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html:has(:target) {
+    scroll-behavior: auto;
+  }
+}
+
+/* ─── Spinner ─────────────────────────────────────────────────────────────── */
+
+/* 4 spin-pause cycles baked into one 3600ms keyframe.
+   Each 25% chunk is one 900ms cycle.
+   Rotation phase = first 60% of each chunk (15pp of total); hold = last 40% (10pp).
+   Ends at 720deg (≡ 0deg mod 360) so the infinite loop boundary is seamless — no snap. */
+@keyframes spin-pause-4 {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(180deg);
+  }
+  25% {
+    transform: rotate(180deg);
+  }
+  40% {
+    transform: rotate(360deg);
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  65% {
+    transform: rotate(540deg);
+  }
+  75% {
+    transform: rotate(540deg);
+  }
+  90% {
+    transform: rotate(720deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
+}
+
+/* ─── Logo rotation transition ────────────────────────────────────────────── */
+
+/* ─── Background transition ───────────────────────────────────────────────── */
+
+@keyframes search-page-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes search-page-slide-up {
+  0% {
+    transform: translateY(5.625rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes logo-rotate {
+  0% {
+    transform: rotate(0deg);
+    filter: brightness(1);
+  }
+  100% {
+    transform: rotate(-90deg);
+    filter: brightness(0) invert(1);
+  }
+}
+
+/* ─── Keyword stream ──────────────────────────────────────────────────────── */
+
+@keyframes keyword-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes line-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ─── Search-prompt refinement card animations ────────────────────────────── */
+
+/* Entrance: opacity 0→1, translate-y 3.5rem→0 — whole group slides up together */
+@keyframes suggestion-slide-up {
+  0% {
+    transform: translateY(3.5rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Exit: opacity 1→0, translate-y 0→−0.5rem — cards slide up and fade out */
+@keyframes suggestion-slide-out {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-0.5rem);
+    opacity: 0;
+  }
+}
+
+/* Selection: scale 1→0.98→1 over 100ms (tapped card pulse) */
+@keyframes suggestion-tap {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+}
+
+/* Dim: opacity 1→0 over 150ms (sibling cards fade when one is selected) */
+@keyframes suggestion-dim {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Scale-out: shrink + fade out */
+@keyframes suggestion-scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* ─── Animation utilities ────────────────────────────────────────────────── */
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes intent-banner-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(5.625rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes save-search-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(-3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@layer utilities {
+  .animate-spin-pause {
+    animation: spin-pause-4 3600ms ease-in-out infinite;
+  }
+
+  .animate-keyword-in {
+    opacity: 0;
+    animation: keyword-in 0.2s ease-out both;
+    animation-delay: var(--keyword-delay, 0ms);
+  }
+
+  .animate-line-grow {
+    transform-origin: top;
+    animation: line-grow 0.25s ease-out both;
+    animation-delay: var(--line-delay, 0ms);
+  }
+
+  .animate-suggestion-tap {
+    animation: suggestion-tap 100ms ease-out both;
+  }
+
+  .animate-suggestion-in {
+    animation: suggestion-slide-up 700ms cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    animation-delay: var(--suggestion-delay, 0ms);
+  }
+
+  .animate-suggestion-out {
+    animation: suggestion-slide-out 150ms ease-in both;
+    animation-delay: var(--suggestion-delay, 0ms);
+  }
+
+  .animate-suggestion-dim {
+    animation: suggestion-dim 150ms ease-in both;
+  }
+
+  .animate-suggestion-scale-out {
+    animation: suggestion-scale-out 200ms ease-in both;
+  }
+
+  .animate-logo-rotate {
+    animation: logo-rotate 1000ms ease-in-out forwards;
+  }
+
+  .animate-search-page-fade-in {
+    animation: search-page-fade-in 1000ms cubic-bezier(0.25, 1.2, 0.75, 1) forwards;
+  }
+
+  .animate-search-page-slide-up {
+    animation: search-page-slide-up 1000ms cubic-bezier(0.25, 1.2, 0.75, 1) forwards;
+  }
+}
+
+@utility animate-intent-banner-slide-up {
+  animation: intent-banner-slide-up 1000ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@utility animate-slide-up-delayed {
+  animation: intent-banner-slide-up 900ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: 150ms;
+}
+
+@utility animate-save-search-slide-in-right {
+  animation: save-search-slide-in-right 700ms cubic-bezier(0.25, 1.2, 0.75, 1) both;
+  animation-delay: 150ms;
+}
+
+@utility animate-slide-in-left-delayed {
+  animation: slide-in-left 1000ms cubic-bezier(0.25, 1.2, 0.75, 1) both;
+  animation-delay: 150ms;
+}
+
+/* ─── Search Results Page entrance animations ─────────────────────────────── */
+/* Spec: header 20px/400ms/0ms, grid 156px/500ms/100ms, footer opacity/300ms/200ms.
+   Easing: cubic-bezier(0.16, 1, 0.3, 1) — ease-out expo (fast start, decelerate). */
+
+@keyframes srp-header-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes srp-grid-in {
+  from {
+    opacity: 0;
+    transform: translateY(156px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes srp-footer-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility animate-srp-header-in {
+  animation: srp-header-in 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility animate-srp-grid-in {
+  animation: srp-grid-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 100ms;
+}
+
+@utility animate-srp-pagination-in {
+  animation: srp-footer-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 200ms;
+}
+
+@utility animate-srp-footer-in {
+  animation: srp-footer-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 200ms;
+}
+
+/* ─── View Transitions (home ↔ /search) ───────────────────────────────────── */
+
+/* Hide the site header when the search overlay is open so the wider
+   nav bar doesn't show behind the overlay's own search header. */
+html[data-search-overlay] [data-site-header] {
+  visibility: hidden;
+  pointer-events: none;
+  view-transition-name: none;
+}
+
+/* Shared-element morph: the search prompt bar morphs from its home-page
+   position to the /search page position (and back). Both elements use
+   viewTransitionName: "search-prompt" so the browser interpolates. */
+::view-transition-group(search-prompt) {
+  animation-duration: 350ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Suppress crossfade on shared element — position/size morph only. */
+::view-transition-old(search-prompt),
+::view-transition-new(search-prompt) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+/* ─── View Transitions (card → VDP shared-element morph) ─────────────────── */
+
+::view-transition-group(*) {
+  animation-duration: 350ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shared-element morph for the vehicle hero image: suppress crossfade so
+   only the position/size transition plays (no ghosting between old & new). */
+::view-transition-old(vehicle-hero),
+::view-transition-new(vehicle-hero) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+/* Shared-element morph for the vehicle title: same treatment. */
+::view-transition-old(vehicle-title-hero),
+::view-transition-new(vehicle-title-hero) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+/* Non-shared page content fades in/out during the view transition. */
+::view-transition-old(root) {
+  animation: 250ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
+}
+::view-transition-new(root) {
+  animation: 350ms cubic-bezier(0, 0, 0.2, 1) 100ms both fade-in;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ─── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all custom animations */
+  .animate-spin-pause,
+  .animate-keyword-in,
+  .animate-line-grow,
+  .animate-logo-rotate,
+  .animate-search-page-fade-in,
+  .animate-search-page-slide-up,
+  .animate-intent-banner-slide-up,
+  .animate-slide-up-delayed,
+  .animate-slide-in-left-delayed,
+  .animate-save-search-slide-in-right,
+  .animate-srp-header-in,
+  .animate-srp-grid-in,
+  .animate-srp-pagination-in,
+  .animate-srp-footer-in,
+  [class*="slide-in-right"],
+  [class*="sign-in-bg-fade-in"],
+  [class*="sign-in-content-slide-up"] {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  /* Skip the suggestion animations — cards appear/disappear instantly. */
+  .animate-suggestion-tap,
+  .animate-suggestion-in {
+    transform: none;
+    animation: none;
+  }
+
+  .animate-suggestion-out {
+    opacity: 0;
+    transform: none;
+    animation: none;
+  }
+
+  .animate-suggestion-dim {
+    opacity: 0.7;
+    transform: none;
+    animation: none;
+  }
+
+  .animate-suggestion-scale-out {
+    opacity: 0;
+    transform: none;
+    animation: none;
+  }
+
+  /* Disable view transition animations — instant swap, no morph */
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* ─── Profile sign-in gate ─────────────────────────────────────────────────── */
+
+@keyframes sign-in-bg-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sign-in-content-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Compare: value highlight flash ──────────────────────────────────────── */
+
+@keyframes compare-value-flash {
+  0% {
+    background-color: oklch(0.9 0.05 250 / 0.6);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@utility animate-compare-flash {
+  animation: compare-value-flash 600ms ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* ─── Compare: page-load entrance animations ─────────────────────────────── */
+
+@keyframes compare-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--compare-card-offset, 2rem));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes compare-data-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-compare-card-enter {
+  opacity: 0;
+  animation: compare-card-enter 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--compare-card-delay, 0ms);
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+@utility animate-compare-data-enter {
+  opacity: 0;
+  animation: compare-data-enter 400ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--compare-data-delay, 800ms);
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* ─── Compare: data swap on vehicle change ────────────────────────────────── */
+
+@keyframes compare-cell-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes compare-cell-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-compare-cell-out {
+  animation: compare-cell-out 200ms cubic-bezier(0.4, 0, 1, 1) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility animate-compare-cell-in {
+  animation: compare-cell-in 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--compare-row-delay, 0ms);
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    animation: none;
+  }
+}

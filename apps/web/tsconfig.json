@@ -1,0 +1,29 @@
+{
+  "extends": "../../packages/config/typescript/nextjs.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["../../packages/ui/src/*"],
+      "@public/*": ["./public/*"],
+      "@ucmp/ui": ["../../packages/ui/src"],
+      "utils": ["../../packages/utils/src"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@config/*": ["./src/config/*"],
+      "@layout/*": ["./src/layout/*"]
+    },
+    "jsx": "react-jsx",
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "data/*.json",
+    "src/types/global.d.ts",
+    "src/types/images.d.ts"
+  ],
+  "exclude": ["node_modules", "**/*.stories.ts", "**/*.stories.tsx"]
+}

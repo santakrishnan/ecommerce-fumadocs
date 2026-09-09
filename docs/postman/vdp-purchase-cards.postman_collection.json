@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "VDP Purchase Cards",
+    "description": "Postman collection for testing VDP API responses that drive the 5 purchase card states: Generic, Estimate, Offer Received, Offer Expired, and Sold.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "S1 — Generic (No Origination)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/vdp/3TMDZ5BN8NM126690",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "vdp", "3TMDZ5BN8NM126690"]
+        },
+        "description": "Default purchase card state — no payment/offer data.\n\nCard shows:\n- \"Below market\" badge (from `data.vehicle.belowMarket`)\n- Selling price $30,775 (from `data.vehicle.pricing.sellingPrice`)\n- List price $31,775 strikethrough (from `data.vehicle.pricing.listPrice`)\n- \"TOYOTA HIGHLANDER HYBRID LIMITED\" (from `vehicleInfo.make`, `vehicleInfo.model`, `vehicleInfo.trim`)\n- \"2023 · 36,435 mi\" (from `vehicleInfo.year`, `status.mileage`)\n- \"Get pre-approved\" button\n- Dealer: \"Toyota of Bay Ridge, 6401 6th Ave, Brooklyn, NY 11220\" (from `data.dealer`)\n- Test drive slots (from `data.dealer.extended.testDrive` — not part of VIN API, enriched by BFF)"
+      },
+      "response": []
+    },
+    {
+      "name": "S2 — Estimated Payment",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/vdp/2T1BURHE8JC039175",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "vdp", "2T1BURHE8JC039175"]
+        },
+        "description": "Estimate state — visitor has started a payment estimate but no formal offer yet.\n\nCard shows everything from Generic PLUS:\n- \"Estimated payment $456.97/mo\" (from `data.origination.estimatedMonthly`)\n- \"with $3,500 down\" (from `data.origination.downPayment`)\n- \"Get pre-approved\" button\n- Test drive note: \"You have a test drive at Toyota of Manhattan today at 2:30 PM\" (visitor-specific, from booking service)"
+      },
+      "response": []
+    },
+    {
+      "name": "S3 — Offer Received (Active)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/vdp/5TDKZRFH8NS112233",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "vdp", "5TDKZRFH8NS112233"]
+        },
+        "description": "Active offer state — visitor has a pre-approved financing offer.\n\nCard shows everything from Generic PLUS:\n- \"Your offer: Expires in 5d, 18h\" (countdown derived from `data.origination.expiresAt`)\n- \"$297/mo\" (from `data.origination.monthly`)\n- \"3.25% APR for 60 months\" (from `data.origination.apr`, `data.origination.termMonths`)\n- \"Continue purchase\" button (instead of \"Get pre-approved\")"
+      },
+      "response": []
+    },
+    {
+      "name": "S4 — Offer Expired",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/vdp/4T1G11AK5NU445566",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "vdp", "4T1G11AK5NU445566"]
+        },
+        "description": "Expired offer state — visitor had an offer that is no longer valid.\n\nCard shows everything from Generic PLUS:\n- \"Your previous offer has expired.\" (triggered when `data.origination.kind === \"expired\"`)\n- \"Restart purchase\" button (instead of \"Get pre-approved\")"
+      },
+      "response": []
+    },
+    {
+      "name": "S5 — Vehicle Sold",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/vdp/JTMRWRFV8ND778899",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "vdp", "JTMRWRFV8ND778899"]
+        },
+        "description": "Sold state — vehicle is no longer available.\n\nCard shows a completely different layout:\n- \"Vehicle sold\" badge (from `status.vehicleStatus === \"Sold\"`)\n- \"This 2023 Highlander Hybrid Limited has sold.\" (composed from `vehicleInfo`)\n- \"Sold on March 24, 2026 at Toyota of Bay Ridge\" (from `data.vehicle.soldAt` + `dealer.dealerName`)\n- \"Search similar to this\" button (no purchase flow)\n- No dealer info, no test drive slots, no pricing"
+      },
+      "response": []
+    }
+  ]
+}

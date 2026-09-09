@@ -1,0 +1,23 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundation/Util/Color Types" />
+
+# Color Types
+
+Shared type definitions used across color utility modules.
+
+## Exports
+
+- `BottomStripSamplingOptions` - Options for bottom-strip image sampling (sample height ratio and target sample width).
+- `RgbColor` - Numeric RGB channel object with `r`, `g`, and `b` values.
+- `OklchColor` - OKLCH color object with lightness (`l`), chroma (`c`), and hue (`h`).
+
+## Usage
+
+```ts
+import type {
+  BottomStripSamplingOptions,
+  OklchColor,
+  RgbColor,
+} from "@/lib/bottom-average-color-types";
+```

@@ -1,0 +1,50 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundation/Util/CSS Color" />
+
+# CSS Color
+
+DOM-aware helpers for turning any CSS color the browser can render into a
+normalized value. Unlike the pure math in `Foundation/Util/Color Converters`,
+these rely on the DOM (canvas) and only work in the browser.
+
+## Exports
+
+- `cssColorToRgb(value)` - Paints an already-resolved CSS color onto a 1×1 canvas and reads the pixel back as an `RgbColor`. Returns `undefined` when a 2D context is unavailable (e.g. SSR/jsdom) or the value isn't a paintable color.
+- `concreteColorToOklch(value)` - Normalizes a concrete CSS color string into an `oklch(...)` string. Tries a cheap `oklch()`/`rgb()` parse first, then falls back to `cssColorToRgb` for other color spaces. Returns `undefined` for anything unresolved (e.g. a literal `var(...)` token or `""`).
+
+## Why canvas
+
+Design tokens are authored in `oklch()`, but the build (Lightning CSS) compiles
+them down to a hex fallback plus a `lab()` value:
+
+```css
+--example-gradient-color: #ababab;
+--example-gradient-color: lab(69.9792% -0.00003 0);
+```
+
+So at runtime a token resolves to `lab(...)`, which a plain `oklch()`/`rgb()`
+string parse can't read. Rasterizing on a 1×1 canvas converts any
+browser-paintable color (including `lab()`, `color(...)`, hex, and named colors)
+into concrete sRGB.
+
+## Notes
+
+- `value` must already be a **concrete** color. These helpers do not resolve
+  `var()` references — read the resolved value from the cascade first (e.g.
+  `getComputedStyle(el).getPropertyValue("--token")`), then pass it in.
+- `concreteColorToOklch` avoids the canvas entirely for `oklch()` and `rgb()`
+  inputs, so it stays cheap and SSR-safe for those.
+
+## Usage
+
+```ts
+import { concreteColorToOklch, cssColorToRgb } from "@/lib/css-color";
+
+// A theme token, resolved from the cascade, then normalized to oklch().
+const resolved = getComputedStyle(el).getPropertyValue("--example-gradient-color").trim();
+const oklch = concreteColorToOklch(resolved); // "oklch(69.98% 0.0000 0.00)" | undefined
+
+// Read any paintable color back as sRGB.
+const rgb = cssColorToRgb("lab(69.9792% -0.00003 0)"); // { r, g, b } | undefined
+```

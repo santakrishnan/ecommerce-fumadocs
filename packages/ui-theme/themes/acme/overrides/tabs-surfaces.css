@@ -1,0 +1,27 @@
+/*
+  Acme Theme — Tabs Pill Surface Color Overrides
+  Violet-branded pill tabs with surface-aware light/dark variants.
+*/
+
+:root,
+[data-surface="light"] {
+  --tabs-pill-list-bg: oklch(0.97 0.014 293 / 0.8);
+  --tabs-pill-trigger-selected-bg: oklch(0.541 0.247 293);
+  --tabs-pill-trigger-selected-text: oklch(1 0 0);
+  --tabs-pill-trigger-unselected-text: oklch(0.453 0.12 293);
+  --tabs-pill-trigger-hover-bg: oklch(0.606 0.216 293);
+  --tabs-pill-trigger-hover-text: oklch(1 0 0);
+  --tabs-pill-trigger-disabled-bg: var(--color-surface-inactive);
+  --tabs-pill-trigger-disabled-text: var(--color-text-inactive-light);
+}
+
+[data-surface="dark"] {
+  --tabs-pill-list-bg: oklch(0 0 0 / 0.26);
+  --tabs-pill-trigger-selected-bg: oklch(0.943 0.034 293);
+  --tabs-pill-trigger-selected-text: oklch(0.187 0.038 293);
+  --tabs-pill-trigger-unselected-text: oklch(0.943 0.034 293);
+  --tabs-pill-trigger-hover-bg: oklch(0.902 0.028 293);
+  --tabs-pill-trigger-hover-text: oklch(0.187 0.038 293);
+  --tabs-pill-trigger-disabled-bg: oklch(0.274 0.05 293);
+  --tabs-pill-trigger-disabled-text: var(--color-text-inactive-dark);
+}

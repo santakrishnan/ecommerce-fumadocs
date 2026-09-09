@@ -1,0 +1,22 @@
+:root,
+[data-surface="light"] {
+  --tabs-pill-list-bg: var(--color-surface-glass-light);
+  --tabs-pill-trigger-selected-bg: var(--color-surface-dark);
+  --tabs-pill-trigger-selected-text: var(--color-text-primary-dark);
+  --tabs-pill-trigger-unselected-text: var(--color-text-primary-light);
+  --tabs-pill-trigger-hover-bg: var(--color-neutral-500);
+  --tabs-pill-trigger-hover-text: var(--color-text-primary-dark);
+  --tabs-pill-trigger-disabled-bg: var(--color-surface-inactive);
+  --tabs-pill-trigger-disabled-text: var(--color-text-inactive-light);
+}
+
+[data-surface="dark"] {
+  --tabs-pill-list-bg: var(--color-surface-glass-dark);
+  --tabs-pill-trigger-selected-bg: var(--color-neutral-50);
+  --tabs-pill-trigger-selected-text: var(--color-text-primary-light);
+  --tabs-pill-trigger-unselected-text: var(--color-text-primary-dark);
+  --tabs-pill-trigger-hover-bg: var(--color-neutral-200);
+  --tabs-pill-trigger-hover-text: var(--color-text-primary-light);
+  --tabs-pill-trigger-disabled-bg: var(--color-neutral-200);
+  --tabs-pill-trigger-disabled-text: var(--color-text-inactive-light);
+}

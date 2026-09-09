@@ -1,0 +1,6 @@
+/* Default Theme Radius Overrides
+   Figma design uses generous radii — cards at 16px, buttons fully rounded. */
+@theme {
+  --radius-xl: 1rem; /* 16px — cards */
+  --radius-2xl: 1.25rem; /* 20px — large panels (financing) */
+}

@@ -1,0 +1,125 @@
+/* Base Colors — OKLCH (shadcn Zinc default) */
+@theme {
+  /* Semantic colors */
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.141 0.005 285.823);
+
+  --color-card: oklch(1 0 0);
+  --color-card-light: oklch(1 0 0 / 0.42); /* Opacity/White 42% */
+  --color-card-md-light: oklch(1 0 0 / 0.2); /* Opacity/White 20% */
+  --color-card-dark: oklch(0 0 0 / 0.7); /* Opacity/Black 70% */
+  --color-card-foreground: oklch(0.141 0.005 285.823);
+
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.141 0.005 285.823);
+
+  --color-primary: oklch(0.21 0.006 285.885);
+  --color-primary-foreground: oklch(0.985 0 0);
+
+  --color-secondary: oklch(0.967 0.001 286.375);
+  --color-secondary-foreground: oklch(0.21 0.006 285.885);
+
+  --color-muted: oklch(0.967 0.001 286.375);
+  --color-muted-foreground: oklch(0.552 0.016 285.938);
+
+  --color-accent: oklch(0.967 0.001 286.375);
+  --color-accent-foreground: oklch(0.21 0.006 285.885);
+
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.985 0 0);
+
+  --color-border: oklch(0.92 0.004 286.32);
+  --color-input: oklch(0.92 0.004 286.32);
+  --color-ring: oklch(0.705 0.015 286.067);
+
+  /* ─── Brand / Styling Colors ─── */
+  --color-brand: oklch(0.594 0.239 26.8); /* #EB0A1E — Styling/Brand red */
+
+  /* ─── Certification Colors ─── */
+  --color-gold: oklch(0.696 0.073 67.5); /* #BC956C — Certification/Gold */
+  --color-silver: oklch(0.732 0 303.1); /* #A8A8A8 — Certification/Silver */
+
+  /* ─── Neutral Palette (Figma Neutral/50–800) ─── */
+  --color-neutral-50: oklch(1 0 0); /* #FFFFFF — Neutral/50 */
+  --color-neutral-100: oklch(0.968 0 0); /* #F5F5F5 — Neutral/100 */
+  --color-neutral-200: oklch(0.925 0 0); /* #E6E6E6 — Neutral/200 */
+  --color-neutral-300: oklch(0.82 0 0); /* #C4C4C4 — Neutral/300 */
+  --color-neutral-400: oklch(0.6268 0 0); /* #888888 — Neutral/400 */
+  --color-neutral-500: oklch(0.463 0.002 146.6); /* #585958 — Neutral/500 */
+  --color-neutral-600: oklch(0.355 0 0); /* #3D3D3D — Neutral/600 */
+  --color-neutral-700: oklch(0.227 0 0); /* #1F1F1F — Neutral/700 */
+  --color-neutral-800: oklch(0 0 0); /* #000000 — Neutral/800 */
+
+  /* ─── Red Palette (Figma Red/50–500) ─── */
+  --color-red-50: oklch(0.971 0.018 12.5); /* #FFF1F4 — Red/50 (error bg) */
+  --color-red-500: oklch(0.577 0.222 17.5); /* #EF1541 — Red/500 (error text/icon) */
+
+  /* ─── Green Palette (Figma Green/50–500) ─── */
+  --color-green-50: oklch(0.952 0.036 152.5); /* #E6F6EB — Green/50 (success bg) */
+  --color-green-500: oklch(0.627 0.194 149.5); /* #05AC3F — Green/500 (success text/icon) */
+
+  /* TODO Verify with design system */
+  /* ─── Chart Colors (semantic aliases) ─── */
+  --color-chart-price-low: oklch(0.627 0.194 149.214); /* #16A34A */
+  --color-chart-price-mid: oklch(0.769 0.188 70.08); /* #F59E0B */
+  --color-chart-price-high: oklch(0.577 0.245 27.325); /* #DC2626 */
+
+  /* ─── Text Colors ─── */
+  /* Primitives for surface switching (consumed via var() in theme overrides) */
+  --color-text-primary-light: oklch(0 0 0); /* #000000 — Text/Primary - Light → Neutral/800 */
+  --color-text-secondary-light: oklch(
+    0.463 0.002 146.6
+  ); /* #585958 — Text/Secondary - Light → Neutral/500 */
+  --color-text-tertiary-light: oklch(
+    0.6268 0 0
+  ); /* #888888 — Text/Tertiary - Light → Neutral/400 */
+  --color-text-inactive-light: oklch(0 0 0 / 0.26); /* #000000 @ 26% — Text/Inactive - Light */
+
+  --color-text-primary-dark: oklch(1 0 0); /* #FFFFFF — Text/Primary - Dark → Neutral/50 */
+  --color-text-secondary-dark: oklch(0.925 0 0); /* #E6E6E6 — Text/Secondary - Dark → Neutral/200 */
+  --color-text-tertiary-dark: oklch(0.82 0 0); /* #C4C4C4 — Text/Tertiary - Dark → Neutral/300 */
+  --color-text-inactive-dark: oklch(1 0 0 / 0.26); /* #FFFFFF @ 26% — Text/Inactive - Dark */
+
+  /* Deprecated, shadcn tokens - Non-surface-aware text colors */
+  --color-text-inverse: oklch(1 0 0); /* #FFFFFF — Text/White → Neutral/50 */
+  --color-text-muted: oklch(0.699 0 0); /* #9E9E9E — Text/Grey → Neutral/400 */
+  --color-text-subtle: oklch(0.463 0.002 146.6); /* #585958 — Styling/Grey Dark → Neutral/500 */
+
+  /* TODO Verify with design system */
+  /* ─── Warm Grey ─── */
+  --color-warm-grey: oklch(0.424 0.008 46.3); /* #5B5553 — Warm Grey (Buy With Confidence)*/
+
+  /* ─── Surface Colors ─── */
+  --color-surface-primary: oklch(1 0 0); /* #FFFFFF — Styling/White → Neutral/50 */
+  --color-surface-secondary: oklch(0.925 0 0); /* #E6E6E6 — Styling/Grey light → Neutral/200 */
+  --color-surface-muted: oklch(0.6268 0 0); /* #888888 — Styling/Grey Mid → Neutral/400 */
+  --color-surface-dark: oklch(0 0 0); /* #000000 — Styling/Black → Neutral/800 */
+  --color-surface-inverse-muted: oklch(1 0 0 / 0.6); /* #FFFFFF99 — Styling/Inverse Muted */
+  --color-surface-inactive: oklch(0.955 0 0); /* #F0F0F0 — Styling/Inactive state */
+  --color-surface-sold: oklch(0.828 0.04 60); /* #DDC5B3 — Sold hero card background */
+  --color-overlay: oklch(0 0 0 / 0.7); /* #000000 @ 70% — Styling/Overlay */
+
+  /* ─── Skeleton Color ─── */
+  --color-skeleton: oklch(0.6268 0 0); /* #888888 — Styling/Grey Mid → Neutral/400 */
+
+  /* ─── Divider Primitives (consumed via var() in theme overrides) ─── */
+  --color-divider-light: oklch(0 0 0 / 0.2); /* #000000 @ 20% — Divider - Light */
+  --color-divider-dark: oklch(1 0 0 / 0.2); /* #FFFFFF @ 20% — Divider - Dark */
+
+  /* ─── Opacity Color ─── */
+  --color-opacity-white-12: oklch(1 0 0 / 0.12); /* #FFFFFF @ 12% — Divider - Light */
+  --color-opacity-white-16: oklch(1 0 0 / 0.16); /* #FFFFFF @ 16% — Divider - Light */
+  --color-opacity-white-20: oklch(1 0 0 / 0.2); /* #FFFFFF @ 20% — Divider - Light */
+  --color-opacity-white-26: oklch(1 0 0 / 0.26); /* #FFFFFF @ 26% — Divider - Light */
+  --color-opacity-white-40: oklch(1 0 0 / 0.4); /* #FFFFFF @ 40% — Divider - Light */
+  --color-opacity-black-12: oklch(0 0 0 / 0.12); /* #000000 @ 12% — Divider - Light */
+  --color-opacity-black-16: oklch(0 0 0 / 0.16); /* #000000 @ 16% — Divider - Light */
+  --color-opacity-black-20: oklch(0 0 0 / 0.2); /* #000000 @ 20% — Divider - Light */
+  --color-opacity-black-26: oklch(0 0 0 / 0.26); /* #000000 @ 26% — Divider - Light */
+  --color-opacity-black-40: oklch(0 0 0 / 0.4); /* #000000 @ 40% — Divider - Light */
+
+  /* TODO Verify with design system */
+  /* ─── Panel / Glass Surface Colors ─── */
+  --color-surface-glass-light: oklch(1 0 0 / 0.42); /* #FFFFFF @ 42% — Glass panel on dark bg */
+  --color-surface-glass-dark: oklch(0 0 0 / 0.33); /* #000000 @ 33% — Glass panel on light bg */
+}

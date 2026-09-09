@@ -1,0 +1,2 @@
+# App-level shared components (not feature-specific).
+# Promote a component here when 2+ features need it.

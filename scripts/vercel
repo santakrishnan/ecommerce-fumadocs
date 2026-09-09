@@ -1,0 +1,3 @@
+vercel pull --environment=dev
+vercel build --target=dev
+vercel deploy --prebuilt --target=dev

@@ -1,0 +1,14 @@
+/* Breakpoints */
+@theme {
+  /* Screen sizes */
+  --breakpoint-sm: 393px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1440px;
+  --breakpoint-xl: 1870px;
+
+  /* Container max widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1440px;
+  --container-xl: 1870px;
+}

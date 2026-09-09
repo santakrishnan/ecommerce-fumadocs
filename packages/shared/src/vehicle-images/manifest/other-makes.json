@@ -1,0 +1,68 @@
+[
+  {
+    "make": "Ford",
+    "series": "explorer",
+    "model": "Explorer Hybrid",
+    "year": 2024,
+    "grades": [
+      {
+        "gradeName": "Hybrid",
+        "gradeSlug": "hybrid",
+        "angle": "13",
+        "defaultColorCode": "default",
+        "image": "/images/search/ford-explorer-hybrid-2024.png",
+        "colors": [
+          {
+            "code": "default",
+            "title": "Default",
+            "image": "/images/search/ford-explorer-hybrid-2024.png"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Hyundai",
+    "series": "santafe",
+    "model": "Santa Fe Hybrid",
+    "year": 2024,
+    "grades": [
+      {
+        "gradeName": "Hybrid",
+        "gradeSlug": "hybrid",
+        "angle": "13",
+        "defaultColorCode": "default",
+        "image": "/images/search/hyundai-santa-fe-hybrid-2024.png",
+        "colors": [
+          {
+            "code": "default",
+            "title": "Default",
+            "image": "/images/search/hyundai-santa-fe-hybrid-2024.png"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Kia",
+    "series": "telluride",
+    "model": "Telluride Hybrid",
+    "year": 2024,
+    "grades": [
+      {
+        "gradeName": "Hybrid",
+        "gradeSlug": "hybrid",
+        "angle": "13",
+        "defaultColorCode": "default",
+        "image": "/images/search/kia-telluride-hybrid-2024.png",
+        "colors": [
+          {
+            "code": "default",
+            "title": "Default",
+            "image": "/images/search/kia-telluride-hybrid-2024.png"
+          }
+        ]
+      }
+    ]
+  }
+]

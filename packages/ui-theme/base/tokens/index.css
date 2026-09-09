@@ -1,0 +1,20 @@
+/* Base Design Tokens */
+@import "./breakpoints.css";
+@import "./colors.css";
+@import "./grid.css";
+@import "./radius.css";
+@import "./shadows.css";
+@import "./spacing.css";
+@import "./typography.css";
+@import "./sizes.css";
+
+/* Animation */
+@theme {
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}

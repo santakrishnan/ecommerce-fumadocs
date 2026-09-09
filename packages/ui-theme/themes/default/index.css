@@ -1,0 +1,36 @@
+/* Default Theme
+
+   This theme is self-contained - it imports base internally.
+   Apps should ONLY import this file, not base separately.
+
+   Usage in app:
+     @import "@ucmp/ui-theme/themes/default";
+*/
+
+/* Import base theme (tailwindcss + foundation) */
+@import "../../base/index.css";
+
+/* Brand overrides */
+@import "./overrides/index.css";
+
+/* Dark mode */
+@import "./dark.css";
+
+/* Light mode (default) */
+@import "./light.css";
+
+/*
+  shadcn Color Mapping
+
+  This theme supports the shadcn/ui pattern where apps define colors
+  in :root using OKLCH format, and this mapping bridges them to Tailwind.
+
+  Apps using this theme can define:
+    :root { --primary: oklch(0.21 0.006 285.885); }
+
+  And this mapping makes Tailwind utilities work:
+    className="bg-primary" ✅
+
+  OKLCH is the shadcn/Tailwind v4 default. Do not use HSL or hex in
+  token definitions — see AGENTS.md "Styling & theming".
+*/

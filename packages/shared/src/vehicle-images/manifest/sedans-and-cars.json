@@ -1,0 +1,1957 @@
+[
+  {
+    "make": "Toyota",
+    "series": "camry",
+    "model": "Camry",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "LE",
+        "gradeSlug": "le",
+        "angle": "13",
+        "defaultColorCode": "01L7",
+        "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-01l7-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-03u5-angle-13.webp"
+          },
+          {
+            "code": "0795",
+            "title": "Ocean Gem",
+            "hex": "#1B4558",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-0795-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-0040-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-08q4-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/camry/2026/le/toyota-camry-2026-le-01l7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "SE",
+        "gradeSlug": "se",
+        "angle": "13",
+        "defaultColorCode": "0795",
+        "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-0795-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-03u5-angle-13.webp"
+          },
+          {
+            "code": "08Z3",
+            "title": "Dark Cosmos",
+            "hex": "#3c4253",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-08z3-angle-13.webp"
+          },
+          {
+            "code": "0795",
+            "title": "Ocean Gem",
+            "hex": "#1B4558",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-0795-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#535353",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-01l5-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-0040-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-08q4-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/camry/2026/se/toyota-camry-2026-se-01l7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Nightshade",
+        "gradeSlug": "nightshade",
+        "angle": "13",
+        "defaultColorCode": "03U5",
+        "image": "/vehicles/toyota/camry/2026/nightshade/toyota-camry-2026-nightshade-03u5-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/camry/2026/nightshade/toyota-camry-2026-nightshade-03u5-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/camry/2026/nightshade/toyota-camry-2026-nightshade-0040-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/camry/2026/nightshade/toyota-camry-2026-nightshade-0218-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XLE",
+        "gradeSlug": "xle",
+        "angle": "13",
+        "defaultColorCode": "08Z3",
+        "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-08z3-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-03u5-angle-13.webp"
+          },
+          {
+            "code": "08Z3",
+            "title": "Dark Cosmos",
+            "hex": "#3c4253",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-08z3-angle-13.webp"
+          },
+          {
+            "code": "0795",
+            "title": "Ocean Gem",
+            "hex": "#1B4558",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-0795-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#535353",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-01l5-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-0089-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/camry/2026/xle/toyota-camry-2026-xle-01l7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XSE",
+        "gradeSlug": "xse",
+        "angle": "13",
+        "defaultColorCode": "02PS",
+        "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-02ps-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-03u5-angle-13.webp"
+          },
+          {
+            "code": "08Z3",
+            "title": "Dark Cosmos",
+            "hex": "#3c4253",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-08z3-angle-13.webp"
+          },
+          {
+            "code": "0795",
+            "title": "Ocean Gem",
+            "hex": "#1B4558",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-0795-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#535353",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-01l5-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-0089-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-01l7-angle-13.webp"
+          },
+          {
+            "code": "02YJ",
+            "title": "Heavy Metal with Midnight Black Metallic roof",
+            "hex": "#535353",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-02yj-angle-13.webp"
+          },
+          {
+            "code": "0M04",
+            "title": "Ocean Gem with Midnight Black Metallic roof",
+            "hex": "#1B4558",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-0m04-angle-13.webp"
+          },
+          {
+            "code": "02PS",
+            "title": "Wind Chill Pearl with Midnight Black Metallic roof",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-02ps-angle-13.webp"
+          },
+          {
+            "code": "02SC",
+            "title": "Supersonic Red with Midnight Black Metallic roof",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/camry/2026/xse/toyota-camry-2026-xse-02sc-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "corolla",
+    "model": "Corolla",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "LE",
+        "gradeSlug": "le",
+        "angle": "13",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-0089-angle-13.webp",
+        "colors": [
+          {
+            "code": "01K3",
+            "title": "Celestite",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-01k3-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-08x8-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-0089-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-0040-angle-13.webp"
+          },
+          {
+            "code": "03T3",
+            "title": "Ruby Flare Pearl",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-03t3-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-01f7-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-0218-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/le/toyota-corolla-2026-le-01l7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Hybrid LE",
+        "gradeSlug": "hybrid-le",
+        "angle": "13",
+        "defaultColorCode": "0040",
+        "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-0040-angle-13.webp",
+        "colors": [
+          {
+            "code": "01K3",
+            "title": "Celestite",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-01k3-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-08x8-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-0089-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-0040-angle-13.webp"
+          },
+          {
+            "code": "03T3",
+            "title": "Ruby Flare Pearl",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-03t3-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-01f7-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-0218-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-le/toyota-corolla-2026-hybrid-le-01l7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "SE",
+        "gradeSlug": "se",
+        "angle": "13",
+        "defaultColorCode": "03T3",
+        "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-03t3-angle-13.webp",
+        "colors": [
+          {
+            "code": "01K3",
+            "title": "Celestite",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-01k3-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-08x8-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-0089-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-0040-angle-13.webp"
+          },
+          {
+            "code": "03T3",
+            "title": "Ruby Flare Pearl",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-03t3-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-01f7-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-0218-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-01l7-angle-13.webp"
+          },
+          {
+            "code": "02RA",
+            "title": "Blueprint with Midnight Black Metallic roof",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02ra-angle-13.webp"
+          },
+          {
+            "code": "02PS",
+            "title": "Wind Chill Pearl with Midnight Black Metallic roof",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02ps-angle-13.webp"
+          },
+          {
+            "code": "02UE",
+            "title": "Ice Cap with Midnight Black Metallic roof",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02ue-angle-13.webp"
+          },
+          {
+            "code": "02YD",
+            "title": "Ruby Flare Pearl with Midnight Black Metallic roof",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02yd-angle-13.webp"
+          },
+          {
+            "code": "02UF",
+            "title": "Classic Silver Metallic with Midnight Black Metallic roof",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02uf-angle-13.webp"
+          },
+          {
+            "code": "02YC",
+            "title": "Celestite with Midnight Black Metallic roof",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02yc-angle-13.webp"
+          },
+          {
+            "code": "02YE",
+            "title": "Underground with Midnight Black Metallic roof",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/se/toyota-corolla-2026-se-02ye-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Hybrid SE",
+        "gradeSlug": "hybrid-se",
+        "angle": "13",
+        "defaultColorCode": "08X8",
+        "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-08x8-angle-13.webp",
+        "colors": [
+          {
+            "code": "01K3",
+            "title": "Celestite",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-01k3-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-08x8-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-0089-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-0040-angle-13.webp"
+          },
+          {
+            "code": "03T3",
+            "title": "Ruby Flare Pearl",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-03t3-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-01f7-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-0218-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-se/toyota-corolla-2026-hybrid-se-01l7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XSE",
+        "gradeSlug": "xse",
+        "angle": "13",
+        "defaultColorCode": "01K3",
+        "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-01k3-angle-13.webp",
+        "colors": [
+          {
+            "code": "01K3",
+            "title": "Celestite",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-01k3-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-08x8-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-0089-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-0040-angle-13.webp"
+          },
+          {
+            "code": "03T3",
+            "title": "Ruby Flare Pearl",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-03t3-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-01f7-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-0218-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-01l7-angle-13.webp"
+          },
+          {
+            "code": "02RA",
+            "title": "Blueprint with Midnight Black Metallic roof",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02ra-angle-13.webp"
+          },
+          {
+            "code": "02PS",
+            "title": "Wind Chill Pearl with Midnight Black Metallic roof",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02ps-angle-13.webp"
+          },
+          {
+            "code": "02UE",
+            "title": "Ice Cap with Midnight Black Metallic roof",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02ue-angle-13.webp"
+          },
+          {
+            "code": "02YD",
+            "title": "Ruby Flare Pearl with Midnight Black Metallic roof",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02yd-angle-13.webp"
+          },
+          {
+            "code": "02UF",
+            "title": "Classic Silver Metallic with Midnight Black Metallic roof",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02uf-angle-13.webp"
+          },
+          {
+            "code": "02YC",
+            "title": "Celestite with Midnight Black Metallic roof",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02yc-angle-13.webp"
+          },
+          {
+            "code": "02YE",
+            "title": "Underground with Midnight Black Metallic roof",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/xse/toyota-corolla-2026-xse-02ye-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Hybrid XLE",
+        "gradeSlug": "hybrid-xle",
+        "angle": "13",
+        "defaultColorCode": "01F7",
+        "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-01f7-angle-13.webp",
+        "colors": [
+          {
+            "code": "01K3",
+            "title": "Celestite",
+            "hex": "#636B79",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-01k3-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-08x8-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-0089-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-0040-angle-13.webp"
+          },
+          {
+            "code": "03T3",
+            "title": "Ruby Flare Pearl",
+            "hex": "#740000",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-03t3-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-01f7-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-0218-angle-13.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/corolla/2026/hybrid-xle/toyota-corolla-2026-hybrid-xle-01l7-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "corollahatchback",
+    "model": "Corolla Hatchback",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "SE",
+        "gradeSlug": "se",
+        "angle": "13",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-0089-angle-13.webp",
+        "colors": [
+          {
+            "code": "04Y8",
+            "title": "Inferno",
+            "hex": "#D63400",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-04y8-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-0218-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-01f7-angle-13.webp"
+          },
+          {
+            "code": "02XM",
+            "title": "Finish Line Red with Midnight Black Metallic roof",
+            "hex": "#A5242D",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-02xm-angle-13.webp"
+          },
+          {
+            "code": "02UF",
+            "title": "Classic Silver Metallic with Midnight Black Metallic roof",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-02uf-angle-13.webp"
+          },
+          {
+            "code": "03U9",
+            "title": "Finish Line Red",
+            "hex": "#A5242D",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-03u9-angle-13.webp"
+          },
+          {
+            "code": "02QZ",
+            "title": "Magnetic Gray Metallic with Midnight Black Metallic roof",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-02qz-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-0040-angle-13.webp"
+          },
+          {
+            "code": "02RC",
+            "title": "Blue Crush Metallic with Midnight Black Metallic roof",
+            "hex": "#111D69",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-02rc-angle-13.webp"
+          },
+          {
+            "code": "08W7",
+            "title": "Blue Crush Metallic",
+            "hex": "#111D69",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-08w7-angle-13.webp"
+          },
+          {
+            "code": "02PS",
+            "title": "Wind Chill Pearl with Midnight Black Metallic roof",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-02ps-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-01g3-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corollahatchback/2026/se/toyota-corollahatchback-2026-se-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "FX",
+        "gradeSlug": "fx",
+        "angle": "13",
+        "defaultColorCode": "04Y8",
+        "image": "/vehicles/toyota/corollahatchback/2026/fx/toyota-corollahatchback-2026-fx-04y8-angle-13.webp",
+        "colors": [
+          {
+            "code": "04Y8",
+            "title": "Inferno",
+            "hex": "#D63400",
+            "image": "/vehicles/toyota/corollahatchback/2026/fx/toyota-corollahatchback-2026-fx-04y8-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corollahatchback/2026/fx/toyota-corollahatchback-2026-fx-0040-angle-13.webp"
+          },
+          {
+            "code": "08W7",
+            "title": "Blue Crush Metallic",
+            "hex": "#111D69",
+            "image": "/vehicles/toyota/corollahatchback/2026/fx/toyota-corollahatchback-2026-fx-08w7-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XSE",
+        "gradeSlug": "xse",
+        "angle": "13",
+        "defaultColorCode": "08W7",
+        "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-08w7-angle-13.webp",
+        "colors": [
+          {
+            "code": "04Y8",
+            "title": "Inferno",
+            "hex": "#D63400",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-04y8-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-0218-angle-13.webp"
+          },
+          {
+            "code": "01F7",
+            "title": "Classic Silver Metallic",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-01f7-angle-13.webp"
+          },
+          {
+            "code": "02XM",
+            "title": "Finish Line Red with Midnight Black Metallic roof",
+            "hex": "#A5242D",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-02xm-angle-13.webp"
+          },
+          {
+            "code": "02UF",
+            "title": "Classic Silver Metallic with Midnight Black Metallic roof",
+            "hex": "#808080",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-02uf-angle-13.webp"
+          },
+          {
+            "code": "03U9",
+            "title": "Finish Line Red",
+            "hex": "#A5242D",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-03u9-angle-13.webp"
+          },
+          {
+            "code": "02QZ",
+            "title": "Magnetic Gray Metallic with Midnight Black Metallic roof",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-02qz-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-0040-angle-13.webp"
+          },
+          {
+            "code": "02RC",
+            "title": "Blue Crush Metallic with Midnight Black Metallic roof",
+            "hex": "#111D69",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-02rc-angle-13.webp"
+          },
+          {
+            "code": "08W7",
+            "title": "Blue Crush Metallic",
+            "hex": "#111D69",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-08w7-angle-13.webp"
+          },
+          {
+            "code": "02PS",
+            "title": "Wind Chill Pearl with Midnight Black Metallic roof",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-02ps-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-01g3-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/corollahatchback/2026/xse/toyota-corollahatchback-2026-xse-0089-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "gr86",
+    "model": "GR86",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "GR86",
+        "gradeSlug": "gr86",
+        "angle": "13",
+        "defaultColorCode": "0K1X",
+        "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0k1x-angle-13.webp",
+        "colors": [
+          {
+            "code": "0D4S",
+            "title": "Raven",
+            "hex": "#191918",
+            "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0d4s-angle-13.webp"
+          },
+          {
+            "code": "0P8Y",
+            "title": "Pavement",
+            "hex": "#79787E",
+            "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0p8y-angle-13.webp"
+          },
+          {
+            "code": "0G1U",
+            "title": "Steel",
+            "hex": "#b8b8b8",
+            "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0g1u-angle-13.webp"
+          },
+          {
+            "code": "0K1X",
+            "title": "Halo",
+            "hex": "#E0DDD4",
+            "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0k1x-angle-13.webp"
+          },
+          {
+            "code": "0WCH",
+            "title": "Trueno Blue",
+            "hex": "#213182",
+            "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0wch-angle-13.webp"
+          },
+          {
+            "code": "0DCK",
+            "title": "Track bRED",
+            "hex": "#BE0000",
+            "image": "/vehicles/toyota/gr86/2026/gr86/toyota-gr86-2026-gr86-0dck-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "GR86 Premium",
+        "gradeSlug": "gr86-premium",
+        "angle": "13",
+        "defaultColorCode": "0DCK",
+        "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0dck-angle-13.webp",
+        "colors": [
+          {
+            "code": "0D4S",
+            "title": "Raven",
+            "hex": "#191918",
+            "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0d4s-angle-13.webp"
+          },
+          {
+            "code": "0P8Y",
+            "title": "Pavement",
+            "hex": "#79787E",
+            "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0p8y-angle-13.webp"
+          },
+          {
+            "code": "0G1U",
+            "title": "Steel",
+            "hex": "#b8b8b8",
+            "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0g1u-angle-13.webp"
+          },
+          {
+            "code": "0K1X",
+            "title": "Halo",
+            "hex": "#E0DDD4",
+            "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0k1x-angle-13.webp"
+          },
+          {
+            "code": "0WCH",
+            "title": "Trueno Blue",
+            "hex": "#213182",
+            "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0wch-angle-13.webp"
+          },
+          {
+            "code": "0DCK",
+            "title": "Track bRED",
+            "hex": "#BE0000",
+            "image": "/vehicles/toyota/gr86/2026/gr86-premium/toyota-gr86-2026-gr86-premium-0dck-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "GR86 Yuzu Edition",
+        "gradeSlug": "gr86-yuzu-edition",
+        "angle": "13",
+        "defaultColorCode": "0C2Z",
+        "image": "/vehicles/toyota/gr86/2026/gr86-yuzu-edition/toyota-gr86-2026-gr86-yuzu-edition-0c2z-angle-13.webp",
+        "colors": [
+          {
+            "code": "0C2Z",
+            "title": "Yuzu Yellow",
+            "hex": "#fdc402",
+            "image": "/vehicles/toyota/gr86/2026/gr86-yuzu-edition/toyota-gr86-2026-gr86-yuzu-edition-0c2z-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "grcorolla",
+    "model": "GR Corolla",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "GR Corolla",
+        "gradeSlug": "gr-corolla",
+        "angle": "13",
+        "defaultColorCode": "01L5",
+        "image": "/vehicles/toyota/grcorolla/2026/gr-corolla/toyota-grcorolla-2026-gr-corolla-01l5-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla/toyota-grcorolla-2026-gr-corolla-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#535353",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla/toyota-grcorolla-2026-gr-corolla-01l5-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla/toyota-grcorolla-2026-gr-corolla-0040-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla/toyota-grcorolla-2026-gr-corolla-0202-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "GR Corolla Premium Plus",
+        "gradeSlug": "gr-corolla-premium-plus",
+        "angle": "13",
+        "defaultColorCode": "03U5",
+        "image": "/vehicles/toyota/grcorolla/2026/gr-corolla-premium-plus/toyota-grcorolla-2026-gr-corolla-premium-plus-03u5-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla-premium-plus/toyota-grcorolla-2026-gr-corolla-premium-plus-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#535353",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla-premium-plus/toyota-grcorolla-2026-gr-corolla-premium-plus-01l5-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla-premium-plus/toyota-grcorolla-2026-gr-corolla-premium-plus-0040-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/grcorolla/2026/gr-corolla-premium-plus/toyota-grcorolla-2026-gr-corolla-premium-plus-0202-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "grsupra",
+    "model": "GR Supra",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "3.0",
+        "gradeSlug": "3-0",
+        "angle": "13",
+        "defaultColorCode": "0D01",
+        "image": "/vehicles/toyota/grsupra/2026/3-0/toyota-grsupra-2026-3-0-0d01-angle-13.webp",
+        "colors": [
+          {
+            "code": "0D13",
+            "title": "Stratosphere",
+            "hex": "#100C56",
+            "image": "/vehicles/toyota/grsupra/2026/3-0/toyota-grsupra-2026-3-0-0d13-angle-13.webp"
+          },
+          {
+            "code": "0D01",
+            "title": "Absolute Zero",
+            "hex": "#EBEAE5",
+            "image": "/vehicles/toyota/grsupra/2026/3-0/toyota-grsupra-2026-3-0-0d01-angle-13.webp"
+          },
+          {
+            "code": "0D04",
+            "title": "Nocturnal",
+            "hex": "#161617",
+            "image": "/vehicles/toyota/grsupra/2026/3-0/toyota-grsupra-2026-3-0-0d04-angle-13.webp"
+          },
+          {
+            "code": "0D05",
+            "title": "Renaissance Red 2.0",
+            "hex": "#B61E0D",
+            "image": "/vehicles/toyota/grsupra/2026/3-0/toyota-grsupra-2026-3-0-0d05-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "3.0 Premium",
+        "gradeSlug": "3-0-premium",
+        "angle": "13",
+        "defaultColorCode": "0D13",
+        "image": "/vehicles/toyota/grsupra/2026/3-0-premium/toyota-grsupra-2026-3-0-premium-0d13-angle-13.webp",
+        "colors": [
+          {
+            "code": "0D13",
+            "title": "Stratosphere",
+            "hex": "#100C56",
+            "image": "/vehicles/toyota/grsupra/2026/3-0-premium/toyota-grsupra-2026-3-0-premium-0d13-angle-13.webp"
+          },
+          {
+            "code": "0D01",
+            "title": "Absolute Zero",
+            "hex": "#EBEAE5",
+            "image": "/vehicles/toyota/grsupra/2026/3-0-premium/toyota-grsupra-2026-3-0-premium-0d01-angle-13.webp"
+          },
+          {
+            "code": "0D04",
+            "title": "Nocturnal",
+            "hex": "#161617",
+            "image": "/vehicles/toyota/grsupra/2026/3-0-premium/toyota-grsupra-2026-3-0-premium-0d04-angle-13.webp"
+          },
+          {
+            "code": "0D05",
+            "title": "Renaissance Red 2.0",
+            "hex": "#B61E0D",
+            "image": "/vehicles/toyota/grsupra/2026/3-0-premium/toyota-grsupra-2026-3-0-premium-0d05-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "MkV Final Edition",
+        "gradeSlug": "mkv-final-edition",
+        "angle": "13",
+        "defaultColorCode": "0D05",
+        "image": "/vehicles/toyota/grsupra/2026/mkv-final-edition/toyota-grsupra-2026-mkv-final-edition-0d05-angle-13.webp",
+        "colors": [
+          {
+            "code": "0D12",
+            "title": "Burnout",
+            "hex": "#E1E1DD",
+            "image": "/vehicles/toyota/grsupra/2026/mkv-final-edition/toyota-grsupra-2026-mkv-final-edition-0d12-angle-13.webp"
+          },
+          {
+            "code": "0D24",
+            "title": "Undercover",
+            "hex": "#0e0e0e",
+            "image": "/vehicles/toyota/grsupra/2026/mkv-final-edition/toyota-grsupra-2026-mkv-final-edition-0d24-angle-13.webp"
+          },
+          {
+            "code": "0D01",
+            "title": "Absolute Zero",
+            "hex": "#EBEAE5",
+            "image": "/vehicles/toyota/grsupra/2026/mkv-final-edition/toyota-grsupra-2026-mkv-final-edition-0d01-angle-13.webp"
+          },
+          {
+            "code": "0D04",
+            "title": "Nocturnal",
+            "hex": "#161617",
+            "image": "/vehicles/toyota/grsupra/2026/mkv-final-edition/toyota-grsupra-2026-mkv-final-edition-0d04-angle-13.webp"
+          },
+          {
+            "code": "0D05",
+            "title": "Renaissance Red 2.0",
+            "hex": "#B61E0D",
+            "image": "/vehicles/toyota/grsupra/2026/mkv-final-edition/toyota-grsupra-2026-mkv-final-edition-0d05-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "mirai",
+    "model": "Mirai",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "Mirai",
+        "gradeSlug": "mirai",
+        "angle": "13",
+        "defaultColorCode": "08Y7",
+        "image": "/vehicles/toyota/mirai/2026/mirai/toyota-mirai-2026-mirai-08y7-angle-13.webp",
+        "colors": [
+          {
+            "code": "08Y7",
+            "title": "Hydro Blue",
+            "hex": "#1347C1",
+            "image": "/vehicles/toyota/mirai/2026/mirai/toyota-mirai-2026-mirai-08y7-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/mirai/2026/mirai/toyota-mirai-2026-mirai-0202-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#545251",
+            "image": "/vehicles/toyota/mirai/2026/mirai/toyota-mirai-2026-mirai-01l5-angle-13.webp"
+          },
+          {
+            "code": "0090",
+            "title": "Oxygen White",
+            "hex": "#FFFCF9",
+            "image": "/vehicles/toyota/mirai/2026/mirai/toyota-mirai-2026-mirai-0090-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "prius",
+    "model": "Prius",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "LE",
+        "gradeSlug": "le",
+        "angle": "13",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-0089-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-01l0-angle-13.webp"
+          },
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4c5156",
+            "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-01m2-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/le/toyota-prius-2026-le-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "LE AWD",
+        "gradeSlug": "le-awd",
+        "angle": "13",
+        "defaultColorCode": "0218",
+        "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-0218-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-01l0-angle-13.webp"
+          },
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4c5156",
+            "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-01m2-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/le-awd/toyota-prius-2026-le-awd-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XLE",
+        "gradeSlug": "xle",
+        "angle": "13",
+        "defaultColorCode": "01M2",
+        "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-01m2-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-01l0-angle-13.webp"
+          },
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4c5156",
+            "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-01m2-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/xle/toyota-prius-2026-xle-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Nightshade Edition",
+        "gradeSlug": "nightshade-edition",
+        "angle": "13",
+        "defaultColorCode": "05C5",
+        "image": "/vehicles/toyota/prius/2026/nightshade-edition/toyota-prius-2026-nightshade-edition-05c5-angle-13.webp",
+        "colors": [
+          {
+            "code": "05C5",
+            "title": "Karashi",
+            "hex": "#AB8214",
+            "image": "/vehicles/toyota/prius/2026/nightshade-edition/toyota-prius-2026-nightshade-edition-05c5-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/nightshade-edition/toyota-prius-2026-nightshade-edition-0218-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/nightshade-edition/toyota-prius-2026-nightshade-edition-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XLE AWD",
+        "gradeSlug": "xle-awd",
+        "angle": "13",
+        "defaultColorCode": "03U5",
+        "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-03u5-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-01l0-angle-13.webp"
+          },
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4c5156",
+            "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-01m2-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/xle-awd/toyota-prius-2026-xle-awd-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Nightshade Edition AWD",
+        "gradeSlug": "nightshade-edition-awd",
+        "angle": "13",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/prius/2026/nightshade-edition-awd/toyota-prius-2026-nightshade-edition-awd-0089-angle-13.webp",
+        "colors": [
+          {
+            "code": "05C5",
+            "title": "Karashi",
+            "hex": "#AB8214",
+            "image": "/vehicles/toyota/prius/2026/nightshade-edition-awd/toyota-prius-2026-nightshade-edition-awd-05c5-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/nightshade-edition-awd/toyota-prius-2026-nightshade-edition-awd-0218-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/nightshade-edition-awd/toyota-prius-2026-nightshade-edition-awd-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited",
+        "gradeSlug": "limited",
+        "angle": "13",
+        "defaultColorCode": "08Q4",
+        "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-08q4-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-01l0-angle-13.webp"
+          },
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4c5156",
+            "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-01m2-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/limited/toyota-prius-2026-limited-0089-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited AWD",
+        "gradeSlug": "limited-awd",
+        "angle": "13",
+        "defaultColorCode": "01L0",
+        "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-01l0-angle-13.webp",
+        "colors": [
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-01l0-angle-13.webp"
+          },
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4c5156",
+            "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-01m2-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-08q4-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/prius/2026/limited-awd/toyota-prius-2026-limited-awd-0089-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "priuspluginhybrid",
+    "model": "Prius Plug-in Hybrid",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "SE",
+        "gradeSlug": "se",
+        "angle": "13",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-0089-angle-13.webp",
+        "colors": [
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4C5156",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-01m2-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-01l0-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-0089-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/se/toyota-priuspluginhybrid-2026-se-08q4-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XSE",
+        "gradeSlug": "xse",
+        "angle": "13",
+        "defaultColorCode": "03U5",
+        "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-03u5-angle-13.webp",
+        "colors": [
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4C5156",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-01m2-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-01l0-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-0089-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse/toyota-priuspluginhybrid-2026-xse-08q4-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Nightshade Edition",
+        "gradeSlug": "nightshade-edition",
+        "angle": "13",
+        "defaultColorCode": "0218",
+        "image": "/vehicles/toyota/priuspluginhybrid/2026/nightshade-edition/toyota-priuspluginhybrid-2026-nightshade-edition-0218-angle-13.webp",
+        "colors": [
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/nightshade-edition/toyota-priuspluginhybrid-2026-nightshade-edition-0089-angle-13.webp"
+          },
+          {
+            "code": "05C5",
+            "title": "Karashi",
+            "hex": "#AB8214",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/nightshade-edition/toyota-priuspluginhybrid-2026-nightshade-edition-05c5-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/nightshade-edition/toyota-priuspluginhybrid-2026-nightshade-edition-0218-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "XSE Premium",
+        "gradeSlug": "xse-premium",
+        "angle": "13",
+        "defaultColorCode": "01M2",
+        "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-01m2-angle-13.webp",
+        "colors": [
+          {
+            "code": "01M2",
+            "title": "Guardian Gray",
+            "hex": "#4C5156",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-01m2-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-03u5-angle-13.webp"
+          },
+          {
+            "code": "01L0",
+            "title": "Cutting Edge",
+            "hex": "#858585",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-01l0-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-0089-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-0218-angle-13.webp"
+          },
+          {
+            "code": "08Q4",
+            "title": "Reservoir Blue",
+            "hex": "#1A1C37",
+            "image": "/vehicles/toyota/priuspluginhybrid/2026/xse-premium/toyota-priuspluginhybrid-2026-xse-premium-08q4-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "toyotacrown",
+    "model": "Toyota Crown",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "XLE",
+        "gradeSlug": "xle",
+        "angle": "13",
+        "defaultColorCode": "0202",
+        "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-0202-angle-13.webp",
+        "colors": [
+          {
+            "code": "01L6",
+            "title": "Storm Cloud",
+            "hex": "#22323F",
+            "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-01l6-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-0202-angle-13.webp"
+          },
+          {
+            "code": "04Y6",
+            "title": "Bronze Age",
+            "hex": "#936445",
+            "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-04y6-angle-13.webp"
+          },
+          {
+            "code": "0090",
+            "title": "Oxygen White",
+            "hex": "#FFFCF9",
+            "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-0090-angle-13.webp"
+          },
+          {
+            "code": "03U9",
+            "title": "Finish Line Red",
+            "hex": "#A11D1D",
+            "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-03u9-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#545251",
+            "image": "/vehicles/toyota/toyotacrown/2026/xle/toyota-toyotacrown-2026-xle-01l5-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited",
+        "gradeSlug": "limited",
+        "angle": "13",
+        "defaultColorCode": "01L5",
+        "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-01l5-angle-13.webp",
+        "colors": [
+          {
+            "code": "01L6",
+            "title": "Storm Cloud",
+            "hex": "#22323F",
+            "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-01l6-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-0202-angle-13.webp"
+          },
+          {
+            "code": "04Y6",
+            "title": "Bronze Age",
+            "hex": "#936445",
+            "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-04y6-angle-13.webp"
+          },
+          {
+            "code": "0090",
+            "title": "Oxygen White",
+            "hex": "#FFFCF9",
+            "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-0090-angle-13.webp"
+          },
+          {
+            "code": "03U9",
+            "title": "Finish Line Red",
+            "hex": "#A11D1D",
+            "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-03u9-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#545251",
+            "image": "/vehicles/toyota/toyotacrown/2026/limited/toyota-toyotacrown-2026-limited-01l5-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Nightshade",
+        "gradeSlug": "nightshade",
+        "angle": "13",
+        "defaultColorCode": "01L6",
+        "image": "/vehicles/toyota/toyotacrown/2026/nightshade/toyota-toyotacrown-2026-nightshade-01l6-angle-13.webp",
+        "colors": [
+          {
+            "code": "01L6",
+            "title": "Storm Cloud",
+            "hex": "#22323F",
+            "image": "/vehicles/toyota/toyotacrown/2026/nightshade/toyota-toyotacrown-2026-nightshade-01l6-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/toyotacrown/2026/nightshade/toyota-toyotacrown-2026-nightshade-0202-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Platinum",
+        "gradeSlug": "platinum",
+        "angle": "13",
+        "defaultColorCode": "03U9",
+        "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-03u9-angle-13.webp",
+        "colors": [
+          {
+            "code": "01L6",
+            "title": "Storm Cloud",
+            "hex": "#22323F",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-01l6-angle-13.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-0202-angle-13.webp"
+          },
+          {
+            "code": "04Y6",
+            "title": "Bronze Age",
+            "hex": "#936445",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-04y6-angle-13.webp"
+          },
+          {
+            "code": "0090",
+            "title": "Oxygen White",
+            "hex": "#FFFCF9",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-0090-angle-13.webp"
+          },
+          {
+            "code": "03U9",
+            "title": "Finish Line Red",
+            "hex": "#A11D1D",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-03u9-angle-13.webp"
+          },
+          {
+            "code": "01L5",
+            "title": "Heavy Metal",
+            "hex": "#545251",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-01l5-angle-13.webp"
+          },
+          {
+            "code": "02ZR",
+            "title": "Finish Line Red with Black bi-tone",
+            "hex": "#A11D1D",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-02zr-angle-13.webp"
+          },
+          {
+            "code": "02XW",
+            "title": "Oxygen White with Black bi-tone",
+            "hex": "#FFFCF9",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-02xw-angle-13.webp"
+          },
+          {
+            "code": "02ZA",
+            "title": "Heavy Metal with Black bi-tone",
+            "hex": "#545251",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-02za-angle-13.webp"
+          },
+          {
+            "code": "02XZ",
+            "title": "Bronze Age with Black bi-tone",
+            "hex": "#936445",
+            "image": "/vehicles/toyota/toyotacrown/2026/platinum/toyota-toyotacrown-2026-platinum-02xz-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  }
+]

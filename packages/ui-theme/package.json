@@ -1,0 +1,26 @@
+{
+  "name": "@ucmp/ui-theme",
+  "version": "1.0.0",
+  "description": "CSS-only design tokens and themes for UCMP monorepo",
+  "main": "./index.css",
+  "exports": {
+    ".": "./index.css",
+    "./base": "./base/index.css",
+    "./themes/default": "./themes/default/index.css",
+    "./themes/acme": "./themes/acme/index.css",
+    "./utilities": "./utilities/index.css"
+  },
+  "files": [
+    "base",
+    "themes",
+    "utilities",
+    "index.css"
+  ],
+  "scripts": {
+    "lint": "echo 'No lint for CSS-only package'",
+    "clean": "rm -rf node_modules"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  }
+}

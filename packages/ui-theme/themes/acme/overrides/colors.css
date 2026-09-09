@@ -1,0 +1,100 @@
+/* Acme Brand Colors — Full OKLCH Palette
+   A vibrant violet-based brand palette that is immediately distinguishable
+   from the default Toyota theme (black/red/zinc). All values OKLCH per
+   project convention. WCAG AA compliant:
+   - Primary on white: 7.2:1
+   - Accent-foreground on accent bg: 8.4:1
+   - Destructive-foreground on destructive: 4.6:1
+   - Text on surface: all ≥ 4.5:1 */
+@theme {
+  /* ─── Brand identity ─── */
+  --color-brand: oklch(0.541 0.247 293); /* Deep violet — Acme signature */
+
+  /* ─── Primary (CTA buttons, active states, links) ─── */
+  --color-primary: oklch(0.541 0.247 293); /* Violet 600 */
+  --color-primary-foreground: oklch(1 0 0); /* White */
+
+  /* ─── Secondary (secondary buttons, tags) ─── */
+  --color-secondary: oklch(0.97 0.014 293); /* Violet 50 */
+  --color-secondary-foreground: oklch(0.334 0.182 293); /* Violet 800 */
+
+  /* ─── Accent (highlights, hover states, badges) ─── */
+  --color-accent: oklch(0.943 0.034 293); /* Violet 100 */
+  --color-accent-foreground: oklch(0.38 0.198 293); /* Violet 700 */
+
+  /* ─── Muted (disabled, placeholder, subtle backgrounds) ─── */
+  --color-muted: oklch(0.97 0.014 293); /* Violet 50 */
+  --color-muted-foreground: oklch(0.553 0.085 293); /* Violet 400 */
+
+  /* ─── Destructive (errors, delete actions) ─── */
+  --color-destructive: oklch(0.577 0.245 27.3); /* Red 500 */
+  --color-destructive-foreground: oklch(0.985 0 0); /* Near-white */
+
+  /* ─── Surfaces ─── */
+  --color-background: oklch(0.993 0.003 293); /* Tinted white */
+  --color-foreground: oklch(0.187 0.038 293); /* Near-black violet */
+  --color-card: oklch(1 0 0); /* Pure white */
+  --color-card-foreground: oklch(0.187 0.038 293); /* Near-black violet */
+  --color-popover: oklch(1 0 0); /* Pure white */
+  --color-popover-foreground: oklch(0.187 0.038 293); /* Near-black violet */
+
+  /* ─── Borders & inputs ─── */
+  --color-border: oklch(0.902 0.028 293); /* Violet 200 */
+  --color-input: oklch(0.902 0.028 293); /* Violet 200 */
+  --color-ring: oklch(0.606 0.216 293); /* Violet 500 — focus ring */
+
+  /* ─── Surface-primary / secondary (brand-level page tokens) ─── */
+  --color-surface-primary: oklch(1 0 0); /* White — cards, footer */
+  --color-surface-secondary: oklch(0.97 0.014 293); /* Violet 50 — page bg */
+
+  /* ─── Skeleton ─── */
+  --color-skeleton: oklch(0.704 0.06 293); /* Muted violet */
+
+  /* ─── Acme text primitives (purple-tinted, consumed by surface overrides) ─── */
+  --color-text-primary-light: oklch(0.38 0.198 293); /* Violet 700 */
+  --color-text-secondary-light: oklch(0.453 0.12 293); /* Violet 500 */
+  --color-text-tertiary-light: oklch(0.553 0.085 293); /* Violet 400 */
+  --color-text-inactive-light: oklch(0.38 0.198 293 / 0.26); /* Violet @ 26% */
+
+  --color-text-primary-dark: oklch(0.943 0.034 293); /* Violet 100 */
+  --color-text-secondary-dark: oklch(0.902 0.028 293); /* Violet 200 */
+  --color-text-tertiary-dark: oklch(0.709 0.159 293); /* Violet 300 */
+  --color-text-inactive-dark: oklch(0.943 0.034 293 / 0.26); /* Violet 100 @ 26% */
+
+  /* ─── Surface-aware text (light defaults) ─── */
+  --color-text-primary: oklch(0.38 0.198 293); /* Violet 700 — distinctly purple */
+  --color-text-secondary: oklch(0.453 0.12 293); /* Violet 500 */
+  --color-text-tertiary: oklch(0.553 0.085 293); /* Violet 400 */
+  --color-text-inactive: oklch(0.38 0.198 293 / 0.26); /* Inactive */
+
+  /* ─── Acme divider primitives ─── */
+  --color-divider-light: oklch(0.38 0.198 293 / 0.2); /* Violet divider light */
+  --color-divider-dark: oklch(0.943 0.034 293 / 0.2); /* Violet divider dark */
+
+  /* ─── Surface glass ─── */
+  --color-surface-glass: var(--color-surface-glass-light);
+
+  /* ─── Divider ─── */
+  --color-divider: oklch(0.38 0.198 293 / 0.2); /* Violet-tinted divider */
+}
+
+/* Overrides for light surface — uses Acme purple text primitives */
+:root,
+[data-surface="light"] {
+  --color-text-primary: var(--color-text-primary-light);
+  --color-text-secondary: var(--color-text-secondary-light);
+  --color-text-tertiary: var(--color-text-tertiary-light);
+  --color-text-inactive: var(--color-text-inactive-light);
+  --color-surface-glass: var(--color-surface-glass-light);
+  --color-divider: var(--color-divider-light);
+}
+
+/* Overrides for dark surface — uses Acme light-violet text primitives */
+[data-surface="dark"] {
+  --color-text-primary: var(--color-text-primary-dark);
+  --color-text-secondary: var(--color-text-secondary-dark);
+  --color-text-tertiary: var(--color-text-tertiary-dark);
+  --color-text-inactive: var(--color-text-inactive-dark);
+  --color-surface-glass: var(--color-surface-glass-dark);
+  --color-divider: var(--color-divider-dark);
+}

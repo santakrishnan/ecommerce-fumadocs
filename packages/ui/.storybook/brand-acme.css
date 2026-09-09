@@ -1,0 +1,17 @@
+/**
+ * Acme brand entry — Storybook only.
+ *
+ * SINGLE SOURCE OF TRUTH: this file declares NO token values. It re-exports
+ * the compiled Acme theme straight from `@ucmp/ui-theme` so Storybook can load
+ * it as a swappable stylesheet. Editing brand tokens happens in
+ * `packages/ui-theme/themes/acme/` and nowhere else.
+ *
+ * Tailwind v4's `@theme` always emits to `:root`, so two full brand themes
+ * cannot be re-scoped and switched via a single attribute; instead the
+ * `withNextThemes` decorator enables exactly one brand stylesheet at a time.
+ * The default brand is the baseline loaded via `styles.css`.
+ */
+@import "@ucmp/ui-theme/themes/acme";
+
+@source "../src/components";
+@source "../src/charts";

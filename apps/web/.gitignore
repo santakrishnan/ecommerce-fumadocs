@@ -1,0 +1,7 @@
+.vercel
+.env*
+!.env.local.example
+!.env.ci.example
+
+# Dev-only captured agent SSE traces (see /debug/agent)
+.debug

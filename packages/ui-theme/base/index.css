@@ -1,0 +1,59 @@
+/* Base Theme */
+@import "tailwindcss";
+@import "./tokens/index.css";
+@import "../utilities/typography.css";
+@import "../utilities/carousel-grid.css";
+@import "../utilities";
+@import "../utilities/glass.css";
+
+/* Enables `dark:bg-foo`, `dark:text-bar`, etc. The `:where()` keeps the
+   variant zero-specificity so it never beats component-level styles. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Enables `surface-dark:*` when an ancestor has data-surface="dark" */
+@custom-variant surface-dark (&:where([data-surface="dark"], [data-surface="dark"] *));
+/* Enables `surface-light:*` when an ancestor has data-surface="light" */
+@custom-variant surface-light (&:where(
+  :not([data-surface="dark"], [data-surface="dark"] *),
+  [data-surface="light"],
+  [data-surface="light"] *
+));
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+/* Interactive element pointer cursor — TFS design system requirement */
+button,
+a[href],
+select,
+label[for],
+[role="button"],
+[role="checkbox"],
+[role="radio"],
+[role="switch"],
+[role="tab"],
+[role="option"],
+[role="menuitem"],
+[role="combobox"] {
+  cursor: pointer;
+}
+
+/* Disabled state — restore default cursor so pointer doesn't bleed through */
+button:disabled,
+select:disabled,
+[aria-disabled="true"],
+[data-disabled] {
+  cursor: default;
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  @apply bg-background text-foreground;
+}

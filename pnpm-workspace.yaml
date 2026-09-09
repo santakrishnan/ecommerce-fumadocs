@@ -1,0 +1,20 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'packages/config/*'
+allowBuilds:
+  '@fingerprint/react': false
+  esbuild: true
+  sharp: true
+# -----------------------------------------------------------------------
+# Dependency exceptions (overrides / audit ignores). Justification lives
+# inline above each entry -- no separate log file. See the pnpm-audit-fix
+# skill (.agents/skills/pnpm-audit-fix/SKILL.md).
+# -----------------------------------------------------------------------
+overrides:
+  # Not security-related. Pins one React version monorepo-wide to avoid
+  # duplicate-React/invalid-hook-call errors. From the next 16.3 upgrade.
+  react: 19.2.8
+  react-dom: 19.2.8
+  '@types/react': 19.2.18
+  '@types/react-dom': 19.2.4

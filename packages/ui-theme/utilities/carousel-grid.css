@@ -1,0 +1,147 @@
+/* Carousel Grid Alignment Utilities
+   Sizes carousel items to the PageGrid column rhythm.
+
+   Depends on custom properties from base/tokens/grid.css:
+     --page-grid-col-width, --page-grid-gap
+
+   Usage:
+     <CarouselItem colSpan={2} />                    → 2 grid columns at all breakpoints
+     <CarouselItem colSpan={{ sm: 2, lg: 3 }} />    → responsive per breakpoint
+
+   Group snapping is automatic (JS-driven in CarouselGroup via ResizeObserver).
+
+   Formula for N columns:
+     width = N * col_width + (N - 1) * gap
+*/
+
+/* ─── Item span: default (mobile-first) ──────────────────────────────── */
+
+[data-col-span="1"] {
+  width: var(--page-grid-col-width);
+}
+
+[data-col-span="2"] {
+  width: calc(2 * var(--page-grid-col-width) + 1 * var(--page-grid-gap));
+}
+
+[data-col-span="3"] {
+  width: calc(3 * var(--page-grid-col-width) + 2 * var(--page-grid-gap));
+}
+
+[data-col-span="4"] {
+  width: calc(4 * var(--page-grid-col-width) + 3 * var(--page-grid-gap));
+}
+
+/* ─── Item span: md breakpoint (tablet, 8-col grid) ─────────────────── */
+
+/* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+@media (min-width: theme(--breakpoint-md)) {
+  [data-col-span-md="1"] {
+    width: var(--page-grid-col-width);
+  }
+  [data-col-span-md="2"] {
+    width: calc(2 * var(--page-grid-col-width) + 1 * var(--page-grid-gap));
+  }
+  [data-col-span-md="3"] {
+    width: calc(3 * var(--page-grid-col-width) + 2 * var(--page-grid-gap));
+  }
+  [data-col-span-md="4"] {
+    width: calc(4 * var(--page-grid-col-width) + 3 * var(--page-grid-gap));
+  }
+  [data-col-span-md="5"] {
+    width: calc(5 * var(--page-grid-col-width) + 4 * var(--page-grid-gap));
+  }
+  [data-col-span-md="6"] {
+    width: calc(6 * var(--page-grid-col-width) + 5 * var(--page-grid-gap));
+  }
+  [data-col-span-md="7"] {
+    width: calc(7 * var(--page-grid-col-width) + 6 * var(--page-grid-gap));
+  }
+  [data-col-span-md="8"] {
+    width: calc(8 * var(--page-grid-col-width) + 7 * var(--page-grid-gap));
+  }
+}
+
+/* ─── Item span: lg breakpoint (desktop and above, 12-col grid) ──────── */
+
+/* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+@media (min-width: theme(--breakpoint-lg)) {
+  [data-col-span-lg="1"] {
+    width: var(--page-grid-col-width);
+  }
+  [data-col-span-lg="2"] {
+    width: calc(2 * var(--page-grid-col-width) + 1 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="3"] {
+    width: calc(3 * var(--page-grid-col-width) + 2 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="4"] {
+    width: calc(4 * var(--page-grid-col-width) + 3 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="5"] {
+    width: calc(5 * var(--page-grid-col-width) + 4 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="6"] {
+    width: calc(6 * var(--page-grid-col-width) + 5 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="7"] {
+    width: calc(7 * var(--page-grid-col-width) + 6 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="8"] {
+    width: calc(8 * var(--page-grid-col-width) + 7 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="9"] {
+    width: calc(9 * var(--page-grid-col-width) + 8 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="10"] {
+    width: calc(10 * var(--page-grid-col-width) + 9 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="11"] {
+    width: calc(11 * var(--page-grid-col-width) + 10 * var(--page-grid-gap));
+  }
+  [data-col-span-lg="12"] {
+    width: calc(12 * var(--page-grid-col-width) + 11 * var(--page-grid-gap));
+  }
+}
+
+/* ─── Item span: xl breakpoint (>= 1870px, 12-col grid) ─────────────── */
+
+/* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+@media (min-width: theme(--breakpoint-xl)) {
+  [data-col-span-xl="1"] {
+    width: var(--page-grid-col-width);
+  }
+  [data-col-span-xl="2"] {
+    width: calc(2 * var(--page-grid-col-width) + 1 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="3"] {
+    width: calc(3 * var(--page-grid-col-width) + 2 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="4"] {
+    width: calc(4 * var(--page-grid-col-width) + 3 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="5"] {
+    width: calc(5 * var(--page-grid-col-width) + 4 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="6"] {
+    width: calc(6 * var(--page-grid-col-width) + 5 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="7"] {
+    width: calc(7 * var(--page-grid-col-width) + 6 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="8"] {
+    width: calc(8 * var(--page-grid-col-width) + 7 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="9"] {
+    width: calc(9 * var(--page-grid-col-width) + 8 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="10"] {
+    width: calc(10 * var(--page-grid-col-width) + 9 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="11"] {
+    width: calc(11 * var(--page-grid-col-width) + 10 * var(--page-grid-gap));
+  }
+  [data-col-span-xl="12"] {
+    width: calc(12 * var(--page-grid-col-width) + 11 * var(--page-grid-gap));
+  }
+}

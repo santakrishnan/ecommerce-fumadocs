@@ -1,0 +1,13 @@
+/* Acme Border Radius Overrides
+   Sharp, geometric radii — contrasts with the default theme's generous
+   rounded cards and fully-rounded buttons. Acme's design language is
+   modern/angular with subtle rounding. */
+@theme {
+  --radius-sm: 0.125rem; /* 2px — badges, small chips */
+  --radius-base: 0.25rem; /* 4px — inputs, buttons */
+  --radius-md: 0.375rem; /* 6px — cards, dropdowns */
+  --radius-lg: 0.5rem; /* 8px — dialogs, panels */
+  --radius-xl: 0.625rem; /* 10px — large cards */
+  --radius-2xl: 0.75rem; /* 12px — hero sections */
+  --radius-drawer-top: 1rem; /* 16px — bottom sheet top corners */
+}

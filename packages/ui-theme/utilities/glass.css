@@ -1,0 +1,5 @@
+/* Glass morphism */
+.glass {
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+}

@@ -1,0 +1,12 @@
+/* Default Theme Overrides
+
+   This theme inherits everything from base.
+   Override files in this folder show the structure you'd use for a
+   real brand — extend them to point at your brand's colors,
+   typography, radius, etc.
+*/
+@import "./colors.css";
+@import "./typography.css";
+@import "./radius.css";
+@import "./button-surfaces.css";
+@import "./tabs-surfaces.css";

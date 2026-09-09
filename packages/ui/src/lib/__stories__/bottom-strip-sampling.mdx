@@ -1,0 +1,29 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundation/Util/Bottom Strip Sampling" />
+
+# Bottom Strip Sampling
+
+Image-based sampling utilities used by gradient surfaces.
+
+## Exports
+
+- `DEFAULT_BOTTOM_COLOR_CSS`
+- `sampleBottomAverageColor(image, options?)`
+
+## Notes
+
+- reads pixels from a bottom strip using a canvas
+- converts the sampled average into OKLCH CSS
+- falls back to `DEFAULT_BOTTOM_COLOR_CSS` when dimensions are invalid or reads are blocked
+
+## Usage
+
+```ts
+import {
+  DEFAULT_BOTTOM_COLOR_CSS,
+  sampleBottomAverageColor,
+} from "@/lib/bottom-strip-sampling";
+
+const color = sampleBottomAverageColor(imageElement, { sampleHeightRatio: 0.14 });
+```

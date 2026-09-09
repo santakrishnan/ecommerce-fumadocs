@@ -1,0 +1,67 @@
+/*
+  Default Theme — Button Surface Color Overrides
+  Values verified against Figma: Toyota Design Library (node 4014-524)
+*/
+
+:root,
+[data-surface="light"] {
+  /* Primary */
+  --btn-primary-bg: var(--color-surface-dark);
+  --btn-primary-text: var(--color-text-primary-dark);
+  --btn-primary-bg-hover: var(--color-neutral-700);
+  --btn-primary-text-hover: var(--color-text-primary-dark);
+  --btn-primary-disabled-bg: var(--color-surface-inactive);
+  --btn-primary-disabled-text: var(--color-text-inactive-light);
+
+  /* Secondary */
+  --btn-secondary-bg: var(--color-neutral-50);
+  --btn-secondary-text: var(--color-text-primary-light);
+  --btn-secondary-bg-hover: var(--color-surface-inactive);
+  --btn-secondary-text-hover: var(--color-text-primary-light);
+  --btn-secondary-disabled-bg: var(--color-surface-inactive);
+  --btn-secondary-disabled-text: var(--color-text-inactive-light);
+
+  /* Tertiary */
+  --btn-tertiary-border: var(--color-neutral-500);
+  --btn-tertiary-text: var(--color-text-primary-light);
+  --btn-tertiary-border-hover: var(--color-neutral-400);
+  --btn-tertiary-text-hover: var(--color-text-tertiary-light);
+  --btn-tertiary-disabled-border: var(--color-neutral-200);
+  --btn-tertiary-disabled-text: var(--color-text-inactive-light);
+
+  /* Text */
+  --btn-text-text: var(--color-text-primary-light);
+  --btn-text-text-hover: var(--color-text-tertiary-light);
+  --btn-text-disabled-text: var(--color-text-inactive-light);
+}
+
+[data-surface="dark"] {
+  /* Primary */
+  --btn-primary-bg: var(--color-neutral-50);
+  --btn-primary-text: var(--color-text-primary-light);
+  --btn-primary-bg-hover: var(--color-neutral-200);
+  --btn-primary-text-hover: var(--color-text-primary-light);
+  --btn-primary-disabled-bg: var(--color-neutral-200);
+  --btn-primary-disabled-text: var(--color-text-inactive-light);
+
+  /* Secondary */
+  --btn-secondary-bg: var(--color-opacity-white-16);
+  --btn-secondary-text: var(--color-text-primary-dark);
+  --btn-secondary-bg-hover: var(--color-opacity-white-12);
+  --btn-secondary-text-hover: var(--color-text-primary-dark);
+  --btn-secondary-disabled-bg: var(--color-opacity-white-16);
+  --btn-secondary-disabled-text: var(--color-text-inactive-dark);
+
+  /* Tertiary */
+  --btn-tertiary-border: var(--color-opacity-white-40);
+  --btn-tertiary-text: var(--color-text-primary-dark);
+  --btn-tertiary-border-hover: var(--color-opacity-white-26);
+  --btn-tertiary-text-hover: var(--color-text-primary-dark);
+  --btn-tertiary-disabled-border: var(--color-opacity-white-26);
+  --btn-tertiary-disabled-text: var(--color-text-inactive-dark);
+
+  /* Text */
+  --btn-text-text: var(--color-text-primary-dark);
+  --btn-text-text-hover: var(--color-text-tertiary-dark);
+  --btn-text-disabled-text: var(--color-text-inactive-dark);
+}

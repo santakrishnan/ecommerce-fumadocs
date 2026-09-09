@@ -1,0 +1,48 @@
+/* Page Grid Tokens
+   Single source of truth for the column system consumed by PageGrid,
+   Carousel grid-alignment utilities, and any layout that needs to
+   snap to the column rhythm.
+
+   Mobile  (< 768px):  4 columns, 8px gutter, 20px margin
+   Tablet  (>= 768px): 8 columns, 8px gutter, 20px margin
+   Desktop (>= 1024px): 12 columns, 8px gutter, 40px margin
+*/
+
+@layer base {
+  :root {
+    --page-grid-cols: 4;
+    --page-grid-gap: var(--spacing-2); /* 8px — gap-2 */
+    --page-grid-margin: var(--spacing-5); /* 20px — px-5 */
+
+    /* Total content width (viewport minus both margins, capped at xl breakpoint) */
+    --page-grid-content: min(
+      100vw -
+      2 *
+      var(--page-grid-margin),
+      var(--breakpoint-xl) -
+      2 *
+      var(--page-grid-margin)
+    );
+
+    /* Width of a single grid column (excluding inter-column gaps) */
+    --page-grid-col-width: calc(
+      (var(--page-grid-content) - (var(--page-grid-cols) - 1) * var(--page-grid-gap)) /
+      var(--page-grid-cols)
+    );
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-md)) {
+    :root {
+      --page-grid-cols: 8;
+    }
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    :root {
+      --page-grid-cols: 12;
+      --page-grid-margin: var(--spacing-10); /* 40px — px-10 */
+    }
+  }
+}

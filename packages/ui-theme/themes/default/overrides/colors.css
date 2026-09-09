@@ -1,0 +1,66 @@
+/* Default Theme Color Overrides
+   Brand colors mapped from Figma design system variables.
+   Uses OKLCH per project convention. */
+@theme {
+  /* Brand primary — Toyota Red */
+  --color-brand: oklch(0.594 0.239 26.8); /* #eb0a1e */
+
+  /* Override primary to black (Figma: buttons, nav, headings) */
+  --color-primary: oklch(0 0 0); /* #000000 */
+  --color-primary-foreground: oklch(1 0 0); /* #ffffff */
+
+  /* Surface / background overrides */
+  --color-surface-primary: oklch(1 0 0); /* #ffffff — cards, footer */
+  --color-surface-secondary: oklch(0.925 0 0); /* #e6e6e6 — page bg */
+
+  /* Skeleton base */
+  --color-skeleton: oklch(0.5863 0 0); /* #7C7C7C - skeleton base color */
+
+  /* Surface-aware text (registered for Tailwind; light defaults) */
+  --color-text-primary: oklch(0 0 0); /* Neutral/800 */
+  --color-text-secondary: oklch(0.463 0.002 146.6); /* Neutral/500 */
+  --color-text-tertiary: oklch(0.6268 0 0); /* #888888 — Neutral/400 */
+  --color-text-inactive: oklch(0 0 0 / 0.26); /* Inactive - Light */
+
+  /* Surface-aware surface (registered for Tailwind; light default) */
+  --color-surface-glass: var(--color-surface-glass-light); /* Glass surface — Light */
+
+  /* Surface-aware divider (registered for Tailwind; light default) */
+  --color-divider: oklch(0 0 0 / 0.2); /* Divider - Light */
+
+  /* Derived from the average color of the bottom of a carcutter image */
+  --carcutter-gradient-color: oklch(0.7412 0 89.88);
+}
+
+/* Overrides for light surface */
+:root,
+[data-surface="light"] {
+  /* Text */
+  --color-text-primary: var(--color-text-primary-light);
+  --color-text-secondary: var(--color-text-secondary-light);
+  --color-text-tertiary: var(--color-text-tertiary-light);
+  --color-text-inactive: var(--color-text-inactive-light);
+
+  /* Surface */
+  --color-surface-glass: var(--color-surface-glass-light);
+
+  /* Divider */
+  --color-divider: var(--color-divider-light);
+}
+
+/* Overrides for dark surface */
+[data-surface="dark"] {
+  /* Text */
+  --color-text-primary: var(--color-text-primary-dark);
+  --color-text-secondary: var(--color-text-secondary-dark);
+  --color-text-tertiary: var(--color-text-tertiary-dark);
+  --color-text-inactive: var(--color-text-inactive-dark);
+
+  /* Surface */
+  --color-surface-glass: var(--color-surface-glass-dark);
+
+  /* Divider */
+  --color-divider: var(--color-divider-dark);
+}
+
+/* TODO: Update Storybook surface stories once glass token is validated with designers */

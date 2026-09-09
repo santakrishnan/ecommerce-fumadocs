@@ -1,0 +1,21 @@
+import { Canvas, Controls, Meta } from "@storybook/addon-docs/blocks";
+import * as ColorContrastStories from "./color-contrast.stories";
+
+<Meta of={ColorContrastStories} title="Foundation/Util/Color Contrast" />
+
+# Color Contrast
+
+Utilities for luminance and surface classification.
+
+## Surface Recommendation Playground
+
+Pick any color and see how `getSurfaceFromOklch` determines the optimal surface tone (`light` or `dark`) for contrast:
+
+<Canvas of={ColorContrastStories.SurfacePlayground} />
+<Controls of={ColorContrastStories.SurfacePlayground} />
+
+## Exports
+
+- `getSurfaceFromOklch(color)` - Chooses `"light"` or `"dark"` surface tone based on WCAG contrast analysis of an OKLCH color.
+
+

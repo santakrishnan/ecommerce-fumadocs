@@ -1,0 +1,67 @@
+/*
+  Acme Theme — Button Surface Color Overrides
+  Violet-branded buttons with surface-aware light/dark variants.
+*/
+
+:root,
+[data-surface="light"] {
+  /* Primary — solid violet */
+  --btn-primary-bg: oklch(0.541 0.247 293);
+  --btn-primary-text: oklch(1 0 0);
+  --btn-primary-bg-hover: oklch(0.606 0.216 293);
+  --btn-primary-text-hover: oklch(1 0 0);
+  --btn-primary-disabled-bg: var(--color-surface-inactive);
+  --btn-primary-disabled-text: var(--color-text-inactive-light);
+
+  /* Secondary — muted violet */
+  --btn-secondary-bg: oklch(0.453 0.12 293);
+  --btn-secondary-text: oklch(1 0 0);
+  --btn-secondary-bg-hover: oklch(0.38 0.198 293);
+  --btn-secondary-text-hover: oklch(1 0 0);
+  --btn-secondary-disabled-bg: var(--color-surface-inactive);
+  --btn-secondary-disabled-text: var(--color-text-inactive-light);
+
+  /* Tertiary — outlined violet */
+  --btn-tertiary-border: oklch(0.606 0.216 293);
+  --btn-tertiary-text: oklch(0.541 0.247 293);
+  --btn-tertiary-border-hover: oklch(0.709 0.159 293);
+  --btn-tertiary-text-hover: oklch(0.38 0.198 293);
+  --btn-tertiary-disabled-border: oklch(0.902 0.028 293);
+  --btn-tertiary-disabled-text: var(--color-text-inactive-light);
+
+  /* Text — violet text button */
+  --btn-text-text: oklch(0.541 0.247 293);
+  --btn-text-text-hover: oklch(0.38 0.198 293);
+  --btn-text-disabled-text: var(--color-text-inactive-light);
+}
+
+[data-surface="dark"] {
+  /* Primary — lighter violet for contrast on dark */
+  --btn-primary-bg: oklch(0.943 0.034 293);
+  --btn-primary-text: oklch(0.187 0.038 293);
+  --btn-primary-bg-hover: oklch(0.902 0.028 293);
+  --btn-primary-text-hover: oklch(0.187 0.038 293);
+  --btn-primary-disabled-bg: oklch(0.274 0.05 293);
+  --btn-primary-disabled-text: var(--color-text-inactive-dark);
+
+  /* Secondary — translucent violet */
+  --btn-secondary-bg: var(--color-opacity-white-16);
+  --btn-secondary-text: var(--color-text-primary-dark);
+  --btn-secondary-bg-hover: var(--color-opacity-white-12);
+  --btn-secondary-text-hover: var(--color-text-primary-dark);
+  --btn-secondary-disabled-bg: var(--color-opacity-white-16);
+  --btn-secondary-disabled-text: var(--color-text-inactive-dark);
+
+  /* Tertiary — outlined light violet */
+  --btn-tertiary-border: oklch(0.709 0.159 293);
+  --btn-tertiary-text: oklch(0.943 0.034 293);
+  --btn-tertiary-border-hover: oklch(0.606 0.216 293);
+  --btn-tertiary-text-hover: oklch(0.943 0.034 293);
+  --btn-tertiary-disabled-border: var(--color-opacity-white-26);
+  --btn-tertiary-disabled-text: var(--color-text-inactive-dark);
+
+  /* Text — light violet text button */
+  --btn-text-text: oklch(0.943 0.034 293);
+  --btn-text-text-hover: oklch(0.709 0.159 293);
+  --btn-text-disabled-text: var(--color-text-inactive-dark);
+}

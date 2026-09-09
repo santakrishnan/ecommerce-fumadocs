@@ -1,0 +1,45 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundation/Util/Color Converters" />
+
+# Color Converters
+
+Standalone color conversion helpers.
+
+These are pure, DOM-free functions. They do **not** resolve CSS `var()`
+references or non-sRGB color spaces such as `lab()`; for that, see
+`Foundation/Util/CSS Color`.
+
+## Exports
+
+- `hexToRgb(hex)` - Converts a hex color string (`#RRGGBB` or `RRGGBB`) into an `RgbColor` object (`0..255`). Returns `undefined` if invalid.
+- `parseOklchCss(color)` - Parses a CSS `oklch(...)` string (percent or unitless lightness) into an `OklchColor` object. Returns `undefined` if it isn't a valid `oklch(...)` value.
+- `parseRgbCss(color)` - Parses a CSS `rgb()`/`rgba()` string (comma- or space-separated channels) into an `RgbColor` object. Alpha is ignored. Returns `undefined` if invalid.
+- `rgbToOklch({ r, g, b })` - Converts an sRGB triplet (`0..255`) into an `OklchColor` object.
+- `toOklchCss({ l, c, h })` - Formats an `OklchColor` object as a CSS `oklch(...)` string.
+- `toRgbCss({ r, g, b })` - Formats numeric RGB channels as a CSS `rgb(...)` string.
+
+## Usage
+
+```ts
+import {
+  hexToRgb,
+  parseOklchCss,
+  parseRgbCss,
+  rgbToOklch,
+  toOklchCss,
+  toRgbCss,
+} from "@/lib/color-converters";
+
+const rgb = hexToRgb("#2d73dc");
+
+if (rgb) {
+  const oklch = rgbToOklch(rgb);
+  const cssOklch = toOklchCss(oklch);
+  const cssRgb = toRgbCss(rgb);
+}
+
+// Parse existing CSS color strings back into structured values.
+const parsedOklch = parseOklchCss("oklch(62% 0.19 259)");
+const parsedRgb = parseRgbCss("rgb(45 115 220)");
+```

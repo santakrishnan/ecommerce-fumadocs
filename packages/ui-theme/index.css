@@ -1,0 +1,17 @@
+/*
+  UI Theme Package - Base Only
+
+  IMPORTANT: Most apps should NOT import this file directly.
+
+  Each theme (default, acme) imports base internally, so you only need
+  to import the theme you want to use.
+
+  Recommended - Import a complete theme:
+    @import "@ucmp/ui-theme/themes/default";
+
+    or
+
+    @import "@ucmp/ui-theme/themes/acme";
+
+*/
+@import "./base/index.css";

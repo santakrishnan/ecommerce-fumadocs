@@ -1,0 +1,61 @@
+{
+  "name": "ucmp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "UCMP - Reusable Next.js 16 monorepo scaffolding with Turborepo, Base UI, multi-brand theming",
+  "keywords": [
+    "nextjs",
+    "turborepo",
+    "monorepo",
+    "typescript",
+    "tailwindcss",
+    "base-ui",
+    "shadcn",
+    "scaffold"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=11.0.0"
+  },
+  "packageManager": "pnpm@11.0.9",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "lint": "turbo lint",
+    "format": "ultracite fix",
+    "format:check": "ultracite check",
+    "check": "ultracite check",
+    "check:ci": "ultracite check",
+    "fix": "ultracite fix",
+    "fix:unsafe": "ultracite fix --unsafe",
+    "doctor": "ultracite doctor",
+    "type-check": "turbo type-check",
+    "test": "turbo test",
+    "test:coverage": "turbo test -- --coverage",
+    "test:watch": "turbo test:watch",
+    "test:ui": "turbo test:ui",
+    "e2e": "turbo run e2e",
+    "clean": "turbo clean && rm -rf node_modules .turbo",
+    "prepare": "husky",
+    "storybook": "pnpm --filter @ucmp/ui storybook",
+    "build-storybook": "pnpm --filter @ucmp/ui build-storybook",
+    "ui:add": "cd packages/ui && npx shadcn@latest add",
+    "turbo:login": "turbo login",
+    "turbo:link": "turbo link",
+    "turbo:unlink": "turbo unlink",
+    "gen": "turbo gen",
+    "gen:component": "turbo gen component",
+    "gen:package": "turbo gen package"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
+    "@turbo/gen": "^2.10.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "lucide-react": "^1.23.0",
+    "turbo": "^2.10.3",
+    "typescript": "^5.9.3",
+    "ultracite": "^7.7.0"
+  }
+}

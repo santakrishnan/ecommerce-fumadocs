@@ -1,0 +1,1077 @@
+[
+  {
+    "make": "Toyota",
+    "series": "tacoma",
+    "model": "Tacoma",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "SR",
+        "gradeSlug": "sr",
+        "angle": "14",
+        "defaultColorCode": "0040",
+        "image": "/vehicles/toyota/tacoma/2026/sr/toyota-tacoma-2026-sr-0040-angle-14.webp",
+        "colors": [
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/sr/toyota-tacoma-2026-sr-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/sr/toyota-tacoma-2026-sr-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/sr/toyota-tacoma-2026-sr-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/sr/toyota-tacoma-2026-sr-0202-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/sr/toyota-tacoma-2026-sr-03u5-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "SR5",
+        "gradeSlug": "sr5",
+        "angle": "14",
+        "defaultColorCode": "01J9",
+        "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-01j9-angle-14.webp",
+        "colors": [
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-0202-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/sr5/toyota-tacoma-2026-sr5-08x0-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD PreRunner",
+        "gradeSlug": "trd-prerunner",
+        "angle": "14",
+        "defaultColorCode": "01L7",
+        "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-01l7-angle-14.webp",
+        "colors": [
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-0202-angle-14.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-04z2-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/trd-prerunner/toyota-tacoma-2026-trd-prerunner-03u5-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD Sport",
+        "gradeSlug": "trd-sport",
+        "angle": "14",
+        "defaultColorCode": "08X0",
+        "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-08x0-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-06x1-angle-14.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-0202-angle-14.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-04z2-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-08x0-angle-14.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport/toyota-tacoma-2026-trd-sport-0089-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD Off-Road",
+        "gradeSlug": "trd-off-road",
+        "angle": "14",
+        "defaultColorCode": "04Z2",
+        "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-04z2-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-06x1-angle-14.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-0202-angle-14.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-04z2-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road/toyota-tacoma-2026-trd-off-road-08x0-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD Sport i-FORCE MAX",
+        "gradeSlug": "trd-sport-i-force-max",
+        "angle": "14",
+        "defaultColorCode": "0202",
+        "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-0202-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-06x1-angle-14.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-0202-angle-14.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-04z2-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-08x0-angle-14.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tacoma/2026/trd-sport-i-force-max/toyota-tacoma-2026-trd-sport-i-force-max-0089-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD Off-Road i-FORCE MAX",
+        "gradeSlug": "trd-off-road-i-force-max",
+        "angle": "14",
+        "defaultColorCode": "01J9",
+        "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-01j9-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-06x1-angle-14.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-0202-angle-14.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-04z2-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/trd-off-road-i-force-max/toyota-tacoma-2026-trd-off-road-i-force-max-08x0-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited",
+        "gradeSlug": "limited",
+        "angle": "14",
+        "defaultColorCode": "03U5",
+        "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-03u5-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-06x1-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-0202-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-08x0-angle-14.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tacoma/2026/limited/toyota-tacoma-2026-limited-0089-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited i-FORCE MAX",
+        "gradeSlug": "limited-i-force-max",
+        "angle": "14",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-0089-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-06x1-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-0202-angle-14.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-03u5-angle-14.webp"
+          },
+          {
+            "code": "08X0",
+            "title": "Heritage Blue",
+            "hex": "#5091C3",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-08x0-angle-14.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tacoma/2026/limited-i-force-max/toyota-tacoma-2026-limited-i-force-max-0089-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Trailhunter",
+        "gradeSlug": "trailhunter",
+        "angle": "14",
+        "defaultColorCode": "06X1",
+        "image": "/vehicles/toyota/tacoma/2026/trailhunter/toyota-tacoma-2026-trailhunter-06x1-angle-14.webp",
+        "colors": [
+          {
+            "code": "06X1",
+            "title": "Bronze Oxide",
+            "hex": "#857A6A",
+            "image": "/vehicles/toyota/tacoma/2026/trailhunter/toyota-tacoma-2026-trailhunter-06x1-angle-14.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trailhunter/toyota-tacoma-2026-trailhunter-0040-angle-14.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tacoma/2026/trailhunter/toyota-tacoma-2026-trailhunter-01j9-angle-14.webp"
+          },
+          {
+            "code": "01L7",
+            "title": "Underground",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trailhunter/toyota-tacoma-2026-trailhunter-01l7-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trailhunter/toyota-tacoma-2026-trailhunter-0202-angle-14.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD Pro",
+        "gradeSlug": "trd-pro",
+        "angle": "14",
+        "defaultColorCode": "0M73",
+        "image": "/vehicles/toyota/tacoma/2026/trd-pro/toyota-tacoma-2026-trd-pro-0m73-angle-14.webp",
+        "colors": [
+          {
+            "code": "0M73",
+            "title": "Wave Maker with Black roof",
+            "hex": "#0CAEC6",
+            "image": "/vehicles/toyota/tacoma/2026/trd-pro/toyota-tacoma-2026-trd-pro-0m73-angle-14.webp"
+          },
+          {
+            "code": "02MQ",
+            "title": "Ice Cap with Black roof",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tacoma/2026/trd-pro/toyota-tacoma-2026-trd-pro-02mq-angle-14.webp"
+          },
+          {
+            "code": "02ZW",
+            "title": "Underground with Black roof",
+            "hex": "#7E7B7D",
+            "image": "/vehicles/toyota/tacoma/2026/trd-pro/toyota-tacoma-2026-trd-pro-02zw-angle-14.webp"
+          },
+          {
+            "code": "0202",
+            "title": "Black",
+            "hex": "#000000",
+            "image": "/vehicles/toyota/tacoma/2026/trd-pro/toyota-tacoma-2026-trd-pro-0202-angle-14.webp"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "make": "Toyota",
+    "series": "tundra",
+    "model": "Tundra",
+    "year": 2026,
+    "grades": [
+      {
+        "gradeName": "SR",
+        "gradeSlug": "sr",
+        "angle": "13",
+        "defaultColorCode": "01J9",
+        "image": "/vehicles/toyota/tundra/2026/sr/toyota-tundra-2026-sr-01j9-angle-13.webp",
+        "colors": [
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tundra/2026/sr/toyota-tundra-2026-sr-0040-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/sr/toyota-tundra-2026-sr-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/sr/toyota-tundra-2026-sr-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/sr/toyota-tundra-2026-sr-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/sr/toyota-tundra-2026-sr-03u5-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "SR5",
+        "gradeSlug": "sr5",
+        "angle": "13",
+        "defaultColorCode": "0040",
+        "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-0040-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-06x3-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-0040-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-03u5-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-08x8-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/sr5/toyota-tundra-2026-sr5-04z2-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited",
+        "gradeSlug": "limited",
+        "angle": "13",
+        "defaultColorCode": "03U5",
+        "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-03u5-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-06x3-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-0040-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-03u5-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-08x8-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/limited/toyota-tundra-2026-limited-04z2-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Limited i-FORCE MAX",
+        "gradeSlug": "limited-i-force-max",
+        "angle": "13",
+        "defaultColorCode": "06X3",
+        "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-06x3-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-06x3-angle-13.webp"
+          },
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-0040-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-03u5-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-08x8-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/limited-i-force-max/toyota-tundra-2026-limited-i-force-max-04z2-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Platinum",
+        "gradeSlug": "platinum",
+        "angle": "13",
+        "defaultColorCode": "08X8",
+        "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-08x8-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-06x3-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-03u5-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-08x8-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/platinum/toyota-tundra-2026-platinum-04z2-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "1794 Edition",
+        "gradeSlug": "1794-edition",
+        "angle": "13",
+        "defaultColorCode": "01G3",
+        "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-01g3-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-06x3-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-0218-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-08x8-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition/toyota-tundra-2026-1794-edition-04z2-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Platinum i-FORCE MAX",
+        "gradeSlug": "platinum-i-force-max",
+        "angle": "13",
+        "defaultColorCode": "0218",
+        "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-0218-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-06x3-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-03u5-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-04z2-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/platinum-i-force-max/toyota-tundra-2026-platinum-i-force-max-08x8-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "1794 Edition i-FORCE MAX",
+        "gradeSlug": "1794-edition-i-force-max",
+        "angle": "13",
+        "defaultColorCode": "01G3",
+        "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-01g3-angle-13.webp",
+        "colors": [
+          {
+            "code": "06X3",
+            "title": "Lunar Rock",
+            "hex": "#949B96",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-06x3-angle-13.webp"
+          },
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-0218-angle-13.webp"
+          },
+          {
+            "code": "04Z2",
+            "title": "Mudbath",
+            "hex": "#604F46",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-04z2-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/1794-edition-i-force-max/toyota-tundra-2026-1794-edition-i-force-max-08x8-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "TRD Pro",
+        "gradeSlug": "trd-pro",
+        "angle": "13",
+        "defaultColorCode": "0040",
+        "image": "/vehicles/toyota/tundra/2026/trd-pro/toyota-tundra-2026-trd-pro-0040-angle-13.webp",
+        "colors": [
+          {
+            "code": "0040",
+            "title": "Ice Cap",
+            "hex": "#FFFFFF",
+            "image": "/vehicles/toyota/tundra/2026/trd-pro/toyota-tundra-2026-trd-pro-0040-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/trd-pro/toyota-tundra-2026-trd-pro-01g3-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/trd-pro/toyota-tundra-2026-trd-pro-0218-angle-13.webp"
+          },
+          {
+            "code": "0796",
+            "title": "Wave Maker",
+            "hex": "#0CAEC6",
+            "image": "/vehicles/toyota/tundra/2026/trd-pro/toyota-tundra-2026-trd-pro-0796-angle-13.webp"
+          }
+        ]
+      },
+      {
+        "gradeName": "Capstone",
+        "gradeSlug": "capstone",
+        "angle": "13",
+        "defaultColorCode": "0089",
+        "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-0089-angle-13.webp",
+        "colors": [
+          {
+            "code": "0089",
+            "title": "Wind Chill Pearl",
+            "hex": "#E3E9E9",
+            "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-0089-angle-13.webp"
+          },
+          {
+            "code": "01G3",
+            "title": "Magnetic Gray Metallic",
+            "hex": "#494848",
+            "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-01g3-angle-13.webp"
+          },
+          {
+            "code": "01J9",
+            "title": "Celestial Silver Metallic",
+            "hex": "#828387",
+            "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-01j9-angle-13.webp"
+          },
+          {
+            "code": "0218",
+            "title": "Midnight Black Metallic",
+            "hex": "#00031E",
+            "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-0218-angle-13.webp"
+          },
+          {
+            "code": "03U5",
+            "title": "Supersonic Red",
+            "hex": "#E20500",
+            "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-03u5-angle-13.webp"
+          },
+          {
+            "code": "08X8",
+            "title": "Blueprint",
+            "hex": "#1E2548",
+            "image": "/vehicles/toyota/tundra/2026/capstone/toyota-tundra-2026-capstone-08x8-angle-13.webp"
+          }
+        ]
+      }
+    ]
+  }
+]

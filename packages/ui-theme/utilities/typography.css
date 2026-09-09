@@ -1,0 +1,362 @@
+/* Typography Utilities — Figma typographic presets as single-class utilities */
+
+/*
+  External stylesheet hardening (maintainable)
+
+  Utilities set --typo-* variables. A single scoped applicator under
+  `body` applies the final font properties with higher specificity than
+  generic third-party single-class selectors injected later.
+*/
+
+body
+:is(
+  .number-xl,
+  .number-lg,
+  .h1,
+  .h2,
+  .h3,
+  .vehicle-title-lg,
+  .vehicle-title-md,
+  .vehicle-title-sm,
+  .subhead-lg,
+  .subhead-sm,
+  .carousel-headline,
+  .button-text,
+  .link-text,
+  .body-xxl,
+  .body-xl,
+  .body-lg,
+  .body-md,
+  .body-sm,
+  .disclaimer
+) {
+  font-family: var(--typo-font-family, inherit);
+  font-size: var(--typo-font-size, inherit);
+  font-weight: var(--typo-font-weight, inherit);
+  line-height: var(--typo-line-height, inherit);
+  text-transform: var(--typo-text-transform, none);
+  letter-spacing: var(--typo-letter-spacing, normal);
+}
+
+/* Numbers */
+
+@utility number-xl {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-5xl);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-6xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-7xl);
+  }
+}
+
+@utility number-lg {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-4xl);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-4\.6xl);
+  }
+}
+
+/* Headings */
+
+@utility h1 {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-3xl);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-4xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-4\.6xl);
+  }
+}
+
+@utility h2 {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-2xl);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-3xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-4\.5xl);
+  }
+}
+
+@utility h3 {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-1\.5xl);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-2xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-3\.5xl);
+  }
+}
+
+/* Vehicle Titles */
+
+@utility vehicle-title-lg {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-2xl);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: uppercase;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-3xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-4\.5xl);
+  }
+}
+
+@utility vehicle-title-md {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-base);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: uppercase;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-2xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-3xl);
+  }
+}
+
+@utility vehicle-title-sm {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-sm);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: uppercase;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-base);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-xl);
+  }
+}
+
+/* Subheads */
+
+@utility subhead-lg {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-base);
+  --typo-font-weight: var(--font-weight-semibold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-xl);
+  }
+}
+
+@utility subhead-sm {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-sm);
+  --typo-font-weight: var(--font-weight-semibold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-lg);
+  }
+}
+
+/* Interactive */
+
+@utility carousel-headline {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-sm);
+  --typo-font-weight: var(--font-weight-bold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: uppercase;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-lg);
+  }
+}
+
+@utility button-text {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-sm);
+  --typo-font-weight: var(--font-weight-semibold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-base);
+  }
+}
+
+@utility link-text {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-xs);
+  --typo-font-weight: var(--font-weight-semibold);
+  --typo-line-height: var(--leading-heading);
+  --typo-letter-spacing: var(--tracking-tightest);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-sm);
+  }
+}
+
+/* Body */
+
+@utility body-xxl {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-1\.5xl);
+  --typo-font-weight: var(--font-weight-normal);
+  --typo-line-height: var(--leading-body);
+  --typo-letter-spacing: var(--tracking-tighter);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-3xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-4\.5xl);
+  }
+}
+
+@utility body-xl {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-lg);
+  --typo-font-weight: var(--font-weight-normal);
+  --typo-line-height: var(--leading-body);
+  --typo-letter-spacing: var(--tracking-tighter);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-lg)) {
+    --typo-font-size: var(--text-2xl);
+  }
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-4xl);
+  }
+}
+
+@utility body-lg {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-base);
+  --typo-font-weight: var(--font-weight-normal);
+  --typo-line-height: var(--leading-body);
+  --typo-letter-spacing: var(--tracking-tighter);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-xl);
+  }
+}
+
+@utility body-md {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-sm);
+  --typo-font-weight: var(--font-weight-normal);
+  --typo-line-height: var(--leading-body);
+  --typo-letter-spacing: var(--tracking-tighter);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-lg);
+  }
+}
+
+@utility body-sm {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-xs);
+  --typo-font-weight: var(--font-weight-normal);
+  --typo-line-height: var(--leading-body);
+  --typo-letter-spacing: var(--tracking-tighter);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-sm);
+  }
+}
+
+@utility disclaimer {
+  --typo-font-family: var(--font-sans);
+  --typo-font-size: var(--text-2xs);
+  --typo-font-weight: var(--font-weight-normal);
+  --typo-line-height: var(--leading-body);
+  --typo-letter-spacing: var(--tracking-tighter);
+  --typo-text-transform: none;
+
+  /* biome-ignore lint/correctness/noUnknownFunction: Tailwind v4 theme() resolved at build time */
+  @media (min-width: theme(--breakpoint-xl)) {
+    --typo-font-size: var(--text-xs);
+  }
+}

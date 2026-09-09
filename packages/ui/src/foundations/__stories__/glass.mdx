@@ -1,0 +1,92 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
+import * as GlassStories from "./glass.stories"
+
+<Meta of={GlassStories} />
+
+# Glass
+
+A utility class that applies a frosted-glass (glassmorphism) effect to any element. Defined in `@ucmp/ui-theme/utilities/glass.css`.
+
+## What it does
+
+```css
+.glass {
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+```
+
+The blur distorts whatever is rendered *behind* the element, and the saturation boost keeps colors vibrant rather than washed out. That's the entire utility — it sets no background color, no opacity, and no layout.
+
+## How to use it
+
+Add the `glass` class to an element and pair it with a semi-transparent background color so the blur is visible through the fill:
+
+```tsx
+<div className="glass rounded-lg bg-white/20 p-4">
+  Frosted panel
+</div>
+```
+
+Without a background color the blur still applies, but there's nothing to tint the frosted area — you'll just see the content behind slightly blurred.
+
+## Background colors
+
+Since `glass` is only the effect, you choose what color tint to layer on top:
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Combination</th>
+      <th align="left">Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>glass bg-white/20</code></td>
+      <td>Light frosted tint</td>
+    </tr>
+    <tr>
+      <td><code>glass bg-black/30</code></td>
+      <td>Dark frosted tint</td>
+    </tr>
+    <tr>
+      <td><code>glass bg-white/50</code></td>
+      <td>Heavier frosted tint, more opaque</td>
+    </tr>
+    <tr>
+      <td><code>glass</code> (no bg)</td>
+      <td>Pure blur, fully transparent</td>
+    </tr>
+  </tbody>
+</table>
+
+The key is using a **semi-transparent** background. A fully opaque `bg-white` would hide the blur entirely since there's nothing to see through.
+
+## Basic blur
+
+The `glass` class over a gradient — no tint applied, just the raw blur effect.
+
+<Canvas of={GlassStories.BasicBlur} />
+
+## With tint colors
+
+Pair `glass` with different semi-transparent backgrounds for light or dark frosted panels.
+
+<Canvas of={GlassStories.WithTint} />
+
+## With vs without
+
+Side-by-side comparison of the same panel with and without `glass` applied.
+
+<Canvas of={GlassStories.Comparison} />
+
+## When to use
+
+- **Floating overlays** — cards, tooltips, or popovers sitting on top of imagery.
+- **Navigation bars** — a blurred strip letting hero content bleed through.
+- **Pill containers** — the Tabs pill variant uses `glass` for its list background.
+
+## Browser support
+
+`backdrop-filter` is supported in all modern browsers. The `-webkit-` prefix is included for Safari. On unsupported browsers the element renders with just the background color (no blur).

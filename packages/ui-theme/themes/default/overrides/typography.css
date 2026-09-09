@@ -1,0 +1,88 @@
+/*
+  Default Theme Typography Overrides
+
+  Default theme font mapping and theme-scoped descender compensation.
+
+  Typography scale (Figma / Toyota Type):
+  ───────────────────────────────────────────────────────────────────────────────────────────────────
+  Variant              | Size (mobile) | Size (lg+) | Weight | Leading | Tracking | Descender padding
+  ───────────────────────────────────────────────────────────────────────────────────────────────────
+  number-xl            | 48px          | 56px       | 700    | 1.05    | -0.04em  | 0.16em
+  number-lg            | 32px          | —          | 700    | 1.05    | -0.04em  | 0.16em
+  h1                   | 28px          | 32px       | 700    | 1.05    | -0.04em  | 0.16em
+  h2                   | 24px          | 28px       | 700    | 1.05    | -0.04em  | 0.16em
+  h3                   | 22px          | 24px       | 700    | 1.05    | -0.04em  | 0.16em
+  subhead-lg           | 16px          | —          | 600    | 1.05    | -0.04em  | 0.16em
+  subhead-sm           | 14px          | —          | 600    | 1.05    | -0.04em  | 0.16em
+  button-text          | 14px          | —          | 600    | 1.05    | -0.04em  | 0.18em
+  link-text            | 12px          | —          | 600    | 1.05    | -0.04em  | 0.16em
+  body-xxl             | 22px          | 28px       | 400    | 1.3     | -0.02em  | 0.10em
+  body-xl              | 18px          | 24px       | 400    | 1.3     | -0.02em  | 0.10em
+  body-lg              | 16px          | —          | 400    | 1.3     | -0.02em  | 0.10em
+  body-md              | 14px          | —          | 400    | 1.3     | -0.02em  | 0.10em
+  body-sm              | 12px          | —          | 400    | 1.3     | -0.02em  | 0.10em
+  disclaimer           | 10px          | —          | 400    | 1.3     | -0.02em  | 0.10em
+  vehicle-title-lg     | 24px          | 28px       | 700    | 1.05    | -0.04em  | 0em
+  vehicle-title-md     | 16px          | 24px       | 700    | 1.05    | -0.04em  | 0em
+  vehicle-title-sm     | 14px          | 16px       | 700    | 1.05    | -0.04em  | 0em
+  carousel-headline    | 14px          | —          | 700    | 1.05    | -0.04em  | 0em
+  ───────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Descender compensation is intentionally defined here (not shared utilities)
+    because the required optical offset is font/theme dependent.
+
+*/
+
+/* Theme token overrides */
+@theme {
+  --font-sans: var(--font-app-sans, "Toyota Type", ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--font-app-mono, ui-monospace, "SF Mono", monospace);
+
+  /* Fallback is off; variants opt in below. */
+  --typo-descender-padding: 0em;
+}
+
+/* Variants that need descender room when truncated/clamped */
+:where(
+  .number-xl,
+  .number-lg,
+  .h1,
+  .h2,
+  .h3,
+  .subhead-lg,
+  .subhead-sm,
+  .link-text,
+  .body-xxl,
+  .body-xl,
+  .body-lg,
+  .body-md,
+  .body-sm,
+  .disclaimer
+) {
+  --typo-descender-padding: 0.16em;
+}
+
+:where(.button-text) {
+  --typo-descender-padding: 0.18em;
+}
+
+:where(.body-xxl, .body-xl, .body-lg, .body-md, .body-sm, .disclaimer) {
+  --typo-descender-padding: 0.1em;
+}
+
+/* Variants that keep compensation disabled (uppercase display styles) */
+:where(.vehicle-title-lg, .vehicle-title-md, .vehicle-title-sm, .carousel-headline) {
+  --typo-descender-padding: 0em;
+}
+
+/* Apply compensation to existing Tailwind truncate/line-clamp class patterns */
+:where(.truncate, [class*="line-clamp-"]) {
+  padding-bottom: var(--typo-descender-padding, 0em);
+  margin-bottom: calc(var(--typo-descender-padding, 0em) * -1);
+}
+
+/* Reset when clamping is explicitly removed */
+:where(.line-clamp-none) {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}

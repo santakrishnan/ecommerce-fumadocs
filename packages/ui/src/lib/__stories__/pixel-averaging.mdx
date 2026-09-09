@@ -1,0 +1,32 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundation/Util/Pixel Averaging" />
+
+# Pixel Averaging
+
+Computes alpha-weighted RGB averages from raw RGBA pixel data.
+
+## Export
+
+- `averageRgbFromPixelData(data: Uint8ClampedArray)`
+
+## Behavior
+
+- fully transparent pixels do not contribute
+- partially transparent pixels contribute proportionally
+- returns `null` when all pixels are transparent
+
+## Usage
+
+```ts
+import { averageRgbFromPixelData } from "@/lib/pixel-averaging";
+
+const data = new Uint8ClampedArray([
+  255, 0, 0, 255,
+  0, 255, 0, 128,
+  0, 0, 255, 0,
+]);
+
+const rgb = averageRgbFromPixelData(data);
+// -> { r: 170, g: 85, b: 0 }
+```

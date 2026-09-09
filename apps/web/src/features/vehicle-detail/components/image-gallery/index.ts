@@ -1,0 +1,12 @@
+export type { GalleryAnchorBarProps } from "./gallery-anchor-bar";
+export { GalleryAnchorBar } from "./gallery-anchor-bar";
+export type { GalleryImageProps } from "./gallery-image";
+export { GalleryImage } from "./gallery-image";
+export type { GalleryOverlayProps } from "./gallery-overlay";
+export { GalleryOverlay } from "./gallery-overlay";
+export type { GalleryTabBarProps } from "./gallery-tab-bar";
+export { GalleryTabBar } from "./gallery-tab-bar";
+export type { HotspotOverlayProps } from "./hotspot-overlay";
+export { HotspotOverlay } from "./hotspot-overlay";
+export type { ManifestHotspotOverlayProps } from "./manifest-hotspot-overlay";
+export { ManifestHotspotOverlay } from "./manifest-hotspot-overlay";

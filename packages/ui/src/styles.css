@@ -1,0 +1,53 @@
+/**
+ * UI Package Styles
+ *
+ * Imports the UCMP Design System theme which includes:
+ * - Tailwind CSS v4
+ * - Design tokens (colors, spacing, typography, etc.)
+ * - Default brand theme
+ * - Base styles and utilities
+ */
+@import "@ucmp/ui-theme/themes/default";
+
+@source "./components";
+@source "./charts";
+
+/**
+ * UI-specific theme customizations
+ * Use @theme directive to extend or override theme values
+ */
+@theme {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-caret-blink: caret-blink 1.25s ease-out infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--accordion-panel-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--accordion-panel-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes caret-blink {
+    0%,
+    70%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    50% {
+      opacity: 0;
+    }
+  }
+}

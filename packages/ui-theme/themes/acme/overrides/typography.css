@@ -1,0 +1,25 @@
+/* Acme Typography Overrides
+   Uses system UI fonts — no download/install required.
+   The system-ui stack renders as SF Pro on macOS, Segoe UI on Windows,
+   and Roboto on Android/ChromeOS. Visually distinct from Toyota Type's
+   humanist letterforms due to tighter metrics and geometric proportions. */
+@theme {
+  --font-sans: var(
+    --font-app-sans,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif
+  );
+  --font-mono: var(
+    --font-app-mono,
+    ui-monospace,
+    "SF Mono",
+    "Cascadia Code",
+    "Segoe UI Mono",
+    monospace
+  );
+}

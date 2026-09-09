@@ -1,0 +1,32 @@
+/* Acme Light Mode — explicit light overrides
+   These match the @theme values in overrides/colors.css for the standard
+   shadcn color slots. Applied as the default (no .dark class). */
+@theme {
+  --color-background: oklch(0.993 0.003 293);
+  --color-foreground: oklch(0.187 0.038 293);
+
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.187 0.038 293);
+
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.187 0.038 293);
+
+  --color-primary: oklch(0.541 0.247 293);
+  --color-primary-foreground: oklch(1 0 0);
+
+  --color-secondary: oklch(0.97 0.014 293);
+  --color-secondary-foreground: oklch(0.334 0.182 293);
+
+  --color-muted: oklch(0.97 0.014 293);
+  --color-muted-foreground: oklch(0.553 0.085 293);
+
+  --color-accent: oklch(0.943 0.034 293);
+  --color-accent-foreground: oklch(0.38 0.198 293);
+
+  --color-destructive: oklch(0.577 0.245 27.3);
+  --color-destructive-foreground: oklch(0.985 0 0);
+
+  --color-border: oklch(0.902 0.028 293);
+  --color-input: oklch(0.902 0.028 293);
+  --color-ring: oklch(0.606 0.216 293);
+}

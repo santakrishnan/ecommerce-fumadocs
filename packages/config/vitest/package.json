@@ -1,0 +1,33 @@
+{
+  "name": "@ucmp/vitest-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared Vitest configurations and test utilities for UCMP monorepo",
+  "main": "./base.ts",
+  "files": [
+    "base.ts",
+    "react.ts",
+    "nextjs.ts",
+    "env.ts",
+    "test-utils"
+  ],
+  "exports": {
+    "./base": "./base.ts",
+    "./react": "./react.ts",
+    "./nextjs": "./nextjs.ts",
+    "./env": "./env.ts",
+    "./test-utils": "./test-utils/index.ts",
+    "./test-utils/pure": "./test-utils/pure.ts"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitejs/plugin-react": "^6.0.3"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.101.2",
+    "vitest": "^4.1.10"
+  }
+}

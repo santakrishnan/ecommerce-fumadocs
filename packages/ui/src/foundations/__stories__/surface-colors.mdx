@@ -1,0 +1,89 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks"
+import * as SurfaceColorStories from "./surface-colors.stories"
+
+<Meta of={SurfaceColorStories} />
+
+# Surface Colors
+
+Typography colors and dividers adapt automatically based on the `data-surface` attribute on an ancestor element. Use the **Surface toolbar** (mirror icon) to switch between Light and Dark and see the Playground story respond in real time.
+
+## How it works
+
+Wrap any section in `data-surface="light"` or `data-surface="dark"` to scope the color tokens:
+
+```html
+<div data-surface="dark">
+  <!-- text-text-primary, border-divider, etc. resolve to dark values -->
+</div>
+```
+
+## Playground
+
+Switch the Surface toolbar to see tokens adapt live:
+
+<Canvas of={SurfaceColorStories.Playground} />
+
+## Typography Colors
+
+<Canvas of={SurfaceColorStories.TypographyColors} />
+
+## Divider
+
+<Canvas of={SurfaceColorStories.Divider} />
+
+## Typographic Sample
+
+<Canvas of={SurfaceColorStories.SideBySide} />
+
+## Token Reference
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Token</th>
+      <th align="left">Light</th>
+      <th align="left">Dark</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>--color-text-primary</code></td>
+      <td>Neutral/800 (black)</td>
+      <td>Neutral/50 (white)</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-secondary</code></td>
+      <td>Neutral/500</td>
+      <td>Neutral/200</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-tertiary</code></td>
+      <td>Neutral/400</td>
+      <td>Neutral/300</td>
+    </tr>
+    <tr>
+      <td><code>--color-text-inactive</code></td>
+      <td>black @ 26%</td>
+      <td>white @ 26%</td>
+    </tr>
+    <tr>
+      <td><code>--color-divider</code></td>
+      <td>black @ 20%</td>
+      <td>white @ 20%</td>
+    </tr>
+  </tbody>
+</table>
+
+## Usage
+
+```tsx
+// Tailwind utilities — surface context handles the rest
+<h2 className="text-text-primary">Adapts to surface</h2>
+<p className="text-text-secondary">Secondary body text</p>
+<hr className="border-divider" />
+
+// Wrap a section in a dark surface
+<section data-surface="dark" className="bg-neutral-900 p-8">
+  <p className="text-text-primary">Now white</p>
+</section>
+```

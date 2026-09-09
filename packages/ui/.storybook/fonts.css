@@ -1,0 +1,110 @@
+/**
+ * Storybook font loading
+ * Registers Toyota Type via @font-face for use in Storybook previews.
+ * In the Next.js app, next/font handles this and sets --font-app-sans.
+ * Fonts are served via staticDirs in main.ts pointing to apps/web/public.
+ *
+ * IMPORTANT: we deliberately do NOT set `--font-app-sans` here. Each theme in
+ * @ucmp/ui-theme declares `--font-sans: var(--font-app-sans, <brand fallback>)`,
+ * so leaving `--font-app-sans` undefined lets every brand fall back to its own
+ * family — Default → "Toyota Type" (loaded below), Acme → system-ui. Setting it
+ * globally would force every brand to Toyota Type and defeat the brand switcher.
+ */
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-LightIt.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-Book.ttf") format("truetype");
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-BookIt.ttf") format("truetype");
+  font-weight: 350;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-RegularIt.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-SemiboldIt.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-BoldIt.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Toyota Type";
+  src: url("/fonts/ToyotaType-BlackIt.ttf") format("truetype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+

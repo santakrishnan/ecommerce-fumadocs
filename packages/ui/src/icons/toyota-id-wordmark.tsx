@@ -1,0 +1,29 @@
+import { createIcon } from "./icon-wrapper";
+
+/**
+ * Toyota iD wordmark icon — the stylised "iD" text mark.
+ *
+ * Original artboard: 14×11. Path positioned within the standard 20×20 icon
+ * grid, centred via a translate.
+ *
+ * Inherits color via `currentColor` — style with `text-*` utilities.
+ *
+ * @example
+ * ```tsx
+ * import { IconToyotaIdWordmark } from "@ucmp/ui/icons";
+ * <IconToyotaIdWordmark className="size-5" />
+ * ```
+ */
+export const IconToyotaIdWordmark = createIcon(
+  "IconToyotaIdWordmark",
+  <g transform="translate(3, 4.5)">
+    <path
+      d="M7.93317 0.496094C8.98195 0.496094 9.9033 0.711731 10.6972 1.143C11.501 1.56448 12.1234 2.16728 12.5645 2.95141C13.0055 3.72575 13.2261 4.6275 13.2261 5.65668C13.2261 6.69565 13.0055 7.61701 12.5645 8.42075C12.1234 9.21468 11.501 9.83219 10.6972 10.2733C9.8935 10.7143 8.97215 10.9349 7.93317 10.9349H4.06641V0.496094H7.93317ZM7.65382 9.19998C8.732 9.19998 9.58475 8.88633 10.2121 8.25902C10.8394 7.63171 11.153 6.76917 11.153 5.67138C11.153 4.603 10.8394 3.76495 10.2121 3.15725C9.58475 2.53974 8.7369 2.23099 7.66852 2.23099H6.05125V9.19998H7.65382Z"
+      fill="currentColor"
+    />
+    <path
+      d="M0.17643 3.4992H2.01424V10.9387H0.17643V3.4992ZM1.13209 2.24948C0.808638 2.24948 0.539092 2.14167 0.323455 1.92603C0.107818 1.70059 0 1.43104 0 1.11739C0 0.803737 0.107818 0.539091 0.323455 0.323454C0.539092 0.107818 0.808638 0 1.13209 0C1.44575 0 1.71039 0.107818 1.92603 0.323454C2.14167 0.539091 2.24948 0.803737 2.24948 1.11739C2.24948 1.43104 2.14167 1.70059 1.92603 1.92603C1.71039 2.14167 1.44575 2.24948 1.13209 2.24948Z"
+      fill="currentColor"
+    />
+  </g>,
+);
