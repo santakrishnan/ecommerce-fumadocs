@@ -126,6 +126,8 @@ export const clientEnvSchema = z.object({
   NEXT_PUBLIC_FINGERPRINT_API_KEY: optStr,
   NEXT_PUBLIC_FINGERPRINT_REGION: optStr,
   NEXT_PUBLIC_MOCKS: boolStr,
+  /** Passkey API base; defaults to the same-origin `/api/auth/passkey` (dev-only mock until the BED lands). */
+  NEXT_PUBLIC_PASSKEY_API_BASE: optStr,
   NEXT_PUBLIC_SEARCH_RECS_LIMIT: z.coerce.number().positive().optional(),
   // Client-side fallback encryption key for isomorphic use (see shared/lib/http/encryption.ts).
   NEXT_PUBLIC_ENCRYPTION_KEY: optStr,

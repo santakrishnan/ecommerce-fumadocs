@@ -1,0 +1,101 @@
+---
+title: Passkey
+description: Test page for the WebAuthn passkey flow — create a passkey, come back, sign in with it
+---
+
+<Callout type="warn" title="Demo build — mock relying party">
+The browser side is production-shaped (`@simplewebauthn/browser` against `features/auth/passkey/contract.ts`). The server side is a **throwaway mock** in `features/auth/passkey/mock-server` served on dev-only routes under `/api/auth/passkey/*`. It does real WebAuthn verification (challenge, origin, RP ID, signature, counter); only the storage is fake (`apps/web/.data/passkey-demo.json`). When the upstream BED passkey API is available on that route, follow the cleanup list at the top of `mock-server/server.ts` and drop `@simplewebauthn/server`.
+</Callout>
+
+## Try it
+
+Passkeys need a secure context: `localhost` works as-is, any other host needs HTTPS (see [testing on phones](#testing-on-phones-and-other-devices)). Opening the preview in a new tab is the most reliable way to run the browser prompts.
+
+<ComponentPreview name="passkey" defaultDevice="mobile" />
+
+### Demo script
+
+<Steps>
+<Step>
+### Create
+Enter a name and email and select **Create a passkey**; approve with Face ID / Touch ID / PIN. The card shows what the server stored: a public key and metadata — and explicitly no private key.
+</Step>
+<Step>
+### Come back
+Reload the preview (↻ in the toolbar). It greets you by name and offers **Sign in with passkey**. No username or password.
+</Step>
+<Step>
+### Cross-device: synced vs. device-bound
+Open the same URL on another device signed into the same Apple or Google account (or 1Password) and choose **Sign in with an existing passkey**. It works without registering again and the card shows **Passkey type: Synced**. Repeat with a YubiKey to see **Device-bound**.
+</Step>
+<Step>
+### Phone as authenticator
+On a desktop that doesn't have the passkey, sign in and pick "Use a phone or tablet" in the browser prompt to scan the QR code.
+</Step>
+<Step>
+### Reset demo
+The link at the bottom wipes the mock store and asks the password manager to hide the old passkeys (Signal API, where supported).
+</Step>
+</Steps>
+
+<Callout title="No device handy?">
+Chrome DevTools → **More tools → WebAuthn** → *Enable virtual authenticator environment* → add an authenticator (`ctap2`, `internal`, resident keys and user verification **on**). The whole flow then runs without a phone or biometric.
+</Callout>
+
+## Testing on phones and other devices
+
+Use a tunnel and open the HTTPS URL on every device:
+
+```bash
+ngrok http 3000
+```
+
+The mock derives the RP ID and origin from the request, so no configuration is needed. Passkeys are bound to the domain: ones created on `localhost` won't appear on the ngrok URL, so create them on the URL you'll demo from. For a fixed domain set `RP_ID`, `RP_ORIGIN` and `RP_NAME` in `.env.local`.
+
+## Where things live
+
+| Layer | Path | Status |
+| --- | --- | --- |
+| Contract (hand to the BED team) | `features/auth/passkey/contract.ts` | keep |
+| Browser client | `features/auth/passkey/client.ts` | keep |
+| UI | `features/auth/components/passkey-panel.tsx`, `stored-passkey-card.tsx` | keep |
+| Mock relying party | `features/auth/passkey/mock-server/` | **throwaway** |
+| Mock routes | `app/api/auth/passkey/**/route.docs.ts` | **throwaway** (dev-only) |
+
+## The contract
+
+Four endpoints, relative to `NEXT_PUBLIC_PASSKEY_API_BASE` (default `/api/auth/passkey`), all using the standard WebAuthn Level 3 JSON shapes so any server library fits behind them (SimpleWebAuthn, Yubico java-webauthn-server, Fido2NetLib, go-webauthn, py_webauthn). The *options* call sets an httpOnly challenge cookie that the matching *verify* call consumes — so the BED must either sit on the same origin (proxy it through this route) or allow credentialed CORS from the app.
+
+| Endpoint | Body | Returns |
+| --- | --- | --- |
+| `POST /register/options` | `{ name, email }` | `PublicKeyCredentialCreationOptionsJSON` |
+| `POST /register/verify` | `RegistrationResponseJSON` | `{ user, credential }` |
+| `POST /login/options` | `{}` | `PublicKeyCredentialRequestOptionsJSON` |
+| `POST /login/verify` | `AuthenticationResponseJSON` | `{ user, credential }` |
+
+`session` and `reset` exist only on the mock.
+
+## Policy choices baked in
+
+- **User verification required** (biometric or PIN) for both ceremonies — banking-grade; `USER_VERIFICATION` in `mock-server/server.ts`.
+- **Discoverable credentials required** — what makes "Sign in with passkey" work without typing an email.
+- **Attestation: none.** Privacy-preserving authenticators (Apple) report an all-zero AAGUID, shown as "Not disclosed".
+- The WebAuthn user handle is random bytes, never the email.
+
+## Next: plugging into the OTP flow
+
+Not built yet, by design. The pieces are in place: `useAuth().meetsRequirement({ acr, evidence })` already models passkey as `acr: 2` / `evidence: ["passkey"]`, so a `GuardedLink` for a high-assurance destination would request that and the auth overlay would offer **Sign in with passkey** before falling back to the OTP steps. After sign-in the BED creates the session and hands off to the assurance engine; the frontend only redirects.
+
+## Source
+
+<include lang="ts" meta='title="features/auth/passkey/contract.ts"'>
+  ../../../src/features/auth/passkey/contract.ts
+</include>
+
+<include lang="ts" meta='title="features/auth/passkey/client.ts"'>
+  ../../../src/features/auth/passkey/client.ts
+</include>
+
+<include lang="tsx" meta='title="features/auth/components/passkey-panel.tsx"'>
+  ../../../src/features/auth/components/passkey-panel.tsx
+</include>

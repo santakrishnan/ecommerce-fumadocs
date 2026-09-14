@@ -213,6 +213,9 @@ Use `composeProviders(...)` to flatten the nesting.
 ### Design-system docs (Fumadocs, development-only)
 App-level components (`src/shared/components/*`, `features/*/components`) are documented at `/docs` with live demos rendered from the real source. Route files are named `page.docs.tsx` / `route.docs.ts`; `next.config.ts` only registers the `docs.*` page extensions in `next dev` or when `ENABLE_DOCS=true`, so `pnpm build` ships no docs code, MDX or previews. To document a component: add a demo wrapper in `src/docs/demos/`, register it in `src/docs/demos/index.ts`, write `content/docs/design-system/<name>.mdx` using `<ComponentPreview name="…" />` and `<include>` for the source. Primitives in `@ucmp/ui` stay in Storybook. See `/docs/design-system` when running `pnpm dev`.
 
+### Passkeys (WebAuthn) — demo build, mock relying party
+`features/auth/passkey/` holds the browser client (`@simplewebauthn/browser`) and `contract.ts`, the 4-endpoint WebAuthn L3 JSON contract for the BED. `features/auth/passkey/mock-server/` + the dev-only routes `app/api/auth/passkey/**/route.docs.ts` are a **throwaway** relying party (`@simplewebauthn/server`, JSON file store in `apps/web/.data/`). When the upstream BED passkey API is available on that route, follow the cleanup list at the top of `mock-server/server.ts`. Test page: `/docs/design-system/passkey`.
+
 ### Features = screaming architecture
 Each subfolder of `apps/web/src/features/` is self-contained: `components/`, `hooks/`, `services/`, `data/`, `lib/`, `__tests__/`, `__fixtures__/`, `index.ts`. Only re-export from `index.ts` what other code should consume.
 

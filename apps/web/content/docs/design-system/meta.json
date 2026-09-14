@@ -1,4 +1,4 @@
 {
   "title": "Design System",
-  "pages": ["index", "---Components---", "otp", "guarded-link"]
+  "pages": ["index", "---Components---", "otp", "guarded-link", "passkey"]
 }

@@ -23,6 +23,8 @@
     "@fingerprint/react": "^3.0.0",
     "@fingerprintjs/fingerprintjs-pro-server-api": "^6.11.0",
     "@hookform/resolvers": "^5.4.0",
+    "@simplewebauthn/browser": "^14.0.0",
+    "@simplewebauthn/server": "^14.0.0",
     "@tanstack/query-db-collection": "^1.0.46",
     "@tanstack/react-db": "^0.1.92",
     "@tanstack/react-query": "^5.101.2",
