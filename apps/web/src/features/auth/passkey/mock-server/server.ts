@@ -10,12 +10,14 @@ import {
 } from "@simplewebauthn/server";
 import { isoBase64URL } from "@simplewebauthn/server/helpers";
 import { cookies } from "next/headers";
-import type {
-  AuthenticationResponseJSON,
-  PasskeyCredentialSummary,
-  PasskeyLoginResult,
-  PasskeyRegisterInput,
-  PasskeyRegisterResult,
+import {
+  type AuthenticationResponseJSON,
+  DEFAULT_REGISTRATION_POLICY,
+  type PasskeyCredentialSummary,
+  type PasskeyLoginResult,
+  type PasskeyRegisterInput,
+  type PasskeyRegisterResult,
+  type PasskeyRegistrationPolicy,
 } from "../contract";
 import { type StoredCredential, store } from "./store";
 
@@ -33,12 +35,19 @@ import { type StoredCredential, store } from "./store";
  * counter) is real, done with @simplewebauthn/server against `../contract.ts`.
  */
 
-// ── Policy (banking-grade defaults) ─────────────────────────────────────────
-/** Biometric or PIN required for both ceremonies. */
+// ── Policy (banking-grade defaults; see DEFAULT_REGISTRATION_POLICY) ───────
+/** Biometric or PIN required for sign-in. */
 const USER_VERIFICATION = "required" as const;
-/** Discoverable credentials: enables "Sign in with passkey" with no username. */
-const RESIDENT_KEY = "required" as const;
 const ATTESTATION = "none" as const;
+
+/**
+ * Merge the demo's requested policy over the defaults. A real RP would apply
+ * its own policy here and ignore the client's — this is the one place the
+ * "where to save your passkey" sheet is controlled from.
+ */
+function resolvePolicy(requested?: PasskeyRegistrationPolicy): Required<PasskeyRegistrationPolicy> {
+  return { ...DEFAULT_REGISTRATION_POLICY, ...requested };
+}
 
 const CHALLENGE_COOKIE = "passkey-demo-challenge";
 const SESSION_COOKIE = "passkey-demo-session";
@@ -184,6 +193,7 @@ export async function registrationOptions(request: Request, input: PasskeyRegist
   };
   store.saveUser(user);
 
+  const policy = resolvePolicy(input.policy);
   const options = await generateRegistrationOptions({
     rpName: rp.name,
     rpID: rp.id,
@@ -191,11 +201,21 @@ export async function registrationOptions(request: Request, input: PasskeyRegist
     userName: user.email,
     userDisplayName: user.name,
     attestationType: ATTESTATION,
+    // Stops the sheet from creating a second passkey on an authenticator that has one.
     excludeCredentials: store
       .credentialsForUser(user.id)
       .map((c) => ({ id: c.id, transports: c.transports })),
-    authenticatorSelection: { residentKey: RESIDENT_KEY, userVerification: USER_VERIFICATION },
+    authenticatorSelection: {
+      // `any` = omit the field so the browser offers every authenticator kind.
+      ...(policy.attachment === "any" ? {} : { authenticatorAttachment: policy.attachment }),
+      residentKey: policy.residentKey,
+      // Spec: requireResidentKey must be true iff residentKey is "required".
+      requireResidentKey: policy.residentKey === "required",
+      userVerification: policy.userVerification,
+    },
   });
+  // Hints are WebAuthn L3; browsers without support ignore them.
+  options.hints = policy.hints;
   await issueChallenge({ challenge: options.challenge, purpose: "register", userId: user.id });
   return options;
 }

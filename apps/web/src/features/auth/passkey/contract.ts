@@ -32,9 +32,44 @@ export const PASSKEY_ENDPOINTS = {
   loginVerify: "/login/verify",
 } as const;
 
+/** Which authenticators the "Choose where to save your passkey" sheet offers. */
+export type PasskeyAttachment = "any" | "platform" | "cross-platform";
+
+/** WebAuthn L3 hints: order/prefer authenticator kinds without excluding any. */
+export type PasskeyHint = "client-device" | "security-key" | "hybrid";
+
+export type PasskeyRequirement = "required" | "preferred" | "discouraged";
+
+/**
+ * Registration policy — the knobs behind the "where to save" sheet.
+ *
+ * In production the relying party OWNS this policy; it is included in the
+ * request only so the demo can switch policies live. A real backend should
+ * ignore (or validate against an allow-list) anything the client sends here.
+ */
+export interface PasskeyRegistrationPolicy {
+  /** `platform` = device keychain only; `cross-platform` = security key / phone only; `any` = all. */
+  attachment?: PasskeyAttachment;
+  /** Preference order shown first in the sheet; ignored by browsers that predate hints. */
+  hints?: PasskeyHint[];
+  /** Discoverable credential — `required` enables sign-in without a username. */
+  residentKey?: PasskeyRequirement;
+  /** Biometric / PIN. */
+  userVerification?: PasskeyRequirement;
+}
+
+export const DEFAULT_REGISTRATION_POLICY: Required<PasskeyRegistrationPolicy> = {
+  attachment: "any",
+  hints: ["client-device"],
+  residentKey: "required",
+  userVerification: "required",
+};
+
 export interface PasskeyRegisterInput {
   email: string;
   name: string;
+  /** Demo-only override of the RP's registration policy (see PasskeyRegistrationPolicy). */
+  policy?: PasskeyRegistrationPolicy;
 }
 
 export interface PasskeyUser {

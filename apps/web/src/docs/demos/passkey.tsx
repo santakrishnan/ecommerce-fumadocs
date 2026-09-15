@@ -6,3 +6,8 @@ import { PasskeyPanel } from "@features/auth";
 export function PasskeyDemo() {
   return <PasskeyPanel />;
 }
+
+/** Same panel with the registration-policy controls and options readout. */
+export function PasskeyPolicyDemo() {
+  return <PasskeyPanel showPolicy />;
+}

@@ -71,12 +71,21 @@ export function passkeysSupported(): boolean {
   return browserSupportsWebAuthn();
 }
 
+export interface RegisterPasskeyHooks {
+  /** Receives the creation options exactly as handed to the browser (useful to show what drove the sheet). */
+  onOptions?: (options: PublicKeyCredentialCreationOptionsJSON) => void;
+}
+
 /** Ceremony 1: create a passkey for a new user and register it with the RP. */
-export async function registerPasskey(input: PasskeyRegisterInput): Promise<PasskeyRegisterResult> {
+export async function registerPasskey(
+  input: PasskeyRegisterInput,
+  hooks: RegisterPasskeyHooks = {}
+): Promise<PasskeyRegisterResult> {
   const optionsJSON = await post<PublicKeyCredentialCreationOptionsJSON>(
     PASSKEY_ENDPOINTS.registerOptions,
     input
   );
+  hooks.onOptions?.(optionsJSON);
   const registration = await startRegistration({ optionsJSON });
   return post<PasskeyRegisterResult>(PASSKEY_ENDPOINTS.registerVerify, registration);
 }

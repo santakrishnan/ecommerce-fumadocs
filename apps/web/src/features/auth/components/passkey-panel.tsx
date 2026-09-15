@@ -5,15 +5,20 @@ import { KeyRoundIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "utils";
 import {
+  DEFAULT_REGISTRATION_POLICY,
   describePasskeyError,
   getPasskeySession,
   type PasskeyCredentialSummary,
+  type PasskeyRegistrationPolicy,
   type PasskeyUser,
+  type PublicKeyCredentialCreationOptionsJSON,
   passkeysSupported,
   registerPasskey,
   resetPasskeyDemo,
   signInWithPasskey,
 } from "../passkey";
+import { PasskeyOptionsReadout } from "./passkey-options-readout";
+import { PasskeyPolicyControls } from "./passkey-policy-controls";
 import { StoredPasskeyCard } from "./stored-passkey-card";
 
 type Status = "loading" | "unsupported" | "anonymous" | "signed-in";
@@ -31,6 +36,12 @@ interface Outcome extends CeremonyResult {
 
 export interface PasskeyPanelProps {
   className?: string;
+  /**
+   * Show the registration-policy controls and the options readout. Demo-only:
+   * lets you change what the "where to save" sheet offers and see the exact
+   * options the browser received. In production the RP fixes the policy.
+   */
+  showPolicy?: boolean;
   /** Show the "Reset demo" link — MOCK-ONLY, remove with the mock server. */
   showReset?: boolean;
 }
@@ -41,8 +52,18 @@ export interface PasskeyPanelProps {
  * Presentational + client-side ceremonies only; the RP is behind
  * `features/auth/passkey` (mock today, upstream BED later).
  */
-export function PasskeyPanel({ className, showReset = true }: PasskeyPanelProps) {
+export function PasskeyPanel({
+  className,
+  showPolicy = false,
+  showReset = true,
+}: PasskeyPanelProps) {
   const [status, setStatus] = useState<Status>("loading");
+  const [policy, setPolicy] = useState<Required<PasskeyRegistrationPolicy>>(
+    DEFAULT_REGISTRATION_POLICY
+  );
+  const [lastOptions, setLastOptions] = useState<PublicKeyCredentialCreationOptionsJSON | null>(
+    null
+  );
   const [user, setUser] = useState<PasskeyUser | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -106,10 +127,23 @@ export function PasskeyPanel({ className, showReset = true }: PasskeyPanelProps)
       {status === "anonymous" && (
         <CreatePasskeyForm
           busy={busy}
-          onCreate={(input) => run("Passkey created", () => registerPasskey(input))}
+          onCreate={(input) =>
+            run("Passkey created", () =>
+              registerPasskey(
+                { ...input, ...(showPolicy ? { policy } : {}) },
+                { onOptions: setLastOptions }
+              )
+            )
+          }
           onSignIn={signIn}
         />
       )}
+
+      {showPolicy && status === "anonymous" && (
+        <PasskeyPolicyControls onChange={setPolicy} policy={policy} />
+      )}
+
+      {showPolicy && lastOptions && <PasskeyOptionsReadout options={lastOptions} />}
 
       {status === "signed-in" && user && (
         <div className="flex flex-col items-center gap-4 text-center">

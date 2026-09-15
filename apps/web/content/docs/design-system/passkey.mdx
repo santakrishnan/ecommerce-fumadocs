@@ -75,6 +75,41 @@ Four endpoints, relative to `NEXT_PUBLIC_PASSKEY_API_BASE` (default `/api/auth/p
 
 `session` and `reset` exist only on the mock.
 
+## Controlling the "Choose where to save your passkey" sheet
+
+That sheet is driven entirely by the **registration options the relying party sends** — the site controls it, not the SDK and not the device. The two settings that matter are `authenticatorSelection` (restricts *which kinds* of authenticator are offered) and `hints` (WebAuthn L3: *orders* the kinds without excluding any). Two things the site does **not** control: which password manager stores the passkey (iCloud Keychain vs Google vs 1Password is the user's OS setting), and the label in the sheet — that's the RP ID and `rp.name`, i.e. `RP_ID` / `RP_NAME` (in production the registrable domain, so one passkey works across `www.`, `shop.`, `id.`).
+
+| Setting | Effect on the sheet |
+| --- | --- |
+| `authenticatorAttachment: "platform"` | Only the device keychain (Face ID / Touch ID / Windows Hello). Hides security keys and "use another device". |
+| `authenticatorAttachment: "cross-platform"` | Only external authenticators: security keys, a phone via QR. |
+| omitted (`any`) | Everything offered — the long list. |
+| `hints: ["client-device"]` etc. | Leads with that kind but keeps the rest available. Safer than attachment when you want a default, not a restriction. Ignored by older browsers. |
+| `residentKey: "required"` | Discoverable passkey — what enables sign-in without a username. Keep. |
+| `userVerification: "required"` | Biometric / PIN mandatory. Keep for banking. |
+| `excludeCredentials` | Prevents a second passkey on an authenticator that already holds one. Set automatically. |
+
+### Try each policy
+
+The panel below adds the policy controls and, after each attempt, shows the options **exactly as the browser received them** (`rp.id`, `rp.name`, `authenticatorSelection`, `hints`). Pick a preset, select **Create a passkey**, and compare the sheet.
+
+<Callout type="info" title="Demo-only knob">
+In production the RP owns this policy and ignores anything the client sends. The `policy` field on `register/options` exists so the sheet can be compared live; the BED should drop it (or validate it against an allow-list).
+</Callout>
+
+<ComponentPreview name="passkey-policy" defaultDevice="mobile" />
+
+### Test matrix
+
+| Preset | On an iPhone / iPad (Safari) | On a Mac / Windows laptop (Chrome) | Chrome DevTools virtual authenticator |
+| --- | --- | --- | --- |
+| **Consumer default** (`any` + hint `client-device`) | Sheet leads with iCloud Keychain; "Other options" reveals security key / other device. | Google Password Manager or iCloud Keychain first; "Use a different device" and security key below. | Works with a `ctap2` / `internal` authenticator; also with `usb`. |
+| **This device only** (`platform`) | Only Face ID / Touch ID; no QR, no security key. | Only Windows Hello / Touch ID; the "other device" option disappears. | Only an `internal` authenticator is accepted — a `usb` one is refused. |
+| **Security key only** (`cross-platform`) | Only NFC/USB security keys and "other device"; the device keychain is hidden. | Only security key / phone via QR. | Only a `usb` / `nfc` / `ble` authenticator works. |
+| **Everything, no preference** (`any`, no hints) | Full list, platform order. | Full list, platform order. | Any authenticator. |
+
+To reproduce a real domain label instead of "localhost", run through ngrok (`RP_ID`/`RP_NAME` derived from the request) or set them in `.env.local`. Remember passkeys are bound to the RP ID: switch `attachment` freely, but changing `RP_ID` starts from an empty list.
+
 ## Policy choices baked in
 
 - **User verification required** (biometric or PIN) for both ceremonies — banking-grade; `USER_VERIFICATION` in `mock-server/server.ts`.
