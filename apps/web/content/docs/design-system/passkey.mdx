@@ -75,6 +75,49 @@ Four endpoints, relative to `NEXT_PUBLIC_PASSKEY_API_BASE` (default `/api/auth/p
 
 `session` and `reset` exist only on the mock.
 
+## Your passkeys: the list, with readable names
+
+A site cannot read the passkeys stored on a device or in a password manager; browsers block that to prevent tracking. What it can list is the relying party's own records for the signed-in customer, which is what every account page does. WebAuthn returns no name for a passkey, so the RP builds one:
+
+| Source | Produces | Where it is computed |
+| --- | --- | --- |
+| AAGUID → authenticator model | "iCloud Keychain", "1Password", "Windows Hello", "YubiKey 5 NFC" | `mock-server/label.ts` `authenticatorNameFor()` against the vendored community list `aaguids.json`. "Not disclosed" for an all-zero AAGUID. |
+| Request context at registration | "Safari on iPhone", "Chrome on Windows", plus the date | `platformLabelFor(request)` from the user agent, at `register/verify`. This is the code that moves into the Next.js proxy route when the BED takes over storage. |
+| User nickname | "Work laptop" | `PATCH /passkeys/:id` |
+
+Display rule: nickname if set, otherwise `<authenticator> · <platform> · added <date>`, otherwise `Passkey · added <date>`. After you sign in, the panel shows the list with Rename and Revoke. Revoke calls the Signal API so the password manager hides the revoked passkey where supported.
+
+Register from two devices through ngrok (a laptop and a phone) to get a list that reads "Apple Passwords · Safari on iPhone · added 16 Sep 2026" and "Google Password Manager · Chrome on macOS · added 16 Sep 2026".
+
+<Callout type="info" title="What the BED must return">
+`aaguid`, `transports`, `backedUp`, `createdAt`, `lastUsedAt`, `authenticatorName`, `platformLabel`, `nickname`, and the derived `name`; plus `GET /passkeys`, `PATCH /passkeys/:id` and `DELETE /passkeys/:id` returning the remaining IDs. The contract in `features/auth/passkey/contract.ts` has the exact types.
+</Callout>
+
+## Detecting a passkey and prompting to sign in
+
+The site cannot ask whether a passkey exists. It can invite the browser to use one in ways that stay silent when there is none. The demo below runs the three layers in order and prints which one did what:
+
+1. **Immediate mediation.** `navigator.credentials.get({ mediation: "immediate" })` shows the passkey sheet at once if this browser holds one for the RP ID, and rejects instantly with no UI if not. Feature detected with `getClientCapabilities().immediateGet`; not every browser has it yet.
+2. **Conditional UI.** A pending request is armed so the email field (`autocomplete="username webauthn"`) offers passkeys in its autofill bar. The broadest support, including iPhone and iPad.
+3. **Relying party hint.** The mock sets a `passkey-hint` cookie when a platform passkey was created or used from this browser; on return the panel shows "Sign in with your passkey" as the primary action. An inference, but it works everywhere.
+
+Whatever the layer, a phone can act as the authenticator for a desktop through the QR path, so "no passkey on this device" is never a dead end.
+
+<ComponentPreview name="passkey-nudge" defaultDevice="mobile" />
+
+### How to test the layers
+
+| Step | What to expect |
+| --- | --- |
+| Open the preview on a device with no passkey for this RP ID | The capabilities card shows what the browser supports; the trace ends with "no passkey" and the form is shown. |
+| Create a passkey with Face ID / Touch ID, then reload the preview | The hint is set: "Sign in with your passkey" becomes the primary button. On a browser with immediate mediation the sheet appears on its own; otherwise tap the email field to see the passkey in the autofill bar. |
+| Chrome DevTools virtual authenticator (`internal`, resident key + UV on) | Conditional UI works; immediate mediation depends on the Chrome version, and the trace says which. |
+| Reset demo | Clears the hint and the store; the next load behaves as a new device. |
+
+<Callout type="warn" title="One WebAuthn request at a time">
+The browser allows a single pending credential request. The hook cancels the conditional-UI request before starting any other ceremony and on unmount, so pressing a button while the autofill request is armed does not fail with an AbortError.
+</Callout>
+
 ## Controlling the "Choose where to save your passkey" sheet
 
 That sheet is driven entirely by the **registration options the relying party sends** — the site controls it, not the SDK and not the device. The two settings that matter are `authenticatorSelection` (restricts *which kinds* of authenticator are offered) and `hints` (WebAuthn L3: *orders* the kinds without excluding any). Two things the site does **not** control: which password manager stores the passkey (iCloud Keychain vs Google vs 1Password is the user's OS setting), and the label in the sheet — that's the RP ID and `rp.name`, i.e. `RP_ID` / `RP_NAME` (in production the registrable domain, so one passkey works across `www.`, `shop.`, `id.`).

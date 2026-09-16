@@ -19,11 +19,13 @@ import {
 } from "@simplewebauthn/browser";
 import {
   PASSKEY_ENDPOINTS,
+  type PasskeyCredentialSummary,
   type PasskeyErrorBody,
   type PasskeyLoginResult,
   type PasskeyRegisterInput,
   type PasskeyRegisterResult,
-  type PasskeyUser,
+  type PasskeyRevokeResult,
+  type PasskeySession,
   type PublicKeyCredentialCreationOptionsJSON,
   type PublicKeyCredentialRequestOptionsJSON,
 } from "./contract";
@@ -44,13 +46,17 @@ export class PasskeyApiError extends Error {
   }
 }
 
-async function post<T>(path: string, body: unknown): Promise<T> {
+async function request<T>(
+  method: "GET" | "POST" | "PATCH" | "DELETE",
+  path: string,
+  body?: unknown
+): Promise<T> {
   const response = await fetch(`${getPasskeyApiBase()}${path}`, {
-    method: "POST",
+    method,
     headers: { "Content-Type": "application/json" },
     // The challenge lives in an httpOnly cookie set by the options call.
     credentials: "same-origin",
-    body: JSON.stringify(body ?? {}),
+    body: method === "GET" ? undefined : JSON.stringify(body ?? {}),
   });
   if (!response.ok) {
     let message = `Request failed (${response.status})`;
@@ -66,6 +72,8 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   }
   return (await response.json()) as T;
 }
+
+const post = <T>(path: string, body: unknown) => request<T>("POST", path, body);
 
 export function passkeysSupported(): boolean {
   return browserSupportsWebAuthn();
@@ -104,14 +112,54 @@ export async function signInWithPasskey(): Promise<PasskeyLoginResult> {
   return post<PasskeyLoginResult>(PASSKEY_ENDPOINTS.loginVerify, assertion);
 }
 
+/** Passkeys registered for the signed-in user (the RP's records; the device is never enumerated). */
+export function listPasskeys(): Promise<PasskeyCredentialSummary[]> {
+  return request<PasskeyCredentialSummary[]>("GET", PASSKEY_ENDPOINTS.list);
+}
+
+export function renamePasskey(
+  id: string,
+  nickname: string | null
+): Promise<PasskeyCredentialSummary> {
+  return request<PasskeyCredentialSummary>(
+    "PATCH",
+    `${PASSKEY_ENDPOINTS.item}/${encodeURIComponent(id)}`,
+    {
+      nickname,
+    }
+  );
+}
+
+/**
+ * Revoke a passkey on the RP, then tell the authenticator which credentials
+ * are still accepted so the password manager hides the revoked one
+ * (Signal API; best effort, ignored where unsupported).
+ */
+export async function revokePasskey(
+  id: string,
+  rpID: string,
+  userID: string
+): Promise<PasskeyRevokeResult> {
+  const result = await request<PasskeyRevokeResult>(
+    "DELETE",
+    `${PASSKEY_ENDPOINTS.item}/${encodeURIComponent(id)}`
+  );
+  await sendSignal({
+    signalName: "allAcceptedCredentials",
+    rpID,
+    userID,
+    allAcceptedCredentialIDs: result.remainingIds,
+  }).catch(() => undefined);
+  return result;
+}
+
 /** MOCK-ONLY (remove when the upstream API lands): who the demo session cookie says is signed in. */
-export async function getPasskeySession(): Promise<PasskeyUser | null> {
+export async function getPasskeySession(): Promise<PasskeySession> {
   const response = await fetch(`${getPasskeyApiBase()}/session`, { credentials: "same-origin" });
   if (!response.ok) {
-    return null;
+    return { user: null, rpID: window.location.hostname };
   }
-  const data = (await response.json()) as { user: PasskeyUser | null };
-  return data.user;
+  return (await response.json()) as PasskeySession;
 }
 
 /**

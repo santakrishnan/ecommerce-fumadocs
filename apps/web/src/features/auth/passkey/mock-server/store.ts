@@ -15,13 +15,19 @@ import type { PasskeyUser } from "../contract";
 
 export interface StoredCredential {
   aaguid: string;
+  /** Resolved from the AAGUID at registration; null when undisclosed. */
+  authenticatorName: string | null;
   backedUp: boolean;
   counter: number;
   createdAt: string;
   deviceType: "singleDevice" | "multiDevice";
   id: string;
   lastUsedAt: string | null;
-  /** COSE public key, base64url. There is no private key — ever. */
+  /** User-set label, via PATCH /passkeys/:id. */
+  nickname: string | null;
+  /** "Safari on iPhone" etc., from the registering request's user agent. */
+  platformLabel: string | null;
+  /** COSE public key, base64url. There is no private key, ever. */
   publicKey: string;
   transports: string[];
   userId: string;
@@ -75,6 +81,11 @@ export const store = {
   saveCredential(credential: StoredCredential): void {
     const data = read();
     data.credentials[credential.id] = credential;
+    write(data);
+  },
+  deleteCredential(id: string): void {
+    const data = read();
+    delete data.credentials[id];
     write(data);
   },
   allUserIds(): string[] {

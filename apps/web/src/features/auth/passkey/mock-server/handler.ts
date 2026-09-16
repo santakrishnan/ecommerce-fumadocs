@@ -13,7 +13,7 @@ export function mockRpRoute<T>(
   return async (request) => {
     await connection();
     let body: unknown = {};
-    if (request.method === "POST") {
+    if (request.method === "POST" || request.method === "PATCH") {
       try {
         body = await request.json();
       } catch {

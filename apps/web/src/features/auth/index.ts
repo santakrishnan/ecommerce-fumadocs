@@ -1,5 +1,7 @@
 export { AuthProvider } from "./auth-provider";
 export { GuardedLink } from "./components/guarded-link";
+export { PasskeyCapabilitiesCard } from "./components/passkey-capabilities";
+export { PasskeyList } from "./components/passkey-list";
 export type { PasskeyPanelProps } from "./components/passkey-panel";
 export { PasskeyPanel } from "./components/passkey-panel";
 export { PasskeyPolicyControls } from "./components/passkey-policy-controls";
@@ -12,6 +14,7 @@ export type {
   OtpFlowStep,
 } from "./hooks/use-auth";
 export { useAuth, useOtpFlow } from "./hooks/use-auth";
+export { usePasskeyNudge } from "./hooks/use-passkey-nudge";
 export type {
   PasskeyAttachment,
   PasskeyCredentialSummary,
@@ -28,9 +31,14 @@ export {
   DEFAULT_REGISTRATION_POLICY,
   describePasskeyError,
   getPasskeyApiBase,
+  getPasskeyCapabilities,
   PASSKEY_ENDPOINTS,
   PasskeyApiError,
   passkeysSupported,
+  readPasskeyHint,
   registerPasskey,
+  renamePasskey,
+  revokePasskey,
   signInWithPasskey,
+  signInWithPasskeyImmediate,
 } from "./passkey";

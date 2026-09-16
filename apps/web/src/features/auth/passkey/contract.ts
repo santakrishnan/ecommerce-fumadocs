@@ -30,6 +30,10 @@ export const PASSKEY_ENDPOINTS = {
   loginOptions: "/login/options",
   /** POST AuthenticationResponseJSON → PasskeyLoginResult */
   loginVerify: "/login/verify",
+  /** GET → PasskeyCredentialSummary[] for the signed-in user */
+  list: "/passkeys",
+  /** PATCH /passkeys/:id { nickname } → PasskeyCredentialSummary; DELETE /passkeys/:id → PasskeyRevokeResult */
+  item: "/passkeys",
 } as const;
 
 /** Which authenticators the "Choose where to save your passkey" sheet offers. */
@@ -85,12 +89,20 @@ export type PasskeyType = "synced" | "device-bound";
 export interface PasskeyCredentialSummary {
   /** Authenticator model id; all-zero for privacy-preserving authenticators (shown as "Not disclosed"). */
   aaguid: string;
+  /** Authenticator model name resolved from the AAGUID ("iCloud Keychain", "1Password"); null if undisclosed. */
+  authenticatorName: string | null;
   backedUp: boolean;
   /** Signature counter, used to detect cloned authenticators. */
   counter: number;
   createdAt: string;
   id: string;
   lastUsedAt: string | null;
+  /** Display label: nickname if set, else "<authenticator> · <platform> · added <date>". */
+  name: string;
+  /** User-chosen label, or null. */
+  nickname: string | null;
+  /** Browser and OS that registered the passkey ("Safari on iPhone"), or null. */
+  platformLabel: string | null;
   /** COSE public key, base64url. */
   publicKey: string;
   transports: string[];
@@ -99,12 +111,30 @@ export interface PasskeyCredentialSummary {
 
 export interface PasskeyRegisterResult {
   credential: PasskeyCredentialSummary;
+  /** RP ID the passkey is bound to; needed for the Signal API. */
+  rpID: string;
   user: PasskeyUser;
 }
 
 export interface PasskeyLoginResult {
   credential: PasskeyCredentialSummary;
+  rpID: string;
   user: PasskeyUser;
+}
+
+export interface PasskeySession {
+  rpID: string;
+  user: PasskeyUser | null;
+}
+
+export interface PasskeyRenameInput {
+  nickname: string | null;
+}
+
+export interface PasskeyRevokeResult {
+  /** IDs still valid for this user; pass to the Signal API so the authenticator hides the rest. */
+  remainingIds: string[];
+  revokedId: string;
 }
 
 export interface PasskeyErrorBody {

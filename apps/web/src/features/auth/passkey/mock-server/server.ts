@@ -18,7 +18,10 @@ import {
   type PasskeyRegisterInput,
   type PasskeyRegisterResult,
   type PasskeyRegistrationPolicy,
+  type PasskeyRenameInput,
+  type PasskeyRevokeResult,
 } from "../contract";
+import { authenticatorNameFor, displayNameFor, platformLabelFor } from "./label";
 import { type StoredCredential, store } from "./store";
 
 /**
@@ -51,6 +54,9 @@ function resolvePolicy(requested?: PasskeyRegistrationPolicy): Required<PasskeyR
 
 const CHALLENGE_COOKIE = "passkey-demo-challenge";
 const SESSION_COOKIE = "passkey-demo-session";
+/** Non-httpOnly: read by the client to nudge "Sign in with your passkey" (approach doc, layer 3). */
+const HINT_COOKIE = "passkey-hint";
+const HINT_TTL_S = 60 * 60 * 24 * 365;
 const CHALLENGE_TTL_MS = 5 * 60 * 1000;
 const SESSION_TTL_S = 60 * 60 * 24;
 const ZERO_AAGUID = "00000000-0000-0000-0000-000000000000";
@@ -149,6 +155,24 @@ async function setSession(userId: string): Promise<void> {
   });
 }
 
+/** Remember that a *platform* passkey was created/used from this browser. */
+async function setHint(attachment: string | undefined): Promise<void> {
+  if (attachment !== "platform") {
+    return;
+  }
+  const jar = await cookies();
+  jar.set(HINT_COOKIE, "platform", {
+    httpOnly: false,
+    sameSite: "lax",
+    path: "/",
+    maxAge: HINT_TTL_S,
+  });
+}
+
+export async function sessionFor(request: Request) {
+  return { user: await currentUser(), rpID: relyingPartyFor(request).id };
+}
+
 export async function currentUser() {
   const jar = await cookies();
   const id = jar.get(SESSION_COOKIE)?.value;
@@ -159,11 +183,16 @@ export async function clearSession(): Promise<void> {
   const jar = await cookies();
   jar.delete(SESSION_COOKIE);
   jar.delete(CHALLENGE_COOKIE);
+  jar.delete(HINT_COOKIE);
 }
 
 function summarize(c: StoredCredential): PasskeyCredentialSummary {
   return {
     id: c.id,
+    name: displayNameFor(c),
+    authenticatorName: c.authenticatorName,
+    platformLabel: c.platformLabel,
+    nickname: c.nickname,
     publicKey: c.publicKey,
     counter: c.counter,
     transports: c.transports,
@@ -255,14 +284,20 @@ export async function registrationVerify(
     deviceType: credentialDeviceType,
     backedUp: credentialBackedUp,
     aaguid,
+    // Labels: what a BED (or the proxy in front of it) should compute at this moment.
+    authenticatorName: authenticatorNameFor(aaguid),
+    platformLabel: platformLabelFor(request),
+    nickname: null,
     createdAt: new Date().toISOString(),
     lastUsedAt: null,
   };
   store.saveCredential(stored);
   await setSession(user.id);
+  await setHint(response.authenticatorAttachment);
   return {
     user: { id: user.id, name: user.name, email: user.email },
     credential: summarize(stored),
+    rpID: rp.id,
   };
 }
 
@@ -322,9 +357,53 @@ export async function authenticationVerify(
   };
   store.saveCredential(updated);
   await setSession(user.id);
+  await setHint(response.authenticatorAttachment);
   return {
     user: { id: user.id, name: user.name, email: user.email },
     credential: summarize(updated),
+    rpID: rp.id,
+  };
+}
+
+// ── Passkey management (list / rename / revoke) ─────────────────────────────
+async function requireUser() {
+  const user = await currentUser();
+  if (!user) {
+    throw new MockRpError("Sign in first.", 401);
+  }
+  return user;
+}
+
+export async function listPasskeys(): Promise<PasskeyCredentialSummary[]> {
+  const user = await requireUser();
+  return store
+    .credentialsForUser(user.id)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .map(summarize);
+}
+
+export async function renamePasskey(id: string, input: PasskeyRenameInput) {
+  const user = await requireUser();
+  const stored = store.getCredential(id);
+  if (!stored || stored.userId !== user.id) {
+    throw new MockRpError("Passkey not found.", 404);
+  }
+  const nickname = typeof input.nickname === "string" ? input.nickname.trim().slice(0, 60) : "";
+  const updated = { ...stored, nickname: nickname || null };
+  store.saveCredential(updated);
+  return summarize(updated);
+}
+
+export async function revokePasskey(id: string): Promise<PasskeyRevokeResult> {
+  const user = await requireUser();
+  const stored = store.getCredential(id);
+  if (!stored || stored.userId !== user.id) {
+    throw new MockRpError("Passkey not found.", 404);
+  }
+  store.deleteCredential(id);
+  return {
+    revokedId: id,
+    remainingIds: store.credentialsForUser(user.id).map((c) => c.id),
   };
 }
 

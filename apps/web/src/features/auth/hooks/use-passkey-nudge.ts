@@ -1,0 +1,122 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import {
+  armPasskeyAutofill,
+  cancelPasskeyAutofill,
+  getPasskeyCapabilities,
+  type PasskeyCapabilities,
+  type PasskeyLoginResult,
+  readPasskeyHint,
+  signInWithPasskeyImmediate,
+} from "../passkey";
+
+export interface PasskeyNudgeState {
+  capabilities: PasskeyCapabilities | null;
+  /** True when the RP hint cookie says a platform passkey was used from this browser. */
+  hinted: boolean;
+  /** Human-readable trace of which layer did what (shown in the demo). */
+  log: string[];
+}
+
+interface Ctx {
+  isActive: () => boolean;
+  note: (line: string) => void;
+  signedIn: (result: PasskeyLoginResult) => void;
+}
+
+/** Layer 1: immediate mediation. Returns true when it completed a sign-in. */
+async function tryImmediate(caps: PasskeyCapabilities, ctx: Ctx): Promise<boolean> {
+  if (!caps.immediateGet) {
+    ctx.note("immediate: not supported in this browser");
+    return false;
+  }
+  ctx.note("immediate: supported, asking the browser…");
+  const outcome = await signInWithPasskeyImmediate();
+  if (!ctx.isActive()) {
+    return true;
+  }
+  if (outcome.kind === "signed-in") {
+    ctx.note("immediate: signed in");
+    ctx.signedIn(outcome.result);
+    return true;
+  }
+  const reason = outcome.kind === "no-passkey" ? "no passkey here (or dismissed)" : outcome.kind;
+  ctx.note(`immediate: ${reason}`);
+  return false;
+}
+
+/** Layer 2: conditional UI on the email field. Resolves when the user picks a passkey. */
+async function tryConditional(caps: PasskeyCapabilities, ctx: Ctx): Promise<void> {
+  if (!caps.conditionalGet) {
+    ctx.note("conditional UI: not supported in this browser");
+    return;
+  }
+  ctx.note("conditional UI: armed on the email field");
+  try {
+    const result = await armPasskeyAutofill();
+    if (ctx.isActive()) {
+      ctx.note("conditional UI: signed in");
+      ctx.signedIn(result);
+    }
+  } catch {
+    if (ctx.isActive()) {
+      ctx.note("conditional UI: cancelled");
+    }
+  }
+}
+
+/**
+ * Runs the sign-in nudge sequence from the approach document while the user
+ * is anonymous: read the RP hint and capabilities → try immediate mediation →
+ * arm conditional UI on the email field. Calls `onSignedIn` when any layer
+ * completes a sign-in; the caller renders the OTP/email form regardless.
+ */
+export function usePasskeyNudge(
+  enabled: boolean,
+  onSignedIn: (result: PasskeyLoginResult) => void
+): PasskeyNudgeState {
+  const [capabilities, setCapabilities] = useState<PasskeyCapabilities | null>(null);
+  const [hinted, setHinted] = useState(false);
+  const [log, setLog] = useState<string[]>([]);
+  const onSignedInRef = useRef(onSignedIn);
+  onSignedInRef.current = onSignedIn;
+
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+    let active = true;
+    const ctx: Ctx = {
+      isActive: () => active,
+      // Numbered so each line is a stable, unique React key.
+      note: (line) => active && setLog((prev) => [...prev, `${prev.length + 1}. ${line}`]),
+      signedIn: (result) => onSignedInRef.current(result),
+    };
+
+    const run = async () => {
+      const hint = readPasskeyHint();
+      setHinted(hint);
+      ctx.note(hint ? "hint: this browser used a platform passkey before" : "hint: none");
+
+      const caps = await getPasskeyCapabilities();
+      if (!active) {
+        return;
+      }
+      setCapabilities(caps);
+
+      if (await tryImmediate(caps, ctx)) {
+        return;
+      }
+      await tryConditional(caps, ctx);
+    };
+
+    run();
+    return () => {
+      active = false;
+      cancelPasskeyAutofill();
+    };
+  }, [enabled]);
+
+  return { capabilities, hinted, log };
+}

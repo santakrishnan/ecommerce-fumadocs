@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import { GuardedLinkDemo } from "./guarded-link";
 import { OtpFlowDemo, OtpStartDarkDemo, OtpStartDemo, OtpVerifyDemo } from "./otp";
-import { PasskeyDemo, PasskeyPolicyDemo } from "./passkey";
+import { PasskeyDemo, PasskeyNudgeDemo, PasskeyPolicyDemo } from "./passkey";
 
 /**
  * Registry of live demos, keyed by the name used in MDX
@@ -17,6 +17,7 @@ export const demos = {
   "guarded-link": GuardedLinkDemo,
   passkey: PasskeyDemo,
   "passkey-policy": PasskeyPolicyDemo,
+  "passkey-nudge": PasskeyNudgeDemo,
 } satisfies Record<string, ComponentType>;
 
 export type DemoName = keyof typeof demos;
