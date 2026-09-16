@@ -237,7 +237,7 @@ Shows `rp.id`, `rp.name`, `authenticatorSelection`, `hints`, the number of exclu
 
 ### 3.5 KEEP: `features/auth/hooks/use-passkey-nudge.ts`
 
-Sequences the layers: hint → capabilities → immediate mediation → conditional UI. Calls `onSignedIn` when a layer completes a sign-in. Keeps `active` and cancels the autofill request on cleanup. Split into `tryImmediate()` and `tryConditional()` helpers to keep each function small.
+Sequences the layers: hint → capabilities → wait for focus or the first click → immediate mediation → conditional UI. The wait exists because the browser allows one pending WebAuthn request per tab and the docs page has several previews; arming conditional UI on load would make every other passkey button fail with "A request is already pending". Calls `onSignedIn` when a layer completes a sign-in. Keeps a liveness flag and cancels the autofill request on cleanup. Returns `started` so the UI can tell whether the prompts have begun. Split into `tryImmediate()` and `tryConditional()` helpers to keep each function small.
 
 ### 3.6 Feature surface: `features/auth/index.ts`
 
@@ -296,3 +296,11 @@ The BED will replace the session with its own mechanism and hand off to the assu
 3. Move `label.ts` and `aaguids.json` into the proxy route if the BED does not compute names itself.
 4. Remove `@simplewebauthn/server`, `getPasskeySession`, `resetPasskeyDemo` and the Reset link.
 5. Nothing else changes: contract, client, nudge layers, components and docs stay as they are.
+
+## Debug logging
+
+All logging is development only.
+
+- Terminal (`pnpm dev`): `mock-server/handler.ts` logs every request as `→ METHOD path` with the body and cookie names, and every response as `← status path` with the JSON returned or the error. Scope is `mock-rp`. Long strings are truncated.
+- Browser console, `[passkey client]`: each fetch to the mock, the creation or request options handed to the browser, and the authenticator response sent back.
+- Browser console, `[passkey nudge]`: the immediate mediation and conditional UI calls.

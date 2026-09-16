@@ -115,8 +115,20 @@ Whatever the layer, a phone can act as the authenticator for a desktop through t
 | Reset demo | Clears the hint and the store; the next load behaves as a new device. |
 
 <Callout type="warn" title="One WebAuthn request at a time">
-The browser allows a single pending credential request. The hook cancels the conditional-UI request before starting any other ceremony and on unmount, so pressing a button while the autofill request is armed does not fail with an AbortError.
+The browser allows a single pending WebAuthn request per tab, and that limit covers every preview iframe on this page. If the nudge preview armed its conditional UI request on load, the Create passkey button in the first preview would fail with "A request is already pending". So the nudge preview waits until you click or tap inside it (its trace shows "waiting" until then), and the client cancels its own pending request before starting any ceremony. If you still see the pending message, another preview on the page holds the request: reload the page and use one preview at a time.
 </Callout>
+
+### Watching the requests
+
+Every mock route and every browser call is logged so you can show the traffic during a demo:
+
+| Where | Prefix | What you see |
+| --- | --- | --- |
+| Terminal running `pnpm dev` | `[mock-rp]` | One line per request (`→ POST /api/auth/passkey/register/options` with body and cookie names) and one per response (`← 200 ...` with the JSON returned, or the error). |
+| Browser console | `[passkey client]` | The options the browser received, the authenticator response sent back, and each fetch to the mock. |
+| Browser console | `[passkey nudge]` | The immediate mediation and conditional UI calls to `navigator.credentials.get`. |
+
+Long values such as challenges and public keys are truncated. Logging is development only; nothing is printed in a production build.
 
 ## Controlling the "Choose where to save your passkey" sheet
 

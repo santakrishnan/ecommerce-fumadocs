@@ -9,6 +9,7 @@
  *   3. relying-party hint   (a cookie the RP sets after a platform passkey was used here)
  */
 
+import { devConsole } from "@shared/lib/dev-console";
 import { startAuthentication, WebAuthnAbortService } from "@simplewebauthn/browser";
 import { getPasskeyApiBase } from "./client";
 import {
@@ -117,6 +118,10 @@ export async function signInWithPasskeyImmediate(): Promise<ImmediateOutcome> {
   const publicKey = pk.parseRequestOptionsFromJSON(optionsJSON);
   // Cancel any pending conditional-UI request; only one WebAuthn call may be active.
   WebAuthnAbortService.cancelCeremony();
+  devConsole.log(
+    '[passkey nudge] navigator.credentials.get({ mediation: "immediate" })',
+    optionsJSON
+  );
   try {
     const credential = (await navigator.credentials.get({
       publicKey,
@@ -149,6 +154,10 @@ export async function signInWithPasskeyImmediate(): Promise<ImmediateOutcome> {
  */
 export async function armPasskeyAutofill(): Promise<PasskeyLoginResult> {
   const optionsJSON = await fetchLoginOptions();
+  devConsole.log(
+    '[passkey nudge] navigator.credentials.get({ mediation: "conditional" }) armed',
+    optionsJSON
+  );
   const assertion = await startAuthentication({ optionsJSON, useBrowserAutofill: true });
   return verifyLogin(assertion);
 }

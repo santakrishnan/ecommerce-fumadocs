@@ -17,12 +17,42 @@ export interface PasskeyNudgeState {
   hinted: boolean;
   /** Human-readable trace of which layer did what (shown in the demo). */
   log: string[];
+  /** False until the document was focused or interacted with, which is when the prompts start. */
+  started: boolean;
 }
 
 interface Ctx {
   isActive: () => boolean;
   note: (line: string) => void;
   signedIn: (result: PasskeyLoginResult) => void;
+}
+
+/**
+ * The browser allows one pending WebAuthn request per tab. A preview that arms
+ * conditional UI the moment it loads would block every other passkey button on
+ * the page (they fail with "A request is already pending"). So the nudge waits
+ * until this document is focused or the user interacts with it.
+ */
+function whenInteracted(isActive: () => boolean): Promise<void> {
+  if (document.hasFocus()) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    const events = ["pointerdown", "focusin", "keydown"] as const;
+    const done = () => {
+      for (const name of events) {
+        document.removeEventListener(name, done, true);
+      }
+      window.removeEventListener("focus", done);
+      if (isActive()) {
+        resolve();
+      }
+    };
+    for (const name of events) {
+      document.addEventListener(name, done, { capture: true, once: true });
+    }
+    window.addEventListener("focus", done, { once: true });
+  });
 }
 
 /** Layer 1: immediate mediation. Returns true when it completed a sign-in. */
@@ -68,9 +98,10 @@ async function tryConditional(caps: PasskeyCapabilities, ctx: Ctx): Promise<void
 
 /**
  * Runs the sign-in nudge sequence from the approach document while the user
- * is anonymous: read the RP hint and capabilities → try immediate mediation →
- * arm conditional UI on the email field. Calls `onSignedIn` when any layer
- * completes a sign-in; the caller renders the OTP/email form regardless.
+ * is anonymous: read the RP hint and capabilities → wait for focus → try
+ * immediate mediation → arm conditional UI on the email field. Calls
+ * `onSignedIn` when any layer completes a sign-in; the caller renders the
+ * OTP/email form regardless.
  */
 export function usePasskeyNudge(
   enabled: boolean,
@@ -78,6 +109,7 @@ export function usePasskeyNudge(
 ): PasskeyNudgeState {
   const [capabilities, setCapabilities] = useState<PasskeyCapabilities | null>(null);
   const [hinted, setHinted] = useState(false);
+  const [started, setStarted] = useState(false);
   const [log, setLog] = useState<string[]>([]);
   const onSignedInRef = useRef(onSignedIn);
   onSignedInRef.current = onSignedIn;
@@ -86,11 +118,12 @@ export function usePasskeyNudge(
     if (!enabled) {
       return;
     }
-    let active = true;
+    const liveness = { active: true };
+    const isActive = () => liveness.active;
     const ctx: Ctx = {
-      isActive: () => active,
+      isActive,
       // Numbered so each line is a stable, unique React key.
-      note: (line) => active && setLog((prev) => [...prev, `${prev.length + 1}. ${line}`]),
+      note: (line) => isActive() && setLog((prev) => [...prev, `${prev.length + 1}. ${line}`]),
       signedIn: (result) => onSignedInRef.current(result),
     };
 
@@ -100,10 +133,19 @@ export function usePasskeyNudge(
       ctx.note(hint ? "hint: this browser used a platform passkey before" : "hint: none");
 
       const caps = await getPasskeyCapabilities();
-      if (!active) {
+      if (!isActive()) {
         return;
       }
       setCapabilities(caps);
+
+      if (!document.hasFocus()) {
+        ctx.note("waiting: click or tap this preview to start the passkey prompt");
+      }
+      await whenInteracted(isActive);
+      if (!isActive()) {
+        return;
+      }
+      setStarted(true);
 
       if (await tryImmediate(caps, ctx)) {
         return;
@@ -113,10 +155,10 @@ export function usePasskeyNudge(
 
     run();
     return () => {
-      active = false;
+      liveness.active = false;
       cancelPasskeyAutofill();
     };
   }, [enabled]);
 
-  return { capabilities, hinted, log };
+  return { capabilities, hinted, log, started };
 }

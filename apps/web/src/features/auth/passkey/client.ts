@@ -10,11 +10,13 @@
  */
 
 import { clientEnv } from "@config/client-env";
+import { devConsole } from "@shared/lib/dev-console";
 import {
   browserSupportsWebAuthn,
   sendSignal,
   startAuthentication,
   startRegistration,
+  WebAuthnAbortService,
   WebAuthnError,
 } from "@simplewebauthn/browser";
 import {
@@ -46,12 +48,17 @@ export class PasskeyApiError extends Error {
   }
 }
 
+const LOG = "[passkey client]";
+const PENDING_PATTERN = /already pending/i;
+
 async function request<T>(
   method: "GET" | "POST" | "PATCH" | "DELETE",
   path: string,
   body?: unknown
 ): Promise<T> {
-  const response = await fetch(`${getPasskeyApiBase()}${path}`, {
+  const url = `${getPasskeyApiBase()}${path}`;
+  devConsole.log(`${LOG} → ${method} ${url}`, body ?? "");
+  const response = await fetch(url, {
     method,
     headers: { "Content-Type": "application/json" },
     // The challenge lives in an httpOnly cookie set by the options call.
@@ -68,9 +75,22 @@ async function request<T>(
     } catch {
       // keep the generic message
     }
+    devConsole.log(`${LOG} ← ${response.status} ${url}`, message);
     throw new PasskeyApiError(message, response.status);
   }
-  return (await response.json()) as T;
+  const data = (await response.json()) as T;
+  devConsole.log(`${LOG} ← ${response.status} ${url}`, data);
+  return data;
+}
+
+/**
+ * The browser allows one pending WebAuthn request per page. A conditional-UI
+ * request armed by the nudge (or by another preview on the same docs page)
+ * would make the next ceremony fail with "A request is already pending", so
+ * every ceremony cancels whatever is pending first.
+ */
+function cancelPending(): void {
+  WebAuthnAbortService.cancelCeremony();
 }
 
 const post = <T>(path: string, body: unknown) => request<T>("POST", path, body);
@@ -94,7 +114,10 @@ export async function registerPasskey(
     input
   );
   hooks.onOptions?.(optionsJSON);
+  cancelPending();
+  devConsole.log(`${LOG} navigator.credentials.create()`, optionsJSON);
   const registration = await startRegistration({ optionsJSON });
+  devConsole.log(`${LOG} authenticator response`, registration);
   return post<PasskeyRegisterResult>(PASSKEY_ENDPOINTS.registerVerify, registration);
 }
 
@@ -108,7 +131,10 @@ export async function signInWithPasskey(): Promise<PasskeyLoginResult> {
     PASSKEY_ENDPOINTS.loginOptions,
     {}
   );
+  cancelPending();
+  devConsole.log(`${LOG} navigator.credentials.get()`, optionsJSON);
   const assertion = await startAuthentication({ optionsJSON });
+  devConsole.log(`${LOG} authenticator response`, assertion);
   return post<PasskeyLoginResult>(PASSKEY_ENDPOINTS.loginVerify, assertion);
 }
 
@@ -193,6 +219,13 @@ export function describePasskeyError(error: unknown): string {
       default:
         return error.message;
     }
+  }
+  if (
+    error instanceof DOMException &&
+    error.name === "NotAllowedError" &&
+    PENDING_PATTERN.test(error.message)
+  ) {
+    return "Another passkey request is still pending in this tab (for example an autofill request in another preview). Reload the page and try again.";
   }
   if (error instanceof Error) {
     return error.message;
