@@ -105,9 +105,12 @@ export type ImmediateOutcome =
   | { kind: "error"; message: string };
 
 /**
- * Layer 1. `mediation: "immediate"`: the browser shows the passkey sheet at
- * once if it holds one for this RP ID, otherwise rejects with NotAllowedError
- * and no UI. SimpleWebAuthn 14 has no flag for it, so this is a direct call.
+ * Layer 1. Immediate UI mode (`uiMode: "immediate"`, WebAuthn L3; shipped in
+ * Chrome 149 as the successor of the origin-trial `mediation: "immediate"`,
+ * which no longer triggers it): the browser shows the passkey sheet at once if
+ * it holds one for this RP ID, otherwise rejects with NotAllowedError and no
+ * UI. Must follow a user gesture, and `allowCredentials` must be empty.
+ * SimpleWebAuthn 14 has no flag for it, so this is a direct call.
  */
 export async function signInWithPasskeyImmediate(): Promise<ImmediateOutcome> {
   const pk = statics();
@@ -118,16 +121,14 @@ export async function signInWithPasskeyImmediate(): Promise<ImmediateOutcome> {
   const publicKey = pk.parseRequestOptionsFromJSON(optionsJSON);
   // Cancel any pending conditional-UI request; only one WebAuthn call may be active.
   WebAuthnAbortService.cancelCeremony();
-  devConsole.log(
-    '[passkey nudge] navigator.credentials.get({ mediation: "immediate" })',
-    optionsJSON
-  );
+  devConsole.log('[passkey nudge] navigator.credentials.get({ uiMode: "immediate" })', optionsJSON);
   try {
-    const credential = (await navigator.credentials.get({
+    const request: CredentialRequestOptions & { uiMode: "immediate" } = {
       publicKey,
-      // Not yet in the TS lib's CredentialMediationRequirement union.
-      mediation: "immediate" as CredentialMediationRequirement,
-    })) as PublicKeyCredential | null;
+      // Not yet in the TS lib's CredentialRequestOptions.
+      uiMode: "immediate",
+    };
+    const credential = (await navigator.credentials.get(request)) as PublicKeyCredential | null;
     if (!credential) {
       return { kind: "no-passkey" };
     }

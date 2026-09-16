@@ -159,7 +159,7 @@ The browser side of the contract. All calls use `credentials: "same-origin"` bec
 The three detection layers from the approach document.
 
 - `getPasskeyCapabilities()`: reads `PublicKeyCredential.getClientCapabilities()` with fallbacks to the older `isConditionalMediationAvailable()` and `isUserVerifyingPlatformAuthenticatorAvailable()`. Returns `immediateGet`, `conditionalGet`, `hybridTransport`, `passkeyPlatformAuthenticator`, `userVerifyingPlatformAuthenticator` and the raw map.
-- `signInWithPasskeyImmediate()`: `navigator.credentials.get({ mediation: "immediate" })` using the native `parseRequestOptionsFromJSON`. Returns `signed-in`, `no-passkey`, `unsupported`, `cancelled` or `error`. An instant `NotAllowedError` means no passkey; the same error is raised when the user dismisses the sheet, so both are treated as "not now".
+- `signInWithPasskeyImmediate()`: `navigator.credentials.get({ uiMode: "immediate" })` (Chrome 149 and later; the origin-trial `mediation: "immediate"` no longer triggers it) using the native `parseRequestOptionsFromJSON`. Must follow a user gesture. Returns `signed-in`, `no-passkey`, `unsupported`, `cancelled` or `error`. An instant `NotAllowedError` means no passkey; the same error is raised when the user dismisses the sheet, so both are treated as "not now".
 - `armPasskeyAutofill()` and `cancelPasskeyAutofill()`: conditional UI through `startAuthentication({ useBrowserAutofill: true })` and `WebAuthnAbortService.cancelCeremony()`.
 - `readPasskeyHint()`: reads the non-httpOnly `passkey-hint` cookie set by the RP.
 

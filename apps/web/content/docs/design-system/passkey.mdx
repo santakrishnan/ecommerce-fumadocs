@@ -97,7 +97,7 @@ Register from two devices through ngrok (a laptop and a phone) to get a list tha
 
 The site cannot ask whether a passkey exists. It can invite the browser to use one in ways that stay silent when there is none. The demo below runs the three layers in order and prints which one did what:
 
-1. **Immediate mediation.** `navigator.credentials.get({ mediation: "immediate" })` shows the passkey sheet at once if this browser holds one for the RP ID, and rejects instantly with no UI if not. Feature detected with `getClientCapabilities().immediateGet`; not every browser has it yet.
+1. **Immediate UI mode** (also called immediate mediation). `navigator.credentials.get({ uiMode: "immediate" })` shows the passkey sheet at once if this browser holds one for the RP ID, and rejects instantly with `NotAllowedError` and no UI if not. It must follow a click or key press, which is why the preview waits for one. Feature detected with `getClientCapabilities().immediateGet`. Chrome 149 and later only as of September 2026; the origin-trial spelling `mediation: "immediate"` no longer works.
 2. **Conditional UI.** A pending request is armed so the email field (`autocomplete="username webauthn"`) offers passkeys in its autofill bar. The broadest support, including iPhone and iPad.
 3. **Relying party hint.** The mock sets a `passkey-hint` cookie when a platform passkey was created or used from this browser; on return the panel shows "Sign in with your passkey" as the primary action. An inference, but it works everywhere.
 
@@ -177,6 +177,8 @@ To reproduce a real domain label instead of "localhost", run through ngrok (`RP_
 Not built yet, by design. The pieces are in place: `useAuth().meetsRequirement({ acr, evidence })` already models passkey as `acr: 2` / `evidence: ["passkey"]`, so a `GuardedLink` for a high-assurance destination would request that and the auth overlay would offer **Sign in with passkey** before falling back to the OTP steps. After sign-in the BED creates the session and hands off to the assurance engine; the frontend only redirects.
 
 ## Source
+
+Background reading with checked links for every browser feature used here (AAGUID, conditional UI, immediate UI mode, `getClientCapabilities()`, Signal API, hints): `docs/PASSKEY-WEBAUTHN-REFERENCES.md`.
 
 <include lang="ts" meta='title="features/auth/passkey/contract.ts"'>
   ../../../src/features/auth/passkey/contract.ts

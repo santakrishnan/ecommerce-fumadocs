@@ -17,7 +17,7 @@ export interface PasskeyNudgeState {
   hinted: boolean;
   /** Human-readable trace of which layer did what (shown in the demo). */
   log: string[];
-  /** False until the document was focused or interacted with, which is when the prompts start. */
+  /** False until the user clicked or pressed a key in this document, which is when the prompts start. */
   started: boolean;
 }
 
@@ -28,22 +28,19 @@ interface Ctx {
 }
 
 /**
- * The browser allows one pending WebAuthn request per tab. A preview that arms
- * conditional UI the moment it loads would block every other passkey button on
- * the page (they fail with "A request is already pending"). So the nudge waits
- * until this document is focused or the user interacts with it.
+ * Two reasons to wait for a real click or key press before prompting:
+ * 1. Immediate UI mode must follow a user gesture (Chrome rejects it otherwise).
+ * 2. The browser allows one pending WebAuthn request per tab. A preview that
+ *    arms conditional UI the moment it loads would block every other passkey
+ *    button on the page (they fail with "A request is already pending").
  */
 function whenInteracted(isActive: () => boolean): Promise<void> {
-  if (document.hasFocus()) {
-    return Promise.resolve();
-  }
   return new Promise((resolve) => {
-    const events = ["pointerdown", "focusin", "keydown"] as const;
+    const events = ["pointerdown", "keydown"] as const;
     const done = () => {
       for (const name of events) {
         document.removeEventListener(name, done, true);
       }
-      window.removeEventListener("focus", done);
       if (isActive()) {
         resolve();
       }
@@ -51,7 +48,6 @@ function whenInteracted(isActive: () => boolean): Promise<void> {
     for (const name of events) {
       document.addEventListener(name, done, { capture: true, once: true });
     }
-    window.addEventListener("focus", done, { once: true });
   });
 }
 
@@ -98,7 +94,7 @@ async function tryConditional(caps: PasskeyCapabilities, ctx: Ctx): Promise<void
 
 /**
  * Runs the sign-in nudge sequence from the approach document while the user
- * is anonymous: read the RP hint and capabilities → wait for focus → try
+ * is anonymous: read the RP hint and capabilities → wait for a click → try
  * immediate mediation → arm conditional UI on the email field. Calls
  * `onSignedIn` when any layer completes a sign-in; the caller renders the
  * OTP/email form regardless.
@@ -138,9 +134,7 @@ export function usePasskeyNudge(
       }
       setCapabilities(caps);
 
-      if (!document.hasFocus()) {
-        ctx.note("waiting: click or tap this preview to start the passkey prompt");
-      }
+      ctx.note("waiting: click or tap this preview to start the passkey prompt");
       await whenInteracted(isActive);
       if (!isActive()) {
         return;

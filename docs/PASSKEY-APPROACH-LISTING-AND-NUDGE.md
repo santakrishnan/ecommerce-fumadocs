@@ -74,9 +74,9 @@ Call `navigator.credentials.get()` with `mediation: "conditional"` when the sign
 
 ### Option B: immediate mediation. The direct "detect and prompt".
 
-`navigator.credentials.get({ mediation: "immediate", ... })` asks the browser to show the passkey prompt right away if a passkey exists for this domain, and to reject immediately (`NotAllowedError`) with no UI if none exists. This is the behaviour the client described. The rejection path leads straight to the OTP form.
+`navigator.credentials.get({ uiMode: "immediate", ... })` (the shipped spelling; the origin trial used `mediation: "immediate"`) asks the browser to show the passkey prompt right away if a passkey exists for this domain, and to reject immediately (`NotAllowedError`) with no UI if none exists. This is the behaviour the client described. The rejection path leads straight to the OTP form.
 
-- This is recent (WebAuthn Level 3). It is shipping in Chromium first and other browsers are following. It must be feature detected with `PublicKeyCredential.getClientCapabilities()` and its `immediateGet` flag. Where it is absent, Option A is the fallback.
+- This is recent (WebAuthn Level 3). Chrome 149 ships it; as of September 2026 no other browser does. It must follow a user gesture such as a button tap, and it must be feature detected with `PublicKeyCredential.getClientCapabilities()` and its `immediateGet` flag. Where it is absent, Option A is the fallback.
 - If the SDK version has no flag for it, it is one direct `navigator.credentials.get()` call using the SDK's option parsers.
 - Limit: it only knows about passkeys in this browser's password manager. A user whose passkey is on their phone still needs Option C or the QR path.
 
@@ -109,13 +109,13 @@ With any of the above, a phone can act as the authenticator for a desktop throug
 | Mechanism | iPhone and iPad Safari | Android Chrome | Desktop Chrome and Edge | Desktop Safari | Detection |
 | --- | --- | --- | --- | --- | --- |
 | Conditional UI (A) | Yes | Yes | Yes | Yes | `getClientCapabilities().conditionalGet` or `isConditionalMediationAvailable()` |
-| Immediate mediation (B) | Rolling out | Recent versions | Recent versions | Rolling out | `getClientCapabilities().immediateGet` |
+| Immediate UI mode (B) | No (Sept 2026) | Chrome 149+ | Chrome 149+ | No (Sept 2026) | `getClientCapabilities().immediateGet` |
 | Relying party hint (C) | Yes | Yes | Yes | Yes | None needed |
 | Another device via QR | Yes | Yes | Yes | Yes | `getClientCapabilities().hybridTransport` |
 
 ### How this will be shown
 
-The demo page will get a capabilities readout (so the client can see what their own device supports), the immediate mediation attempt with a visible fallback, conditional UI on the email field, and the hint-driven prompt. On an iPhone with a registered passkey, the page opens straight into the passkey prompt. On a device without one, it falls through to the form with no flicker.
+The demo page will get a capabilities readout (so the client can see what their own device supports), the immediate mediation attempt with a visible fallback, conditional UI on the email field, and the hint-driven prompt. On an iPhone with a registered passkey, tapping the email field offers the passkey in the autofill bar; on Chrome 149 and later the sheet opens on the first tap. On a device without one, it falls through to the form with no flicker.
 
 ---
 
