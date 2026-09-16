@@ -1,4 +1,4 @@
-# Passkey registration options — `authenticatorSelection`, `excludeCredentials`, `attestation`
+# Passkey registration options: `authenticatorSelection`, `excludeCredentials`, `attestation`
 
 Reference for the options the relying party (RP) sends in `PublicKeyCredentialCreationOptions` when a user creates a passkey. These fields are what control the browser's "Choose where to save your passkey" sheet and what the RP learns about the authenticator. In this codebase they are produced by `features/auth/passkey/mock-server/server.ts` (`resolvePolicy()` → `generateRegistrationOptions()`), and the contract type is `PasskeyRegistrationPolicy` in `features/auth/passkey/contract.ts`.
 
@@ -25,21 +25,21 @@ A dictionary of four members. Every member is optional; the defaults are the mos
 }
 ```
 
-### 1.1 `authenticatorAttachment` — which authenticators appear in the sheet
+### 1.1 `authenticatorAttachment`: which authenticators appear in the sheet
 
 | Value | Meaning | What the user sees |
 | --- | --- | --- |
 | `"platform"` | Only the authenticator built into the device the user is on: Face ID / Touch ID with iCloud Keychain, Android with Google Password Manager, Windows Hello. | Only the device's own option. No security key, no "use another device / QR". |
-| `"cross-platform"` | Only *roaming* authenticators — ones that can move between devices: FIDO2 security keys (USB/NFC/BLE) and a phone acting for a laptop over the hybrid (QR) transport. | Security key and "other device" options only. The device's keychain is hidden. |
+| `"cross-platform"` | Only *roaming* authenticators, meaning ones that can move between devices: FIDO2 security keys (USB/NFC/BLE) and a phone acting for a laptop over the hybrid (QR) transport. | Security key and "other device" options only. The device's keychain is hidden. |
 | omitted | No restriction. | Everything the platform supports, in the platform's default order. |
 
 Notes
 
 - This is a **hard filter**: the browser does not offer excluded kinds at all. Use it only when the policy really requires it (for example a "hardware key only" enrolment for a privileged role). For consumer sign-in, omit it and use `hints` (below) for ordering, so users with a security key or a second device are never locked out.
 - Third-party password managers (1Password, Bitwarden) register with the OS as platform authenticators, so `"platform"` includes them.
-- The value the authenticator actually used comes back in the registration response as `authenticatorAttachment` — useful to store (e.g. "registered a platform passkey from this browser" drives the returning-user nudge).
+- The value the authenticator actually used comes back in the registration response as `authenticatorAttachment`. It is worth storing: "this browser registered a platform passkey" is what drives the returning-user prompt.
 
-### 1.2 `residentKey` (and `requireResidentKey`) — discoverable credential or not
+### 1.2 `residentKey` (and `requireResidentKey`): discoverable credential or not
 
 A *resident* (in WebAuthn L3 terms: *discoverable*) credential is one where the authenticator stores the credential and the user handle itself, so it can be found by RP ID alone. A non-discoverable credential is derived from the credential ID, so the RP must first know *who* is signing in and send that ID in `allowCredentials`.
 
@@ -53,7 +53,7 @@ A *resident* (in WebAuthn L3 terms: *discoverable*) credential is one where the 
 
 Trade-off: discoverable credentials occupy a slot on hardware keys (older keys hold ~25), which is why `"preferred"` exists. For a consumer site that is a non-issue and `"required"` is the right setting.
 
-### 1.3 `userVerification` — must the user prove *who* they are, not just that they are present
+### 1.3 `userVerification`: must the user prove *who* they are, not just that they are present
 
 User *presence* (a touch) is always required by WebAuthn. User *verification* additionally proves identity to the authenticator: biometric, device PIN, or a security-key PIN.
 
@@ -65,7 +65,7 @@ User *presence* (a touch) is always required by WebAuthn. User *verification* ad
 
 Two server-side consequences: with `"required"`, `verifyRegistrationResponse({ requireUserVerification: true })` rejects a response whose `UV` flag is false; and the same setting must be applied on the *authentication* side (`generateAuthenticationOptions({ userVerification })`) or the sign-in step silently becomes weaker than enrolment.
 
-### 1.4 `hints` — ordering without excluding (WebAuthn Level 3, sits beside `authenticatorSelection`)
+### 1.4 `hints`: ordering without excluding (WebAuthn Level 3, sits beside `authenticatorSelection`)
 
 Not a member of `authenticatorSelection` but used together with it. An ordered list of `"client-device"`, `"security-key"`, `"hybrid"` that tells the browser which kind the RP *prefers*; the browser leads with that option but keeps the others reachable. Older browsers ignore it. Hints let you express "put Face ID first" without the lock-out risk of `authenticatorAttachment: "platform"`. Where a hint and `authenticatorAttachment` conflict, the attachment wins because it is a hard filter.
 
@@ -76,7 +76,7 @@ Not a member of `authenticatorSelection` but used together with it. An ordered l
 | Consumer sign-in (our default) | omitted | `["client-device"]` | `required` | `required` |
 | Enrol a hardware key for privileged users | `cross-platform` | `["security-key"]` | `required` | `required` |
 | Kiosk / shared device (bind to this device only) | `platform` | `["client-device"]` | `required` | `required` |
-| Legacy 2FA key alongside a password | omitted | — | `discouraged` | `preferred` |
+| Legacy 2FA key alongside a password | omitted | none | `discouraged` | `preferred` |
 
 ---
 
@@ -94,10 +94,10 @@ What it is **not**: it is not an allow-list and it does not enumerate what the d
 
 Details that matter
 
-- Populate it from the server's credential table for the user identified in `register/options` — which is why registration must know the user (email) before the ceremony. Our server does `store.credentialsForUser(user.id)`.
+- Populate it from the server's credential table for the user identified in `register/options`. This is why registration must know the user (email) before the ceremony. Our server does `store.credentialsForUser(user.id)`.
 - Include `transports` when known; the browser uses them to decide which authenticator to consult without prompting for others.
 - The list must be per-user. Sending another user's credentials would leak nothing (IDs are random) but would wrongly block registration.
-- The mirror on the sign-in side is `allowCredentials`: the list of credentials the RP *accepts*. For discoverable passkeys we deliberately send an empty list so the browser offers every passkey it has for the RP ID — that is what makes username-less sign-in work.
+- The mirror on the sign-in side is `allowCredentials`: the list of credentials the RP *accepts*. For discoverable passkeys we deliberately send an empty list so the browser offers every passkey it has for the RP ID. That is what makes sign-in without a username work.
 
 ---
 
@@ -116,7 +116,7 @@ Details that matter
 | `"direct"` | The RP wants the authenticator's own attestation statement. Some platforms show the user a consent prompt because the model can be identifying. | Regulated flows that must only accept certified authenticators (FIDO-certified keys, specific security levels). Requires verifying against FIDO MDS and keeping root certificates current. |
 | `"enterprise"` | Requests uniquely identifying attestation; honoured only for authenticators enrolled by an enterprise policy in a managed browser. | Corporate device fleets. Not applicable to a public consumer site. |
 
-What you get regardless of this setting: the **AAGUID** (authenticator model identifier) is part of the authenticator data, not the attestation statement, so it is available with `"none"` — with one caveat: privacy-preserving authenticators may report an all-zero AAGUID (older Apple behaviour; current iCloud Keychain reports its real AAGUID). That is why the demo shows "Not disclosed" for zeros. The AAGUID resolves to a human name ("iCloud Keychain", "YubiKey 5 NFC") via the community AAGUID list, which is enough for "Your passkeys" labels without any attestation.
+What you get regardless of this setting: the **AAGUID** (authenticator model identifier) is part of the authenticator data, not the attestation statement, so it is available with `"none"`. One caveat: privacy-preserving authenticators may report an all-zero AAGUID (older Apple behaviour; current iCloud Keychain reports its real AAGUID). That is why the demo shows "Not disclosed" for zeros. The AAGUID resolves to a human name ("iCloud Keychain", "YubiKey 5 NFC") via the community AAGUID list, which is enough for "Your passkeys" labels without any attestation.
 
 Why `"none"` is the right default here: attestation adds a consent prompt on some platforms, ties the backend to certificate maintenance and the FIDO Metadata Service, and buys nothing for a consumer sign-in whose security comes from the public-key ceremony, not from the authenticator's brand. If the assurance engine ever needs "hardware-backed, certified authenticator only" for a specific tier, that tier can request `"direct"` on its own enrolment path while the consumer path stays at `"none"`.
 
@@ -129,7 +129,7 @@ Why `"none"` is the right default here: attestation adds a consent prompt on som
 3. `residentKey` and `userVerification` decide **what the chosen authenticator must be able to do**; an authenticator that cannot meet them is skipped or fails.
 4. `excludeCredentials` removes authenticators that **already hold** a passkey for this user.
 5. `attestation` does not change the sheet, except that `"direct"` may add a consent prompt after the user picks.
-6. The label ("for localhost") is the **RP ID** plus `rp.name` — set by the server, not by any of the above.
+6. The label ("for localhost") is the **RP ID** plus `rp.name`, set by the server and not by any of the above.
 
 The demo page (`/docs/design-system/passkey`, section "Controlling the sheet") lets you switch 1–3 live and shows the options exactly as the browser received them.
 
@@ -142,6 +142,6 @@ The demo page (`/docs/design-system/passkey`, section "Controlling the sheet") l
 | `authenticatorSelection`, `hints` | `mock-server/server.ts` → `resolvePolicy()` → `generateRegistrationOptions()` | `verifyRegistrationResponse({ requireUserVerification })` |
 | `excludeCredentials` | `mock-server/server.ts` from `store.credentialsForUser()` | enforced by the authenticator, not the server |
 | `attestation` | `ATTESTATION = "none"` in `mock-server/server.ts` | `verifyRegistrationResponse` (accepts `none`; would validate `direct`) |
-| Contract type | `features/auth/passkey/contract.ts` → `PasskeyRegistrationPolicy`, `DEFAULT_REGISTRATION_POLICY` | — |
+| Contract type | `features/auth/passkey/contract.ts` → `PasskeyRegistrationPolicy`, `DEFAULT_REGISTRATION_POLICY` | not applicable |
 
 When the upstream BED replaces the mock, these settings move to the BED's option generation; the contract and the client do not change.
