@@ -1,0 +1,60 @@
+---
+title: "Use case 2: Detect and prompt"
+description: Detect that the device has a passkey and prompt the user to sign in with it, falling through silently to the form when there is none
+---
+
+The site cannot ask the browser whether a passkey exists. It can invite the browser to use one in ways that stay silent when there is none. This preview runs the layers in order and prints a trace of which one did what.
+
+1. **Relying party hint.** A cookie set when a platform passkey was created or used from this browser. If present, "Sign in with your passkey" is the primary button.
+2. **Capabilities.** `getClientCapabilities()` decides which layers the browser supports. The card shows the raw result for this device.
+3. **Immediate UI mode.** On Chrome 149 and later, after your first tap, `navigator.credentials.get({ uiMode: "immediate" })` opens the passkey sheet if one exists and rejects instantly with no UI if not.
+4. **Conditional UI.** The email field offers passkeys in its autofill bar. The broadest support, including iPhone and iPad.
+5. **The form.** If nothing above signed the user in, the email and OTP form is what they see, unchanged.
+
+<ComponentPreview name="passkey-nudge" defaultDevice="mobile" />
+
+<Callout type="warn" title="The preview waits for a tap">
+The trace shows "waiting: click or tap this preview" until you interact. Two reasons: Chrome requires a user gesture before immediate UI mode, and the browser allows one pending WebAuthn request per tab, so arming autofill on load would block every other passkey button on a page. In the product the trigger is the user's real sign-in tap; on this page any click inside the preview does it.
+</Callout>
+
+## Demo script
+
+Run [Your passkeys](/docs/design-system/passkey-demos/your-passkeys) first so a passkey exists for this URL, then come here.
+
+<Steps>
+<Step>
+### Returning user on a phone (Safari)
+Open the preview full screen on the iPhone that has the passkey. The hint is set, so **Sign in with your passkey** is the primary button. Tap the email field instead: the passkey appears in the keyboard's autofill bar. One tap signs you in. The trace reads: hint set, immediate not supported, conditional UI armed, conditional UI signed in.
+</Step>
+<Step>
+### Returning user on Chrome 149
+Same on the laptop. Click anywhere inside the preview: the passkey sheet opens on its own. The trace reads: immediate supported, immediate signed in. If the laptop's Chrome is older, the capabilities card shows `immediateGet: false` and the flow goes to autofill instead.
+</Step>
+<Step>
+### New device, no passkey
+Open the preview in a private window, or after **Reset demo**. Click inside it. Nothing appears: immediate rejects instantly ("no passkey here"), autofill stays silent, and the form is what the user sees. This is the point to make: no failed prompt, no flicker, straight to the existing flow.
+</Step>
+<Step>
+### Passkey on another device
+On a desktop that has no passkey, select **Sign in with an existing passkey** and choose "Use a phone or tablet". Scan the QR code with the phone that has it. The `hybridTransport` capability is what makes this available.
+</Step>
+</Steps>
+
+## What to say when asked
+
+**"Can it just detect the passkey?"** Not directly; browsers refuse on purpose. Immediate UI mode is the closest thing: it either shows the sheet or rejects instantly, and only Chrome has it today. Autofill works everywhere and is what FIDO's research found most successful. The hint cookie covers the rest. See `docs/PASSKEY-PROMPTING-VALIDATION.md`.
+
+**"What happens on Safari?"** The capabilities card on an iPhone shows `conditionalGet: true` and no `immediateGet`. The autofill bar is the experience, and it is the one Apple designed for.
+
+**"What is the hint?"** Our own cookie, set by the server when a platform passkey was verified from this browser. It only decides which button is primary. A wrong hint costs one dismissed prompt and falls through to the form.
+
+**"What does the BED need?"** Nothing new for detection. The existing `login/options` and `login/verify` serve the button, autofill and immediate mode alike. Returning `authenticatorAttachment` from verify lets the proxy set the hint.
+
+## Files
+
+| What | Where |
+| --- | --- |
+| Capabilities, immediate, conditional, hint | `features/auth/passkey/nudge.ts` |
+| Sequencing and the trace | `features/auth/hooks/use-passkey-nudge.ts` |
+| Capabilities card and trace UI | `features/auth/components/passkey-capabilities.tsx`, `passkey-flow-log.tsx` |
+| Email field with `autocomplete="username webauthn"` | `features/auth/components/passkey-panel.tsx` |

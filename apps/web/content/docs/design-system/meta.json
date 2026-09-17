@@ -1,4 +1,11 @@
 {
   "title": "Design System",
-  "pages": ["index", "---Components---", "otp", "guarded-link", "passkey"]
+  "pages": [
+    "index",
+    "---Components---",
+    "otp",
+    "guarded-link",
+    "passkey",
+    "passkey-demos"
+  ]
 }

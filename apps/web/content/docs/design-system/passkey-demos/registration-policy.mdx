@@ -1,0 +1,60 @@
+---
+title: "Use case 3: Registration policy"
+description: Control which authenticators the "Choose where to save your passkey" sheet offers, and see the options the browser receives
+---
+
+The sheet the user sees when creating a passkey is driven by four fields the relying party sends: `authenticatorAttachment` (a hard filter on the kind of authenticator), `hints` (an ordering preference that excludes nothing), `residentKey` (discoverable credential, required for sign-in without a username) and `userVerification` (biometric or PIN). This preview lets you switch presets live and shows the JSON the browser received for the last attempt.
+
+<ComponentPreview name="passkey-policy" defaultDevice="mobile" />
+
+## Demo script
+
+Use **Reset demo** between presets if the same email is reused; `excludeCredentials` will otherwise refuse a second passkey on the same authenticator, which is correct behaviour but confusing mid-demo.
+
+<Steps>
+<Step>
+### Consumer default
+`attachment: any`, hint `client-device`, resident key and user verification required. On a Mac the sheet leads with iCloud Keychain or Google Password Manager and keeps "Use a different device" and security keys reachable. This is the policy the product should ship with.
+</Step>
+<Step>
+### This device only
+`attachment: platform`. The QR and security key options disappear. Use this to explain why a hard filter is risky for consumers: a user with only a security key is locked out.
+</Step>
+<Step>
+### Security key only
+`attachment: cross-platform`. The device keychain is hidden; only USB, NFC or another device via QR. The enrolment shape for privileged roles.
+</Step>
+<Step>
+### Everything, no preference
+`attachment: any`, no hints. Full list in the platform's default order. Compare with the consumer default to show what `hints` does on its own.
+</Step>
+<Step>
+### Read the options readout
+After each attempt the readout shows `authenticatorSelection`, `hints`, `excludeCredentials` and `attestation: "none"` exactly as sent. Point out `user.id` is random bytes, never the email, and that `excludeCredentials` lists the passkeys already stored for this user.
+</Step>
+</Steps>
+
+## Test matrix
+
+| Preset | iPhone / iPad (Safari) | Mac / Windows (Chrome) | DevTools virtual authenticator |
+| --- | --- | --- | --- |
+| Consumer default | iCloud Keychain first; other options behind "Other options" | Password manager first; other device and security key below | `internal` and `usb` both work |
+| This device only | Face ID / Touch ID only | Windows Hello / Touch ID only | Only `internal`; `usb` refused |
+| Security key only | NFC/USB key or other device only | Security key or phone via QR only | Only `usb`, `nfc`, `ble` |
+| Everything, no preference | Full list, platform order | Full list, platform order | Any |
+
+## What to say when asked
+
+**"Who owns this policy?"** The relying party. The preview sends the policy in the request only so it can be switched live; a real backend ignores what the client sends and applies its own. Reference: `docs/PASSKEY-REGISTRATION-OPTIONS.md`.
+
+**"Why attestation none?"** Attestation proves the authenticator's make with a vendor certificate. It adds a consent prompt on some platforms, ties the backend to the FIDO Metadata Service, and buys nothing for consumer sign-in. The AAGUID used for naming arrives regardless.
+
+**"Why user verification required?"** Presence (a touch) is always required; verification (biometric or PIN) proves who. Account-grade flows require it on both registration and sign-in, and the server checks the flag rather than trusting the request.
+
+## Files
+
+| What | Where |
+| --- | --- |
+| Policy type and defaults | `features/auth/passkey/contract.ts` `PasskeyRegistrationPolicy`, `DEFAULT_REGISTRATION_POLICY` |
+| Options generation | `features/auth/passkey/mock-server/server.ts` `resolvePolicy()`, `registrationOptions()` |
+| Controls and readout | `features/auth/components/passkey-policy-controls.tsx`, `passkey-options-readout.tsx` |

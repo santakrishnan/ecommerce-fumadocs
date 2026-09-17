@@ -1,0 +1,53 @@
+---
+title: Endpoints and logging
+description: Watch the two-call ceremonies in the terminal and the browser console, and see what stays the same when the BED replaces the mock
+---
+
+Every passkey ceremony is two calls: `options` hands the browser a challenge, the browser runs the native prompt, `verify` checks the signed result. This page uses the plain preview so the traffic is easy to follow.
+
+<ComponentPreview name="passkey" defaultDevice="mobile" />
+
+## Where to look
+
+| Where | Prefix | What you see |
+| --- | --- | --- |
+| Terminal running `pnpm dev` | `[mock-rp]` | `→ POST /api/auth/passkey/register/options` with the body and cookie names, then `← 200 …` with the JSON returned, or `← 4xx …` with the error |
+| Browser console | `[passkey client]` | Each fetch, the options handed to `navigator.credentials.create()` or `get()`, and the authenticator response sent back |
+| Browser console | `[passkey nudge]` | The immediate and conditional `navigator.credentials.get()` calls (on the detect-and-prompt page) |
+
+Long values such as challenges and public keys are truncated. All of this is development only.
+
+## Demo script
+
+<Steps>
+<Step>
+### One create, four lines
+Create a passkey and read the terminal: `register/options` in and out, then `register/verify` in and out. Between the two, the console shows the options the browser received and the attestation response it produced. Point out the challenge cookie being set by `options` and consumed by `verify`.
+</Step>
+<Step>
+### One sign-in, four lines
+Reload and sign in. Same shape: `login/options` with an empty body and no `allowCredentials` (discoverable credentials, no username), then `login/verify` with the assertion. The response carries `lastUsedAt` and the updated counter.
+</Step>
+<Step>
+### Management calls
+Rename and revoke: `PATCH /passkeys/:id` and `DELETE /passkeys/:id`. The delete response includes `remainingIds`; the console then shows the Signal API call that hides the revoked passkey in the password manager.
+</Step>
+<Step>
+### A failure that is not a bug
+Reset the demo, then try to sign in with the passkey still in your keychain. `login/verify` answers `404 This passkey is not registered here (was the demo reset?)`. The browser has the private key; the server no longer has the public one. This is the state a user reaches if their passkey record is deleted server-side, and why revoke signals the password manager.
+</Step>
+</Steps>
+
+## What stays the same when the BED arrives
+
+| Part | Now | Later |
+| --- | --- | --- |
+| Paths, methods, JSON shapes | `contract.ts` | unchanged |
+| Browser client | `client.ts`, `nudge.ts` | unchanged |
+| Route handlers `app/api/auth/passkey/*` | call the mock in-process | forward to the BED; renamed from `route.docs.ts` to `route.ts` |
+| Challenge cookie between `options` and `verify` | set and read by the mock | still set by the route handler; holds a BED challenge reference |
+| Session and hint cookies | mock | set by the route handler from the BED's answer |
+| Storage and verification | in-memory, `@simplewebauthn/server` | the BED |
+| `/session`, `/reset` | mock only | removed |
+
+The route handlers stay same-origin because the challenge cookie must be first-party, the expected origin and RP ID come from the page's own host, and the app session is set here. Full detail in `docs/PASSKEY-ENDPOINTS.md`.

@@ -1,0 +1,56 @@
+---
+title: "Use case 1: Your passkeys"
+description: List a customer's passkeys with readable names, rename them, revoke them, and keep the password manager in sync
+---
+
+A site cannot read the passkeys stored on a device; browsers block that to prevent tracking. What it can show is the relying party's own records for the signed-in customer, which is what Google, Apple and GitHub show on their account pages. The name comes from three sources, in this order: the nickname the user chose, otherwise the authenticator name from the AAGUID plus the browser and device from the user agent plus the date, otherwise "Passkey · added `<date>`".
+
+<ComponentPreview name="passkey" defaultDevice="mobile" />
+
+## Demo script
+
+<Steps>
+<Step>
+### Create the first passkey
+Enter a name and email, select **Create a passkey**, approve with Touch ID or Face ID. After the ceremony the panel shows the signed-in state and, below it, **Your passkeys** with one entry.
+</Step>
+<Step>
+### Read the label
+On a Mac with iCloud Keychain the entry reads "iCloud Keychain · Chrome on Mac · added `<today>`". If you saved to the Chrome profile it reads "Chrome on Mac" as the authenticator and carries the **Device-bound** badge; iCloud Keychain and Google Password Manager passkeys carry **Synced**. The badge comes from the `backedUp` flag the authenticator reports, not from the label.
+</Step>
+<Step>
+### Create a second one from a phone
+Open the same ngrok URL on an iPhone, sign in with the same email and create a passkey there. Back on the laptop, the list now has two entries and the second reads "Apple Passwords · Safari on iPhone · added `<today>`". This is the "readable name" the client asked for, with no user input.
+</Step>
+<Step>
+### Rename
+Select **Rename** on one entry and type "Work laptop". The nickname replaces the generated label. This is `PATCH /passkeys/:id`.
+</Step>
+<Step>
+### Revoke with the password manager open
+Open Apple Passwords (or `chrome://password-manager/passwords` for Google Password Manager, or `chrome://settings/passkeys` for a Chrome-profile passkey) next to the browser. Select **Revoke**. The entry leaves the list, and on Chrome 132+ or Safari 26+ it also disappears from the password manager: the client sends the remaining IDs through the Signal API and the manager hides anything not on the list.
+</Step>
+<Step>
+### Sign in again
+Reload and select **Sign in with passkey**. The revoked passkey is no longer offered; the remaining one signs you in and its **last used** time updates.
+</Step>
+</Steps>
+
+## What to say when asked
+
+**"Where does the name come from?"** The AAGUID is a 16-byte model identifier every authenticator sends at registration, the same for every passkey from that provider. We look it up in the community list maintained by the providers themselves. The browser and device come from the user agent at registration. A nickname overrides both. This is the approach Google's passkey management guide prescribes; see `docs/PASSKEY-NAMING-VALIDATION.md`.
+
+**"Why 'Not disclosed'?"** Some providers report an all-zero AAGUID on purpose. The label then falls back to the user agent, as the guidance recommends.
+
+**"Can we see what is on the phone?"** No, and neither can anyone else. The list is what our server knows. A passkey deleted on the phone stays in the list until the user revokes it here or fails to sign in with it.
+
+**"Will this change with the real backend?"** No. The BED stores the same fields and serves `GET`, `PATCH` and `DELETE /passkeys`; the list, rename and revoke UI is production-shaped already.
+
+## Files
+
+| What | Where |
+| --- | --- |
+| Label computation | `features/auth/passkey/mock-server/label.ts`, `aaguids.json` |
+| List, rename, revoke UI | `features/auth/components/passkey-list.tsx`, `stored-passkey-card.tsx` |
+| Signal API call after revoke | `features/auth/passkey/client.ts` `revokePasskey()` |
+| Contract types | `features/auth/passkey/contract.ts` `PasskeyCredentialSummary`, `PasskeyRevokeResult` |

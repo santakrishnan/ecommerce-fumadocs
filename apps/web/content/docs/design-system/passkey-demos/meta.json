@@ -1,0 +1,4 @@
+{
+  "title": "Passkey demos",
+  "pages": ["index", "your-passkeys", "detect-and-prompt", "registration-policy", "endpoints-and-logging"]
+}

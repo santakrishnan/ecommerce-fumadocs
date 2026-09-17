@@ -1,0 +1,47 @@
+---
+title: Overview and demo script
+description: One page per passkey use case, each with its own preview, so a walkthrough can be run in order without the previews interfering with each other
+---
+
+These pages split the [Passkey](/docs/design-system/passkey) reference into one demo per use case. Each page has a single preview, so only one WebAuthn request is ever pending in the tab (the browser allows one per tab, which is why several previews on one page can show "A request is already pending"). The original page is unchanged and stays as the reference.
+
+| Page | Use case | What you show |
+| --- | --- | --- |
+| [Your passkeys](/docs/design-system/passkey-demos/your-passkeys) | 1. List a customer's passkeys with readable names | Create from two devices, see "Apple Passwords · Safari on iPhone · added …", rename, revoke, watch the entry disappear from the password manager |
+| [Detect and prompt](/docs/design-system/passkey-demos/detect-and-prompt) | 2. Detect a passkey on the device and prompt to sign in | Capabilities card, immediate UI mode on Chrome 149, autofill on iPhone, the hint-driven primary button, the fallback to the form |
+| [Registration policy](/docs/design-system/passkey-demos/registration-policy) | 3. Control the "where to save your passkey" sheet | Switch presets and watch the options the browser receives and the sheet it shows |
+| [Endpoints and logging](/docs/design-system/passkey-demos/endpoints-and-logging) | Under the hood | The two-call ceremonies in the terminal and the browser console, and what changes when the BED arrives |
+
+## Before you start
+
+<Steps>
+<Step>
+### Pick the URL you will demo from
+Passkeys are bound to the domain. `localhost` works on the laptop only. For phones run `ngrok http 3000` and open the HTTPS URL on every device; create the passkeys on that URL.
+</Step>
+<Step>
+### Start clean
+Open any page and use **Reset demo** at the bottom of the preview. It empties the mock store, signs you out, clears the hint cookie, and asks the password manager to hide old demo passkeys.
+</Step>
+<Step>
+### Open the terminal and the console
+Every request to the mock is logged as `[mock-rp]` in the `pnpm dev` terminal, and every browser call as `[passkey client]` or `[passkey nudge]` in the console. Keep both visible if the audience is technical.
+</Step>
+<Step>
+### Open the preview in its own tab for browser prompts
+The ↗ control on the preview toolbar opens `/preview/<name>` full screen. Face ID and the autofill bar behave most reliably there, and on a phone it is the only sensible way to present.
+</Step>
+</Steps>
+
+<Callout title="No device handy?">
+Chrome DevTools → **More tools → WebAuthn** → *Enable virtual authenticator environment* → add an authenticator (`ctap2`, `internal`, resident keys and user verification **on**). Every page here works against it. Its passkeys vanish when the panel closes, so nothing accumulates in your real keychain.
+</Callout>
+
+## Suggested order for a 20-minute walkthrough
+
+1. **Your passkeys** (8 min): create on the laptop, create on the phone, show the list, rename one, revoke one with Apple Passwords or `chrome://settings/passkeys` open beside it.
+2. **Detect and prompt** (7 min): reload as a returning user on the phone, tap the email field, pick the passkey from the autofill bar; on Chrome 149 tap once and watch the sheet open by itself; then reset and show the same page fall through silently to the form.
+3. **Registration policy** (3 min): switch "This device only" and "Security key only" and show the sheet change.
+4. **Endpoints and logging** (2 min): point at the terminal, explain the two calls per ceremony and that the paths stay the same when the BED lands.
+
+Background reading for questions that come up: `docs/PASSKEY-WEBAUTHN-REFERENCES.md`, `docs/PASSKEY-NAMING-VALIDATION.md`, `docs/PASSKEY-PROMPTING-VALIDATION.md`, `docs/PASSKEY-ENDPOINTS.md`.
