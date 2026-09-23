@@ -144,62 +144,54 @@ Mock only. Removed. Session comes from the app's existing Auth0 session.
 ```mermaid
 sequenceDiagram
     autonumber
-    participant B as Browser<br/>(client.ts / nudge.ts)
-    participant P as Next.js BFF<br/>/api/auth/passkey/*
-    participant A as Auth0<br/>(custom domain)
-    participant M as Auth0 Management API<br/>(server to server)
-    participant S as Side store<br/>(BED: aaguid, name, nickname)
+    participant B as Browser (client.ts, nudge.ts)
+    participant P as Next.js BFF /api/auth/passkey
+    participant A as Auth0 custom domain
+    participant M as Auth0 Management API
+    participant S as Side store (BED)
 
-    rect rgb(235, 245, 255)
-    note over B,A: Create a passkey (registration)
-    B->>P: POST /register/options { email, name }
-    P->>A: POST /passkey/register { client_id, user_profile }
-    A-->>P: { authn_params_public_key, auth_session }
-    P->>P: add hints / attachment / UV to options
-    P-->>B: options JSON + Set-Cookie challenge = auth_session (httpOnly)
-    B->>B: navigator.credentials.create(options)<br/>user picks where to save, Face ID
+    Note over B,A: Create a passkey (registration)
+    B->>P: POST /register/options {email, name}
+    P->>A: POST /passkey/register {client_id, user_profile}
+    A-->>P: {authn_params_public_key, auth_session}
+    P->>P: add hints, attachment, UV to options
+    P-->>B: options JSON + Set-Cookie challenge=auth_session (httpOnly)
+    B->>B: navigator.credentials.create(options), Face ID
     B->>P: POST /register/verify RegistrationResponseJSON
-    P->>P: read + delete challenge cookie
-    P->>P: parse attestationObject: aaguid, transports, backup flags
-    P->>A: POST /oauth/token grant=webauthn { auth_session, authn_response }
-    A-->>P: { id_token, access_token, refresh_token }
-    P->>S: save { key_id, aaguid, authenticatorName, platformLabel }
-    P-->>B: { user, credential, rpID } + Set-Cookie session, passkey-hint
-    end
+    P->>P: read and delete challenge cookie
+    P->>P: parse attestationObject (aaguid, transports, backup flags)
+    P->>A: POST /oauth/token grant=webauthn {auth_session, authn_response}
+    A-->>P: {id_token, access_token, refresh_token}
+    P->>S: save key_id, aaguid, authenticatorName, platformLabel
+    P-->>B: {user, credential, rpID} + Set-Cookie session, passkey-hint
 
-    rect rgb(240, 250, 240)
-    note over B,A: Sign in (button, autofill or immediate UI mode: same calls)
+    Note over B,A: Sign in (button, autofill or immediate UI mode use the same calls)
     B->>P: POST /login/options {}
-    P->>A: POST /passkey/challenge { client_id }
-    A-->>P: { authn_params_public_key, auth_session }
-    P-->>B: options JSON (no allowCredentials) + Set-Cookie challenge = auth_session
-    B->>B: navigator.credentials.get(options)<br/>user picks a passkey, Face ID
+    P->>A: POST /passkey/challenge {client_id}
+    A-->>P: {authn_params_public_key, auth_session}
+    P-->>B: options JSON (no allowCredentials) + Set-Cookie challenge=auth_session
+    B->>B: navigator.credentials.get(options), Face ID
     B->>P: POST /login/verify AuthenticationResponseJSON
-    P->>P: read + delete challenge cookie
-    P->>A: POST /oauth/token grant=webauthn { auth_session, authn_response }
+    P->>P: read and delete challenge cookie
+    P->>A: POST /oauth/token grant=webauthn {auth_session, authn_response}
     A-->>P: tokens
-    P-->>B: { user, rpID } + Set-Cookie session, passkey-hint
-    end
+    P-->>B: {user, rpID} + Set-Cookie session, passkey-hint
 
-    rect rgb(255, 248, 235)
-    note over B,S: Your passkeys (session cookie on every call)
+    Note over B,S: Your passkeys (session cookie on every call)
     B->>P: GET /passkeys
-    P->>M: GET /api/v2/users/{id}/authentication-methods (type = passkey)
+    P->>M: GET /api/v2/users/{id}/authentication-methods (type=passkey)
     M-->>P: key_id, created_at, last_auth_at, backed_up, user_agent
-    P->>S: read aaguid name + nickname by key_id
-    P-->>B: PasskeyCredentialSummary[] (name computed by display rule)
-
-    B->>P: PATCH /passkeys/:id { nickname }
+    P->>S: read aaguid name and nickname by key_id
+    P-->>B: PasskeyCredentialSummary[] (name by display rule)
+    B->>P: PATCH /passkeys/:id {nickname}
     P->>S: update nickname (Auth0 has no rename)
     P-->>B: updated summary
-
     B->>P: DELETE /passkeys/:id
     P->>M: DELETE /api/v2/users/{id}/authentication-methods/{method_id}
     P->>M: GET authentication-methods (remaining)
     P->>S: delete row
-    P-->>B: { revokedId, remainingIds }
-    B->>B: PublicKeyCredential.signalAllAcceptedCredentials(remainingIds)
-    end
+    P-->>B: {revokedId, remainingIds}
+    B->>B: signalAllAcceptedCredentials(remainingIds)
 ```
 
 ---
