@@ -1,0 +1,2876 @@
+openapi: 3.1.0
+info:
+  title: Visitor Profile Service API
+  description: |
+    Manages anonymous visitor profiles with device-based identity resolution,
+    activity ingestion, and LLM-derived preference consolidation.
+
+    Design principles:
+    - **Single entry point**: `POST /resolve` is the only call the frontend
+      makes on every page load. It accepts a device fingerprint and returns the full
+      profile (including visitorId and sessionId). If the visitor is new, it creates
+      one. Sessions are managed internally via Redis — no explicit session endpoints.
+    - **Headers as identity context**: After resolve, the frontend stores `visitorId`
+      and `sessionId` from the JSON response and sends `X-Visitor-Id` and `X-Session-Id`
+      as headers on subsequent API calls (across all services). This API does not use
+      `Set-Cookie` for identity — a BFF may set HttpOnly cookies separately.
+    - **Visitor session (Redis)**: Ephemeral coordination per `visitorId` (not durable
+      identity). Default sliding TTL is 30 minutes (`SESSION_TTL_SECONDS`, implementation).
+      Redis key: `session:{visitorId}` → active `sessionId` UUID.
+      - **`POST /resolve` only** creates, resumes, or **rotates** the session (new
+        `sessionId` in the response when the prior Redis session expired).
+      - **Visitor-scoped routes** (`/preferences`, `/watchlist`, `/searches`, `/activities`,
+        etc.) validate `X-Session-Id` when present and refresh the sliding TTL. They do
+        **not** mint a new session — rotation is never done mid-request on these paths.
+      - If `X-Session-Id` is sent but missing or mismatched in Redis → **401 Unauthorized**.
+        Clients should call `POST /resolve` again, update stored ids, and retry.
+      - **`POST /merge`** links profiles under `customerId` and does **not** refresh or
+        rotate sessions. Each device keeps its own `visitorId` and session until resolve.
+    - **Merge on auth**: When a user authenticates, `POST /merge` links the
+      current visitor (from `X-Visitor-Id` header) to a customerId and folds
+      secondary profiles together.
+    - **Typed activity ingestion**: `POST /activities` accepts a single
+      behavioral event using a discriminated union on the `type` field. Each event
+      type has its own schema with type-safe fields. Events are routed to the
+      EventBridge Event Bus (async) for preference aggregation and S3 archival.
+    - **Scoped preferences**: Preferences are served through dedicated endpoints —
+      `GET /preferences` for lifetime preferences and
+      `GET /preferences/search/{searchId}` for search-funnel-scoped
+      snapshots. Write endpoints are internal (called by aggregator lambdas).
+
+    Response envelope:
+    All responses use a consistent envelope: `{ "data": {...}, "meta": {...} }` for
+    success and `{ "error": {...}, "meta": {...} }` for errors. The `meta` object
+    always contains `traceId` and `timestamp`.
+
+    Validation rules (enforced by handler, not expressible in OpenAPI):
+    - Session: when `X-Session-Id` is sent with `X-Visitor-Id`, it must match the
+      active Redis session for that visitor or the request returns 401. Expired sessions
+      are rotated only via `POST /resolve`, not on other endpoints.
+    - Activity.timestamp must be within the last 24 hours. Future timestamps
+      beyond 5 minutes of clock skew are rejected.
+    - FilterEntry: min must be <= max when both are present.
+    - Preferences.priceRange: min must be <= max when both are present.
+  version: 0.2.0
+  contact:
+    name: API Support
+    email: api-support@example.com
+servers:
+  - url: https://api.example.com/api/v1
+    description: Production
+  - url: http://localhost:3000
+    description: Local dev
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Health
+    description: Service health checks
+  - name: Identity
+    description: Device resolution and profile merging
+  - name: Activities
+    description: Behavioral event ingestion
+  - name: Preferences
+    description: Visitor preference data
+  - name: Watchlist
+    description: Saved vehicles
+  - name: Searches
+    description: Search session management
+  - name: Auth
+    description: OTP and passkey authentication, auth profile, and display name
+paths:
+  /resolve:
+    post:
+      tags:
+        - Identity
+      operationId: resolveVisitor
+      summary: Resolve device fingerprint to a visitor profile
+      description: |
+        The single entry point for every page load. Accepts a device fingerprint
+        hash and returns the canonical visitor profile.
+
+        Backend behavior:
+        - Device not seen before: create visitor, create session in Redis, return profile.
+        - Device seen before, session warm: return profile with current sessionId; extend TTL.
+        - Device seen before, session expired: **rotate** — mint new sessionId in Redis,
+          return it in the response body (only place session rotation happens).
+
+        Identity is returned in the JSON envelope (`visitorId`, `sessionId`), not via
+        `Set-Cookie`. On later calls, send both values as headers. If a downstream call
+        returns 401 because the session expired, call `/resolve` again before retrying.
+      parameters:
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResolveRequest"
+      responses:
+        "200":
+          description: Visitor resolved (existing or newly created)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResolveResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /merge:
+    post:
+      tags:
+        - Identity
+      operationId: mergeVisitors
+      summary: Merge visitor profiles under a customer identity
+      description: |
+        Called when a user authenticates. Links the visitor identified by the
+        X-Visitor-Id header to the provided customerId. If other visitorIds
+        already share that customerId (from other devices), their activities
+        and preferences are folded into a single canonical profile.
+
+        Does **not** merge or rotate Redis sessions across devices — each device
+        keeps its own session until the next `POST /resolve` on that device.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MergeRequest"
+      responses:
+        "200":
+          description: Profiles merged
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MergeResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Visitor already linked to a different customerId
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /activities:
+    post:
+      tags:
+        - Activities
+      operationId: recordActivity
+      summary: Record a single visitor activity event
+      description: |
+        Accepts a single behavioral event. Processing is async — the endpoint
+        validates and accepts the payload, then routes it to the EventBridge
+        Event Bus. From there, events fan out to: (1) EventBridge Rule → SQS →
+        Preference Aggregator Lambda for lifetime preference updates, and
+        (2) Firehose → S3 for archival.
+
+        The request body uses a discriminated union on the `type` field. Each
+        event type has its own schema with type-safe, event-specific fields.
+
+        Optional headers `X-Visitor-Id` and `X-Session-Id` (e.g. from the Search
+        Service) refresh the sliding session TTL when present; same 401 rules apply.
+      parameters:
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivityEvent"
+      responses:
+        "202":
+          description: Activity accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivityAcceptedResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /preferences:
+    get:
+      tags:
+        - Preferences
+      operationId: getLifetimePreferences
+      summary: Get visitor lifetime preferences
+      description: |
+        Returns the visitor's lifetime preferences — the durable, cross-session
+        aggregation of all behavioral signals. Used by the BFF, AI suggestion
+        engines, and recommendation services.
+
+        The visitor is identified via the X-Visitor-Id header. Refreshes the sliding
+        session TTL when `X-Session-Id` is valid.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+      responses:
+        "200":
+          description: Lifetime preferences retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifetimePreferencesResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    patch:
+      tags:
+        - Preferences
+      operationId: updateLifetimePreferences
+      summary: Partially update visitor lifetime preferences
+      description: |
+        Merges new weighted preference data into the visitor's lifetime
+        preferences record. The aggregator sends incremental updates —
+        provided dimensions are merged (ADD expressions in DDB), omitted
+        dimensions are unchanged.
+
+        Internal endpoint — called by the Preference Aggregator Lambda
+        after processing activity events, not by frontend clients.
+
+        Server-managed fields (`createdAt`, `lastSeenAt`) are updated
+        atomically via DDB expressions and should not be passed by the caller.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LifetimePreferencesPatchRequest"
+      responses:
+        "200":
+          description: Lifetime preferences updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LifetimePreferencesResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /preferences/search/{searchId}:
+    get:
+      tags:
+        - Preferences
+      operationId: getSearchPreferences
+      summary: Get search-scoped preferences
+      description: |
+        Returns the preference snapshot for a specific search funnel. These are
+        the preferences that were active during the search session, used by the
+        Search Service to compute preferenceChanges between the current request
+        and the prior search state.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - name: searchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Identifies the search funnel to read preferences from
+      responses:
+        "200":
+          description: Search preferences retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchPreferencesResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    patch:
+      tags:
+        - Preferences
+      operationId: updateSearchPreferences
+      summary: Partially update search-scoped preferences
+      description: |
+        Merges new preference dimensions into the search funnel record.
+        Provided dimensions are merged; omitted dimensions are unchanged.
+        Called by the Search Aggregator Lambda after each conversational turn.
+
+        Internal endpoint — called by backend services, not by frontend clients.
+        Note: eventsCount and lastActiveAt are managed server-side (incremented
+        atomically via DynamoDB expressions) and should not be passed by the caller.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - name: searchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Identifies the search funnel to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SearchPreferencesPatchRequest"
+      responses:
+        "200":
+          description: Search preferences updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchPreferencesResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /watchlist:
+    get:
+      tags:
+        - Watchlist
+      operationId: getWatchlist
+      summary: List saved vehicles
+      description: |
+        Returns the visitor's watchlist — vehicles they've saved for later.
+        Ordered by updatedAt descending (most recent first).
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+      responses:
+        "200":
+          description: Watchlist retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchlistResponse"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      tags:
+        - Watchlist
+      operationId: addToWatchlist
+      summary: Add a vehicle to the watchlist
+      description: |
+        Adds a vehicle to the visitor's watchlist. The client supplies the full
+        vehicle metadata (vin, title, vehicleId, price). Upsert — saving a VIN
+        already on the watchlist overrides title, vehicleId, and price. Returns
+        the visitor's full updated watchlist.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddToWatchlistRequest"
+      responses:
+        "201":
+          description: Vehicle added to watchlist; full updated watchlist returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WatchlistResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /watchlist/{vin}:
+    delete:
+      tags:
+        - Watchlist
+      operationId: removeFromWatchlist
+      summary: Remove a vehicle from the watchlist
+      description: |
+        Hard delete — permanently removes the vehicle (by VIN) from the visitor's
+        watchlist. There is no soft unpin; once removed, the vehicle never appears
+        in GET /watchlist or the POST /watchlist response again unless re-added.
+        (The bookmark/unbookmark preference signal is tracked separately via
+        POST /activities, so a hard delete here loses no signal.)
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 17
+            maxLength: 17
+          description: VIN of the vehicle to remove
+      responses:
+        "204":
+          description: Vehicle removed from watchlist
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /searches:
+    get:
+      tags:
+        - Searches
+      operationId: getSearches
+      summary: List visitor's search sessions
+      description: |
+        Returns the visitor's recent search sessions, sorted by lastActiveAt
+        descending. Each entry includes whether the search is saved (pinned)
+        by the visitor. Saved searches persist indefinitely; unsaved ones
+        may be pruned after a retention period.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+      responses:
+        "200":
+          description: Search sessions retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchesResponse"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /searches/{searchId}:
+    patch:
+      tags:
+        - Searches
+      operationId: updateSearch
+      summary: Update a search session (pin/unpin, rename)
+      description: |
+        Partially updates a search session. Use this to:
+        - **Pin (save):** Set `isSaved: true` to persist the search and enable
+          notifications for new matches.
+        - **Unpin:** Set `isSaved: false` to stop notifications and allow the
+          search to be pruned after the retention period.
+        - **Rename:** Set `name` to give the saved search a custom label
+          (e.g. "SUVs under $35k").
+
+        Only provided fields are updated; omitted fields are unchanged.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - name: searchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Search session to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSearchRequest"
+      responses:
+        "200":
+          description: Search session updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchSessionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /health:
+    get:
+      operationId: getHealth
+      tags:
+        - Health
+      summary: Liveness and dependency check
+      security: []
+      description: Returns service status and dependency health for liveness and readiness checks.
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /auth/profile:
+    get:
+      tags:
+        - Auth
+      operationId: getAuthProfile
+      summary: Get the current auth profile (read-only, no session rotation)
+      description: |
+        Returns the auth-only subset of the resolved visitor — the tiers,
+        `deviceSessionExpiresAt`, and the `metadata.auth` block, refreshed from EDI.
+        Unlike `POST /resolve`, it returns no identity/preference/activity data and
+        does not create or rotate the visitor session, so the UI can call it any time
+        to refresh auth state without signing in. For an anonymous visitor, auth
+        metadata (passkeys, contacts) is empty until the visitor is recognized with
+        OTP.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      responses:
+        "200":
+          description: Current auth profile (tiers, session expiry, and auth metadata)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthProfileResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/otp:
+    post:
+      tags:
+        - Auth
+      operationId: sendOtp
+      summary: Send a one-time code
+      description: |
+        Sends a one-time code to the shopper and proxies to EDI passwordless start.
+
+        Always send `channel` (sms or email). Address the code one of two ways:
+        send `recipient` (a phone or email the shopper typed), or send
+        `contactPointToken` to reach a contact already on file without re-entering it.
+        The token is opaque and carries no channel, which is why `channel` is always
+        required.
+
+        A token is only available for a recognized visitor — one whose profile came
+        back on `/resolve` in `metadata.auth.contacts[]`. A brand-new device is
+        anonymous with no contacts, so it must send `recipient`; its profile is
+        linked to the shopper only after the code is verified and the visitor is
+        merged.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OtpSendRequest"
+      responses:
+        "200":
+          description: OTP sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OtpSendResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags:
+        - Auth
+      operationId: verifyOtp
+      summary: Verify a one-time code (establishes T1)
+      description: |
+        Verifies the code the shopper entered and proxies to EDI passwordless verify.
+
+        Send `channel`, the `code`, and the same recipient the code was sent to —
+        either `recipient` or `contactPointToken`, matching whatever was used on send.
+        On success the service records the auth metadata (OTP verified, channel,
+        expiry, and the resolved ACR/Tier) and the visitor reaches T1.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OtpVerifyRequest"
+      responses:
+        "200":
+          description: Code verified; T1 established. Returns the updated auth profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthProfileResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/passkey:
+    post:
+      tags:
+        - Auth
+      operationId: startPasskeyCeremony
+      summary: Start a WebAuthn ceremony (register or authenticate)
+      description: |
+        Starts a WebAuthn ceremony and returns the browser options plus an opaque
+        `authSession` handle to pass back on completion. `action` picks the
+        ceremony: `register-options` to enroll a new passkey (requires T1) or
+        `login-options` to authenticate with an existing one. The service routes to
+        the matching EDI endpoint; the UI never calls EDI directly.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasskeyOptionsRequest"
+      responses:
+        "200":
+          description: WebAuthn options and correlation handle
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasskeyOptionsResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    put:
+      tags:
+        - Auth
+      operationId: completePasskeyCeremony
+      summary: Complete a WebAuthn ceremony (register or authenticate)
+      description: |
+        Completes the ceremony with the browser's WebAuthn response and the
+        `authSession` handle from the start call. `action` `register` stores the
+        credential (tier unchanged); `action` `login` verifies it and raises the
+        visitor to T2. Proxies to the matching EDI endpoint.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasskeyVerifyRequest"
+      responses:
+        "200":
+          description: Ceremony completed. Returns the updated auth profile.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthProfileResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    delete:
+      tags:
+        - Auth
+      operationId: deletePasskey
+      summary: Remove a passkey from the customer profile
+      description: |
+        Unlinks a passkey server-side, identified by `authenticationMethodId` (from
+        `metadata.auth.passkeys[].id`). Does not remove it from the browser/OS.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasskeyDeleteRequest"
+      responses:
+        "200":
+          description: Passkey removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasskeyDeleteResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /auth/name:
+    put:
+      tags:
+        - Auth
+      operationId: saveName
+      summary: Save the customer display name
+      description: |
+        Calls EDI to set or update the customer display name. Requires T1+.
+      parameters:
+        - $ref: "#/components/parameters/XVisitorId"
+        - $ref: "#/components/parameters/XSessionId"
+        - $ref: "#/components/parameters/XTraceId"
+        - $ref: "#/components/parameters/XTenantId"
+        - $ref: "#/components/parameters/XDealerId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NameRequest"
+      responses:
+        "200":
+          description: Name saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NameResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalError"
+components:
+  parameters:
+    XVisitorId:
+      name: X-Visitor-Id
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Canonical visitor identifier. Obtained from the resolve endpoint and sent as a header on all subsequent API
+        calls.
+    XSessionId:
+      name: X-Session-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+      description: |
+        Current session identifier from `POST /resolve` (`data.sessionId`). Send on
+        visitor-scoped calls alongside `X-Visitor-Id`. When present, the service
+        validates it against Redis and extends the sliding session TTL. If the session
+        expired or does not match → **401**; client must re-resolve (do not expect a
+        new sessionId from non-resolve endpoints).
+    XTraceId:
+      name: X-Trace-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+      description: |
+        Distributed trace identifier. Propagated across all service calls for
+        end-to-end observability. If not provided, the service generates one
+        and returns it in the response meta.
+    XTenantId:
+      name: X-Tenant-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+        pattern: "^[a-zA-Z0-9_-]+$"
+      description: Tenant context. Optional — used for multi-tenant deployments.
+    XDealerId:
+      name: X-Dealer-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        maxLength: 100
+      description: Dealer context. Optional — identifies the dealer context for the request.
+  responses:
+    BadRequest:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: |
+        Authentication failed. Returned by API Gateway before the request reaches
+        the application. Causes: missing X-API-Key header, invalid/disabled API key,
+        or request originated outside the allowed VPC endpoint.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Forbidden
+    Unauthorized:
+      description: |
+        Session invalid or expired. Returned when `X-Session-Id` is sent but does not
+        match the active Redis session for `X-Visitor-Id` (including after TTL expiry).
+        Call `POST /resolve` to obtain a new `sessionId`, then retry the original request.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    TooManyRequests:
+      description: |
+        Too many requests — rate limited (for example, too many OTP sends in a
+        short window). The client should wait and retry.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    Tier:
+      type: string
+      description: |
+        Progressive-identity trust tier. The service maps EDI ACR levels to these
+        for the UI: T0 = anonymous (`anon`), T1 = OTP verified (`1fa`), T2 = passkey
+        authenticated (`2fa:phr`), T3 = qualified (pre-qual / elevated). See the
+        Progressive Identity PRD for tier definitions.
+      enum: [T0, T1, T2, T3]
+    ContactChannel:
+      type: string
+      enum: [email, phone]
+    ContactRole:
+      type: string
+      enum: [primary, secondary, recovery]
+    VisitorAuthMetadata:
+      type: object
+      description: |
+        The channels and devices through which the customer can reach each tier:
+        which contacts can be used for OTP (T1) and which passkeys can be used per
+        device (T2), plus the display name. Returned at `metadata.auth` on both
+        `ResolvedVisitor` (`POST /resolve`) and `AuthProfile` (`GET /auth/profile`).
+        The coarse tiers and the device-session expiry sit alongside it at the root
+        of each.
+      properties:
+        hasPasskey:
+          type: boolean
+          description: The customer has at least one passkey enrolled on any device (can reach T2).
+        hasEmail:
+          type: boolean
+          description: The customer has a verified email on file (a channel that can reach T1).
+        hasPhone:
+          type: boolean
+          description: The customer has a verified phone on file (a channel that can reach T1).
+        hasRecovery:
+          type: boolean
+          description: |
+            The customer has a backup/recovery contact on file (a `contacts[]` entry
+            with `contactRole: recovery`). A recovery contact is added through the
+            normal OTP flow (`POST`/`PUT /auth/otp`) on a new address; EDI rejects a
+            duplicate of an existing email/phone.
+        hasName:
+          type: boolean
+          description: A customer display name is set.
+        name:
+          type: string
+          description: Customer display name, when set.
+        contacts:
+          type: array
+          description: Contact channels that can be used to reach T1 (OTP).
+          items:
+            $ref: "#/components/schemas/AuthContact"
+        passkeys:
+          type: array
+          description: Passkeys (per device) that can be used to reach T2.
+          items:
+            $ref: "#/components/schemas/AuthPasskey"
+    AuthContact:
+      type: object
+      required: [type, masked, contactRole]
+      properties:
+        type:
+          $ref: "#/components/schemas/ContactChannel"
+        masked:
+          type: string
+          description: Masked value for display (see auth requirements NFR 3). Never the full value.
+        contactRole:
+          $ref: "#/components/schemas/ContactRole"
+        contactPointToken:
+          type: string
+          description: |
+            Opaque token standing in for this contact's phone/email. The UI passes it
+            (with `channel`) to `POST /auth/otp` to re-send a code to a known contact
+            without re-entering it. Carries no channel and no raw value.
+    AuthPasskey:
+      type: object
+      required: [id, isThisDevice]
+      properties:
+        id:
+          type: string
+          description: |
+            EDI authentication-method id for this passkey. Used to remove it via
+            `DELETE /auth/passkey`.
+        deviceId:
+          type: string
+          format: uuid
+          nullable: true
+          description: |
+            The device this passkey was enrolled on. Drives `isThisDevice`.
+        deviceLabel:
+          type: string
+          nullable: true
+          description: |
+            Human-friendly label for the enrolling device/authenticator.
+          example: Toyota Profile on macOS
+        deviceBound:
+          type: boolean
+          nullable: true
+          description: |
+            Whether the passkey is bound to this device's authenticator, derived
+            from the WebAuthn authenticator attachment EDI reports at ceremony time.
+            `true` when EDI reports `platform` (this device's authenticator);
+            `false` when EDI reports `cross-platform` (a roaming/other-device
+            authenticator). Advisory UX signal.
+        createdAt:
+          type: string
+          format: date-time
+        lastUsedAt:
+          type: string
+          format: date-time
+        isThisDevice:
+          type: boolean
+          description: |
+            True when this passkey belongs to the current device. Computed by VPS by
+            matching `deviceId` to the resolved device. Lets the UI distinguish
+            "use your passkey" (local) from "use another device" (remote).
+    AuthProfileResponse:
+      type: object
+      description: |
+        Envelope for `GET /auth/profile`. `data` is the auth-only subset of
+        `ResolvedVisitor` — the tiers, the device-session expiry, and
+        `metadata.auth` — refreshed from EDI without rotating the session.
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/AuthProfile"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    AuthProfile:
+      type: object
+      description: |
+        The authentication subset of `ResolvedVisitor`. Same fields with the same
+        meaning as on `ResolvedVisitor`; see there for the authoritative
+        descriptions. Carries no identity, preference, or activity data.
+      required:
+        - deviceSessionTier
+        - customerTier
+      properties:
+        deviceSessionTier:
+          $ref: "#/components/schemas/Tier"
+        deviceSessionExpiresAt:
+          type: string
+          format: date-time
+        customerTier:
+          $ref: "#/components/schemas/Tier"
+        metadata:
+          type: object
+          properties:
+            auth:
+              $ref: "#/components/schemas/VisitorAuthMetadata"
+    OtpSendRequest:
+      type: object
+      required: [channel]
+      description: |
+        Request to send a one-time code. Always include `channel`, and address the
+        code with exactly one of `recipient` (a typed phone/email) or
+        `contactPointToken` (a contact already on file). A token is only available to a
+        recognized visitor whose contacts came back on `/resolve`.
+      properties:
+        channel:
+          $ref: "#/components/schemas/ContactChannel"
+        recipient:
+          type: string
+          description: A phone (E.164) or email the shopper typed. Provide this when there is no token.
+        contactPointToken:
+          type: string
+          description: An opaque token for a recipient already on file, taken from `metadata.auth.contacts[].contactPointToken`. Provide this instead of `recipient`.
+    OtpSendResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [sent]
+          properties:
+            sent:
+              type: boolean
+              example: true
+            channel:
+              $ref: "#/components/schemas/ContactChannel"
+            maskedRecipient:
+              type: string
+              description: Masked recipient the code was sent to (see auth requirements NFR 3).
+        meta:
+          $ref: "#/components/schemas/Meta"
+    OtpVerifyRequest:
+      type: object
+      required: [channel, code]
+      description: |
+        Request to verify a one-time code. Include `channel`, the `code`, and the
+        same recipient used on send — either `recipient` or `contactPointToken`.
+      properties:
+        channel:
+          $ref: "#/components/schemas/ContactChannel"
+        recipient:
+          type: string
+          description: The phone/email the code was sent to. Provide this when there is no token.
+        contactPointToken:
+          type: string
+          description: The same token used on send. Provide this instead of `recipient`.
+        code:
+          type: string
+          description: The one-time code entered by the shopper.
+    PasskeyOptionsRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [register-options, login-options]
+    PasskeyOptionsResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [options, authSession]
+          properties:
+            options:
+              type: object
+              description: WebAuthn PublicKeyCredentialCreationOptions or RequestOptions JSON, passed to the browser.
+              additionalProperties: true
+            authSession:
+              type: string
+              description: Opaque correlation handle to submit on completion.
+        meta:
+          $ref: "#/components/schemas/Meta"
+    PasskeyVerifyRequest:
+      type: object
+      required: [action, authSession, response]
+      properties:
+        action:
+          type: string
+          enum: [register, login]
+        authSession:
+          type: string
+          description: The correlation handle from the options step.
+        response:
+          type: object
+          description: WebAuthn attestation (register) or assertion (login) JSON from the browser.
+          additionalProperties: true
+        deviceName:
+          type: string
+          description: Client-reported platform label, stored for passkey management UI.
+          example: macOS
+    PasskeyDeleteRequest:
+      type: object
+      required: [authenticationMethodId]
+      properties:
+        authenticationMethodId:
+          type: string
+          description: EDI authentication-method id from `metadata.auth.passkeys[].id`.
+    PasskeyDeleteResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [deleted]
+          properties:
+            deleted:
+              type: boolean
+              example: true
+        meta:
+          $ref: "#/components/schemas/Meta"
+    NameRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+    NameResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+        meta:
+          $ref: "#/components/schemas/Meta"
+    Meta:
+      type: object
+      required:
+        - traceId
+        - timestamp
+      properties:
+        traceId:
+          type: string
+          format: uuid
+          description: Distributed trace identifier for this request
+        timestamp:
+          type: string
+          format: date-time
+          description: Server timestamp when the response was generated
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+        - meta
+      properties:
+        error:
+          type: string
+          enum:
+            - BadRequest
+            - NotFound
+            - Unauthorized
+            - Conflict
+            - InternalError
+          description: Machine-readable error code (PascalCase)
+        message:
+          type: string
+          maxLength: 500
+          description: Human-readable error message
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: JSON path to the invalid field (e.g. "type", "filters[0].key")
+              message:
+                type: string
+                description: Human-readable validation message
+        meta:
+          $ref: "#/components/schemas/Meta"
+    ResolveResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/ResolvedVisitor"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    MergeResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/MergedVisitor"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    ActivityAcceptedResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/ActivityAccepted"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    LifetimePreferencesResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/LifetimePreferences"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    SearchPreferencesResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/SearchPreferences"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    ResolveRequest:
+      type: object
+      required:
+        - deviceFingerprintHash
+      properties:
+        deviceFingerprintHash:
+          type: string
+          minLength: 64
+          maxLength: 128
+          pattern: ^[a-fA-F0-9]+$
+          description: Stable device fingerprint hash generated client-side (hex-encoded SHA-256 or similar)
+        userAgent:
+          type: string
+          maxLength: 500
+        referrer:
+          type: string
+          format: uri
+          maxLength: 2000
+        utm:
+          $ref: "#/components/schemas/UtmParams"
+    MergeRequest:
+      type: object
+      required:
+        - customerId
+      properties:
+        customerId:
+          type: string
+          minLength: 1
+          maxLength: 100
+          pattern: ^\S+$
+          description: Authenticated customer identifier from the auth system (no whitespace)
+    ResolvedVisitor:
+      type: object
+      required:
+        - visitorId
+        - sessionId
+        - deviceId
+        - isNew
+      properties:
+        visitorId:
+          type: string
+          format: uuid
+          description: Canonical visitor identifier
+        sessionId:
+          type: string
+          format: uuid
+          description: Current session (created or resumed from Redis)
+        deviceId:
+          type: string
+          format: uuid
+          description: Identifier for this specific device
+        isNew:
+          type: boolean
+          description: True if this visitor was just created
+        customerId:
+          type: string
+          maxLength: 100
+          description: Present if visitor was previously linked via merge. Null otherwise.
+        deviceSessionTier:
+          allOf:
+            - $ref: "#/components/schemas/Tier"
+          description: |
+            The authentication tier THIS device's live session currently holds.
+            Computed by the service with the auth-token expiry threshold already
+            applied. Drops to T0 once expiry has lapsed or within threshold.
+        deviceSessionExpiresAt:
+          type: string
+          format: date-time
+          description: |
+            When THIS device's auth session expires — the expiry behind
+            `deviceSessionTier`. The UI may proactively trigger a login as it nears.
+            Omitted when the device session is anonymous (`deviceSessionTier` = T0).
+        customerTier:
+          allOf:
+            - $ref: "#/components/schemas/Tier"
+          description: |
+            The highest tier the customer has established anywhere (across devices),
+            regardless of this device's live session. A single high-water mark; it
+            does not say how to reach it — see `metadata.auth` for the channels and
+            devices (contacts, passkeys) that can.
+        preferences:
+          allOf:
+            - $ref: "#/components/schemas/LifetimePreferences"
+          description: Lifetime preference weights from the preferences store. Omitted if none yet.
+        metadata:
+          allOf:
+            - $ref: "#/components/schemas/VisitorMetadata"
+          description: Visitor metadata (location, language, tags). Omitted if none set.
+        stats:
+          allOf:
+            - $ref: "#/components/schemas/VisitorStats"
+          description: Lifetime activity counters. Omitted if not yet initialised.
+    VisitorStats:
+      type: object
+      description: Per-visitor lifetime activity counters.
+      properties:
+        totalSessions:
+          type: integer
+          minimum: 0
+        totalSearches:
+          type: integer
+          minimum: 0
+        totalVehicleViews:
+          type: integer
+          minimum: 0
+        firstSeenAt:
+          type: string
+          format: date-time
+        lastActiveAt:
+          type: string
+          format: date-time
+    VisitorMetadata:
+      type: object
+      description: Per-visitor preferences/metadata.
+      properties:
+        preferredZipCode:
+          type: string
+          maxLength: 10
+        preferredRadiusMiles:
+          type: integer
+          minimum: 0
+        language:
+          type: string
+          maxLength: 10
+        notificationTopics:
+          type: array
+          items:
+            type: string
+        tags:
+          type: object
+          additionalProperties: true
+        updatedAt:
+          type: string
+          format: date-time
+        auth:
+          allOf:
+            - $ref: "#/components/schemas/VisitorAuthMetadata"
+          description: |
+            Authentication metadata describing how the customer can reach each tier —
+            which contact channels can reach T1 and which devices can reach T2.
+            Coarse tier values live at the root of `data` (`deviceSessionTier`,
+            `customerTier`); this object holds the supporting detail. Omitted for a
+            fully anonymous, unrecognized device.
+    MergedVisitor:
+      type: object
+      required:
+        - canonicalVisitorId
+        - customerId
+        - mergedVisitorIds
+      properties:
+        canonicalVisitorId:
+          type: string
+          format: uuid
+          description: The surviving visitorId after merge
+        customerId:
+          type: string
+          maxLength: 100
+        mergedVisitorIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: All visitorIds folded into the canonical profile
+        devices:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeviceSummary"
+    ActivityAccepted:
+      type: object
+      required:
+        - accepted
+      properties:
+        accepted:
+          type: boolean
+          enum:
+            - true
+          description: Confirms the activity was accepted for async processing
+    LifetimePreferencesPatchRequest:
+      type: object
+      description: |
+        Partial update for lifetime preferences. Provided dimensions are
+        merged into the existing record using DDB ADD expressions (weights
+        accumulate). Omitted dimensions are unchanged.
+        At least one of `preferences`, `totalSessions`, `totalSearches`, or
+        `totalVehicleViews` must be present. Both preference weights and
+        counter fields may be present in the same request.
+      allOf:
+        - properties:
+            preferences:
+              $ref: "#/components/schemas/PreferenceWeights"
+            rawWeightsByDate:
+              type: object
+              description: |
+                Daily weight buckets to merge. Keys are ISO date strings (YYYY-MM-DD),
+                values follow the same dimension structure as preferences.
+                Used for audit and future decay computation.
+              additionalProperties:
+                $ref: "#/components/schemas/PreferenceWeights"
+              example:
+                2026-04-28:
+                  make:
+                    toyota: 3.715
+                  bodyStyle:
+                    suv: 3.715
+            totalSessions:
+              type: integer
+              minimum: 0
+              description: Cumulative count of sessions started by this visitor.
+            totalSearches:
+              type: integer
+              minimum: 0
+              description: Cumulative count of searches executed by this visitor.
+            totalVehicleViews:
+              type: integer
+              minimum: 0
+              description: Cumulative count of vehicle detail page views by this visitor.
+            computedAt:
+              type: string
+              format: date-time
+              description: Timestamp when the aggregator computed these values
+            algorithmVersion:
+              type: string
+              maxLength: 50
+              description: Algorithm identifier (e.g. "milestone1-no-decay")
+        - anyOf:
+            - required:
+                - preferences
+            - required:
+                - totalSessions
+            - required:
+                - totalSearches
+            - required:
+                - totalVehicleViews
+    SearchPreferencesPatchRequest:
+      type: object
+      description: |
+        Partial update for search-scoped preferences. Provided fields are
+        merged into the search funnel record. Omitted fields are unchanged.
+        `eventsCount` and `lastSeenAt` are managed server-side via DDB
+        atomic expressions.
+      properties:
+        preferences:
+          $ref: "#/components/schemas/PreferenceWeights"
+        location:
+          $ref: "#/components/schemas/VisitorLocation"
+        computedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the aggregator computed these preferences
+    LifetimePreferences:
+      type: object
+      required:
+        - visitorId
+      properties:
+        visitorId:
+          type: string
+          format: uuid
+        preferences:
+          $ref: "#/components/schemas/PreferenceWeights"
+        rawWeightsByDate:
+          type: object
+          description: |
+            Daily weight buckets for audit and decay computation.
+            Keys are ISO date strings (YYYY-MM-DD).
+          additionalProperties:
+            $ref: "#/components/schemas/PreferenceWeights"
+        createdAt:
+          type: string
+          format: date-time
+          description: When the preference record was first created
+        lastSeenAt:
+          type: string
+          format: date-time
+          description: Last activity that contributed to these preferences
+        computedAt:
+          type: string
+          format: date-time
+          description: When the aggregator last computed these preferences
+        totalSessions:
+          type: integer
+          minimum: 0
+          description: Lifetime session count, maintained by the Preference Aggregator.
+        totalSearches:
+          type: integer
+          minimum: 0
+          description: Lifetime search count, maintained by the Preference Aggregator.
+        totalVehicleViews:
+          type: integer
+          minimum: 0
+          description: Lifetime vehicle-view count, maintained by the Preference Aggregator.
+    SearchPreferences:
+      type: object
+      required:
+        - visitorId
+        - searchId
+      description: |
+        Search-scoped preference record. Captures accumulated preferences
+        within this search session and location.
+      properties:
+        visitorId:
+          type: string
+          format: uuid
+        searchId:
+          type: string
+          format: uuid
+        preferences:
+          $ref: "#/components/schemas/PreferenceWeights"
+        location:
+          $ref: "#/components/schemas/VisitorLocation"
+        eventsCount:
+          type: integer
+          minimum: 0
+          description: Number of activity events processed in this funnel
+        createdAt:
+          type: string
+          format: date-time
+          description: When the search funnel was created
+        lastSeenAt:
+          type: string
+          format: date-time
+          description: Last activity timestamp in this funnel
+        computedAt:
+          type: string
+          format: date-time
+          description: When the aggregator last computed these preferences
+    PreferenceWeights:
+      type: object
+      description: |
+        Weighted preference dimensions. Each property is a dimension derived
+        from visitor activity events. Values are label → weight maps where
+        weights are non-normalized running totals (normalization happens at
+        query time by the Search Service).
+
+        The named properties below document the common dimensions. The schema is
+        open (additionalProperties is a WeightedMap) so any DimensionId-derived
+        dimension can be aggregated without a spec change, including boolean
+        dimensions represented as {"true": weight}.
+      properties:
+        make:
+          $ref: "#/components/schemas/WeightedMap"
+        model:
+          $ref: "#/components/schemas/WeightedMap"
+        trim:
+          $ref: "#/components/schemas/WeightedMap"
+        bodyStyle:
+          $ref: "#/components/schemas/WeightedMap"
+        fuelType:
+          $ref: "#/components/schemas/WeightedMap"
+        drivetrain:
+          $ref: "#/components/schemas/WeightedMap"
+        transmissionType:
+          $ref: "#/components/schemas/WeightedMap"
+        condition:
+          $ref: "#/components/schemas/WeightedMap"
+        exteriorColor:
+          $ref: "#/components/schemas/WeightedMap"
+        interiorColor:
+          $ref: "#/components/schemas/WeightedMap"
+        priceBucket:
+          $ref: "#/components/schemas/WeightedMap"
+        mileageBucket:
+          $ref: "#/components/schemas/WeightedMap"
+        yearBucket:
+          $ref: "#/components/schemas/WeightedMap"
+        powertrainType:
+          $ref: "#/components/schemas/WeightedMap"
+      additionalProperties:
+        $ref: "#/components/schemas/WeightedMap"
+    WeightedMap:
+      type: object
+      description: |
+        Label → accumulated weight. Labels are lowercase normalized values
+        from the vehicle record (e.g. "toyota", "suv", "hybrid").
+        Weights accumulate via DDB ADD expressions.
+      additionalProperties:
+        type: number
+      example:
+        toyota: 24.5
+        honda: 6.2
+    VisitorActivityType:
+      type: string
+      description: |
+        Activity event discriminator. Matches CloudEvents `type` and specs/visitor/events/*.json `$id` values.
+      enum:
+        - visitorActivity.search.executed
+        - visitorActivity.filter.added
+        - visitorActivity.filter.removed
+        - visitorActivity.smartFilter.removed
+        - visitorActivity.sort.executed
+        - visitorActivity.vehicle.clicked
+        - visitorActivity.vehicle.viewed
+        - visitorActivity.vehicle.bookmarked
+        - visitorActivity.vehicle.unbookmarked
+        - visitorActivity.appointment.executed
+        - visitorActivity.suggestion.clicked
+        - visitorActivity.recommendation.clicked
+        - visitorActivity.page.viewed
+        - visitorActivity.session.started
+        - visitorActivity.session.expired
+    ActivityEvent:
+      description: |
+        A single behavioral event. Uses a discriminated union on the `type` field.
+        Each event type has its own schema with type-safe fields.
+      discriminator:
+        propertyName: type
+        mapping:
+          visitorActivity.search.executed: "#/components/schemas/SearchExecutedActivity"
+          visitorActivity.filter.added: "#/components/schemas/FilterAddedActivity"
+          visitorActivity.filter.removed: "#/components/schemas/FilterRemovedActivity"
+          visitorActivity.smartFilter.removed: "#/components/schemas/SmartFilterRemovedActivity"
+          visitorActivity.sort.executed: "#/components/schemas/SortExecutedActivity"
+          visitorActivity.vehicle.clicked: "#/components/schemas/VehicleClickedActivity"
+          visitorActivity.vehicle.viewed: "#/components/schemas/VehicleViewedActivity"
+          visitorActivity.vehicle.bookmarked: "#/components/schemas/VehicleBookmarkedActivity"
+          visitorActivity.vehicle.unbookmarked: "#/components/schemas/VehicleUnbookmarkedActivity"
+          visitorActivity.appointment.executed: "#/components/schemas/AppointmentExecutedActivity"
+          visitorActivity.suggestion.clicked: "#/components/schemas/SuggestionClickedActivity"
+          visitorActivity.recommendation.clicked: "#/components/schemas/RecommendationClickedActivity"
+          visitorActivity.page.viewed: "#/components/schemas/PageViewedActivity"
+          visitorActivity.session.started: "#/components/schemas/SessionStartedActivity"
+          visitorActivity.session.expired: "#/components/schemas/SessionExpiredActivity"
+      oneOf:
+        - $ref: "#/components/schemas/SearchExecutedActivity"
+        - $ref: "#/components/schemas/FilterAddedActivity"
+        - $ref: "#/components/schemas/FilterRemovedActivity"
+        - $ref: "#/components/schemas/SmartFilterRemovedActivity"
+        - $ref: "#/components/schemas/SortExecutedActivity"
+        - $ref: "#/components/schemas/VehicleClickedActivity"
+        - $ref: "#/components/schemas/VehicleViewedActivity"
+        - $ref: "#/components/schemas/VehicleBookmarkedActivity"
+        - $ref: "#/components/schemas/VehicleUnbookmarkedActivity"
+        - $ref: "#/components/schemas/AppointmentExecutedActivity"
+        - $ref: "#/components/schemas/SuggestionClickedActivity"
+        - $ref: "#/components/schemas/RecommendationClickedActivity"
+        - $ref: "#/components/schemas/PageViewedActivity"
+        - $ref: "#/components/schemas/SessionStartedActivity"
+        - $ref: "#/components/schemas/SessionExpiredActivity"
+    SearchExecutedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - searchId
+      properties:
+        type:
+          const: visitorActivity.search.executed
+        timestamp:
+          type: string
+          format: date-time
+          description: Client-provided event time. If omitted, the server generates it on receipt.
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        searchId:
+          type: string
+          format: uuid
+        searchFlow:
+          type: string
+          enum:
+            - Agentic
+            - Filtered
+          description: |
+            Origin of the search. `Agentic` = agent-driven search (Visitor Profile
+            records it to the Saved Searches table, and the aggregator updates the
+            search-preference snapshot); `Filtered` = standard filtered search
+            (neither of those writes happens). Sent by the search service based on
+            the endpoint that was called. Optional during rollout; treated as
+            non-Agentic when absent.
+        query:
+          type: string
+          maxLength: 500
+        filters:
+          type: array
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/FilterEntry"
+        sort:
+          type: string
+          enum:
+            - Recommended
+            - LowestPrice
+            - HighestPrice
+            - LowestMileage
+            - NewestYear
+        resultCount:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        location:
+          $ref: "#/components/schemas/VisitorLocation"
+        smartFilters:
+          type: array
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/SmartFilter"
+          description: Result-scoped facet dimensions returned with the search response
+    FilterAddedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - searchId
+        - filter
+      properties:
+        type:
+          const: visitorActivity.filter.added
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        searchId:
+          type: string
+          format: uuid
+        filter:
+          $ref: "#/components/schemas/FilterEntry"
+        filters:
+          type: array
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/FilterEntry"
+    FilterRemovedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - searchId
+        - filter
+      properties:
+        type:
+          const: visitorActivity.filter.removed
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        searchId:
+          type: string
+          format: uuid
+        filter:
+          $ref: "#/components/schemas/FilterEntry"
+        filters:
+          type: array
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/FilterEntry"
+    SmartFilterRemovedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - searchId
+        - name
+        - filters
+      properties:
+        type:
+          const: visitorActivity.smartFilter.removed
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        searchId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 200
+          description: Display name of the smart filter chip that was removed
+        filters:
+          type: array
+          items:
+            $ref: "#/components/schemas/FilterEntry"
+          description: The individual filters the smart filter chip represented
+    SortExecutedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - searchId
+        - newSort
+      properties:
+        type:
+          const: visitorActivity.sort.executed
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        searchId:
+          type: string
+          format: uuid
+        previousSort:
+          type: string
+          enum:
+            - Recommended
+            - LowestPrice
+            - HighestPrice
+            - LowestMileage
+            - NewestYear
+        newSort:
+          type: string
+          enum:
+            - Recommended
+            - LowestPrice
+            - HighestPrice
+            - LowestMileage
+            - NewestYear
+    VehicleClickedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - vehicle
+        - source
+      properties:
+        type:
+          const: visitorActivity.vehicle.clicked
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+        source:
+          $ref: "#/components/schemas/PageSource"
+        searchId:
+          type: string
+          format: uuid
+        position:
+          type: integer
+          minimum: 0
+          description: Position in the result list where the vehicle was clicked
+    VehicleViewedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - vehicle
+      properties:
+        type:
+          const: visitorActivity.vehicle.viewed
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+        source:
+          $ref: "#/components/schemas/PageSource"
+        searchId:
+          type: string
+          format: uuid
+    VehicleBookmarkedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - vehicle
+      properties:
+        type:
+          const: visitorActivity.vehicle.bookmarked
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+        source:
+          $ref: "#/components/schemas/PageSource"
+    VehicleUnbookmarkedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - vehicle
+      properties:
+        type:
+          const: visitorActivity.vehicle.unbookmarked
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+    AppointmentExecutedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - vehicle
+        - dealerId
+        - contactMethod
+        - requestedDate
+      properties:
+        type:
+          const: visitorActivity.appointment.executed
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+        dealerId:
+          type: integer
+          description: Dealer where the appointment was requested
+        dealerName:
+          type: string
+          maxLength: 200
+        appointmentType:
+          type: string
+          maxLength: 100
+          description: Type of appointment (e.g. test drive, inspection)
+        requestedDate:
+          type: string
+          format: date-time
+          description: Requested appointment date/time
+        contactMethod:
+          type: string
+          maxLength: 50
+          description: How the visitor chose to be contacted (phone, email, text)
+    SuggestionClickedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - suggestionId
+      properties:
+        type:
+          const: visitorActivity.suggestion.clicked
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        suggestionId:
+          type: string
+          maxLength: 100
+          description: Unique identifier of the suggestion that was clicked
+        suggestionType:
+          type: string
+          maxLength: 100
+          description: Category of suggestion (e.g. recommendation, alternative, trending)
+        suggestionTitle:
+          type: string
+          maxLength: 500
+          description: Display title of the suggestion
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+        source:
+          $ref: "#/components/schemas/PageSource"
+    RecommendationClickedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - vehicle
+        - source
+      properties:
+        type:
+          const: visitorActivity.recommendation.clicked
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        vehicle:
+          $ref: "#/components/schemas/VehicleRef"
+        source:
+          $ref: "#/components/schemas/PageSource"
+        position:
+          type: integer
+          minimum: 0
+          description: Position in the recommendation list
+    PageViewedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - pageType
+      properties:
+        type:
+          const: visitorActivity.page.viewed
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        pageType:
+          type: string
+          maxLength: 100
+          description: Type of page viewed (e.g. homepage, srp, vdp, comparison)
+        pageUrl:
+          type: string
+          maxLength: 2000
+        referrerPageType:
+          type: string
+          maxLength: 100
+          description: Type of the referring page
+    SessionStartedActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - isNewVisitor
+        - entryPageType
+      properties:
+        type:
+          const: visitorActivity.session.started
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        isNewVisitor:
+          type: boolean
+          description: Whether this is the visitor's first session
+        entryPageType:
+          type: string
+          maxLength: 100
+          description: Page type where the session began
+        referrer:
+          type: string
+          maxLength: 2000
+          description: External referrer URL
+        utm:
+          $ref: "#/components/schemas/UtmParams"
+        deviceType:
+          type: string
+          maxLength: 50
+          description: Device category (e.g. desktop, mobile, tablet)
+    SessionExpiredActivity:
+      type: object
+      required:
+        - type
+        - visitorId
+        - sessionId
+        - startedAt
+        - expiredAt
+      properties:
+        type:
+          const: visitorActivity.session.expired
+        timestamp:
+          type: string
+          format: date-time
+        visitorId:
+          type: string
+          format: uuid
+        sessionId:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Tenant identifier for multi-tenant deployments. Matches the DFP tenantKey (max 255). Optional during rollout.
+        startedAt:
+          type: string
+          format: date-time
+          description: When the session originally started
+        expiredAt:
+          type: string
+          format: date-time
+          description: When the session was determined to have expired
+    VehicleRef:
+      type: object
+      required:
+        - vin
+        - title
+      description: Snapshot of vehicle attributes at event time. Denormalized to avoid join-time lookups.
+      properties:
+        vin:
+          type: string
+          minLength: 17
+          maxLength: 17
+          pattern: ^[A-HJ-NPR-Z0-9]{17}$
+          description: 17-character VIN (excludes I, O, Q per standard)
+        vehicleId:
+          type: string
+          maxLength: 50
+        title:
+          type: string
+          maxLength: 255
+          description: Display title (e.g. "2024 Toyota RAV4 Hybrid XSE")
+        year:
+          type: integer
+          minimum: 1900
+          maximum: 2099
+        make:
+          type: string
+          maxLength: 100
+        model:
+          type: string
+          maxLength: 100
+        trim:
+          type: string
+          maxLength: 100
+        bodyStyle:
+          type: string
+          maxLength: 50
+        listPrice:
+          type: number
+          minimum: 0
+        condition:
+          type: string
+          maxLength: 50
+          description: Vehicle condition (e.g. new, used, certified)
+        fuelType:
+          type: string
+          maxLength: 50
+        drivetrain:
+          type: string
+          maxLength: 50
+        transmissionType:
+          type: string
+          maxLength: 50
+          description: Transmission type (e.g. Automatic, Manual, CVT)
+        mileage:
+          type: integer
+          minimum: 0
+          description: Odometer reading at event time
+        exteriorColor:
+          type: string
+          maxLength: 50
+          description: Exterior color family (e.g. White, Black, Gray)
+        interiorColor:
+          type: string
+          maxLength: 50
+          description: Interior color family (e.g. Black, Beige, Gray)
+        computed:
+          type: object
+          description: Server-computed enrichment fields
+          properties:
+            powertrainType:
+              type: string
+              maxLength: 50
+            vehicleCategory:
+              type: string
+              maxLength: 50
+            isLuxury:
+              type: boolean
+            dealRating:
+              type: string
+              maxLength: 50
+    DimensionId:
+      type: string
+      description: |
+        Core v360 / index dimensions. Valid on `Filter.key` (all core ids).
+        Full capability matrix: `architecture/14-dimension-registry.md`.
+      enum:
+        - make
+        - model
+        - trim
+        - bodyStyle
+        - fuelType
+        - drivetrain
+        - transmissionType
+        - exteriorColorFamily
+        - interiorColorFamily
+        - seatingCapacity
+        - price
+        - mileage
+        - year
+        - features
+        - certified
+        - condition
+        - vehicleStatus
+        - dealerId
+        - daysInStock
+        - powertrainType
+        - vehicleCategory
+        - dealRating
+        - fuelEfficient
+        - isLowMiles
+        - familyFriendly
+        - hasThirdRow
+        - offRoadCapable
+        - towingCapable
+        - isLuxury
+        - isSporty
+        - isCityFriendly
+        - availability
+    FilterKey:
+      deprecated: true
+      description: "**Deprecated.** Use `DimensionId`. Alias for v1 migration."
+      allOf:
+        - $ref: "#/components/schemas/DimensionId"
+    FilterEntry:
+      type: object
+      required:
+        - key
+        - filterType
+      properties:
+        key:
+          $ref: "#/components/schemas/DimensionId"
+        filterType:
+          type: string
+          enum:
+            - Enum
+            - MultiEnum
+            - Range
+            - Boolean
+          description: Type of filter control (from search API SmartFilter type)
+        value:
+          description: Selected value (Enum filters — single select)
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+        values:
+          type: array
+          maxItems: 50
+          items:
+            oneOf:
+              - type: string
+              - type: number
+          description: Selected values (MultiEnum filters — multi select)
+        min:
+          type: number
+          description: Range minimum (Range filters)
+        max:
+          type: number
+          description: Range maximum (Range filters)
+        enabled:
+          type: boolean
+          description: Toggle state (Boolean filters — true when active)
+    SmartFilter:
+      type: object
+      required:
+        - key
+        - label
+        - type
+      description: |
+        One filter dimension with its available values/range in the current
+        search context. Shape of additional fields depends on `type`.
+      discriminator:
+        propertyName: type
+        mapping:
+          Enum: "#/components/schemas/EnumFilter"
+          MultiEnum: "#/components/schemas/MultiEnumFilter"
+          Range: "#/components/schemas/RangeFilter"
+          Boolean: "#/components/schemas/BooleanFilter"
+      oneOf:
+        - $ref: "#/components/schemas/EnumFilter"
+        - $ref: "#/components/schemas/MultiEnumFilter"
+        - $ref: "#/components/schemas/RangeFilter"
+        - $ref: "#/components/schemas/BooleanFilter"
+    EnumFilter:
+      type: object
+      description: Single-select categorical filter dimension
+      required:
+        - key
+        - label
+        - type
+        - options
+      properties:
+        key:
+          $ref: "#/components/schemas/DimensionId"
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+            - Enum
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/FilterOption"
+    MultiEnumFilter:
+      type: object
+      description: Multi-select categorical filter dimension
+      required:
+        - key
+        - label
+        - type
+        - options
+      properties:
+        key:
+          $ref: "#/components/schemas/DimensionId"
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+            - MultiEnum
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/FilterOption"
+    RangeFilter:
+      type: object
+      description: Numeric range filter dimension
+      required:
+        - key
+        - label
+        - type
+      properties:
+        key:
+          $ref: "#/components/schemas/DimensionId"
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+            - Range
+        min:
+          type: number
+          description: Minimum value in the current context
+        max:
+          type: number
+          description: Maximum value in the current context
+    BooleanFilter:
+      type: object
+      description: Boolean toggle filter dimension
+      required:
+        - key
+        - label
+        - type
+        - count
+      properties:
+        key:
+          $ref: "#/components/schemas/DimensionId"
+        label:
+          type: string
+        type:
+          type: string
+          enum:
+            - Boolean
+        count:
+          type: integer
+          minimum: 0
+          description: Vehicles where this flag is true
+    FilterOption:
+      type: object
+      required:
+        - value
+        - count
+      properties:
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+        label:
+          type: string
+          description: Display label if different from value
+        count:
+          type: integer
+          minimum: 0
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Rendering hints (e.g. hex color code, swatch image URL)
+    PageSource:
+      type: string
+      enum:
+        - LandingPage
+        - WelcomeBack
+        - ConversationalSearch
+        - Srp
+        - Vdp
+        - Comparison
+        - Recommendations
+        - Watchlist
+    VisitorLocation:
+      type: object
+      required:
+        - zipCode
+        - latitude
+        - longitude
+      properties:
+        zipCode:
+          type: string
+          maxLength: 10
+        city:
+          type: string
+          maxLength: 100
+        state:
+          type: string
+          maxLength: 2
+          pattern: ^[A-Z]{2}$
+          description: US state code (uppercase, 2 chars)
+        country:
+          type: string
+          maxLength: 2
+          pattern: ^[A-Z]{2}$
+          description: ISO 3166-1 alpha-2 country code
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+    UtmParams:
+      type: object
+      properties:
+        source:
+          type: string
+          maxLength: 255
+        medium:
+          type: string
+          maxLength: 255
+        campaign:
+          type: string
+          maxLength: 255
+        term:
+          type: string
+          maxLength: 255
+        content:
+          type: string
+          maxLength: 255
+    WatchlistVehicle:
+      type: object
+      required:
+        - vin
+        - title
+        - vehicleId
+        - price
+        - createdAt
+        - updatedAt
+        - lastActiveAt
+      properties:
+        vin:
+          type: string
+          minLength: 17
+          maxLength: 17
+          pattern: ^[A-HJ-NPR-Z0-9]{17}$
+        vehicleId:
+          type: string
+          maxLength: 50
+        title:
+          type: string
+          maxLength: 255
+          description: Display title (e.g. "2025 Toyota RAV4 Hybrid XLE")
+        price:
+          type: number
+          minimum: 0
+        createdAt:
+          type: string
+          format: date-time
+          description: When the vehicle was first added to the watchlist.
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the watchlist entry was last written (created or overridden).
+        lastActiveAt:
+          type: string
+          format: date-time
+          description: Updated on every write to the watchlist entry.
+    AddToWatchlistRequest:
+      type: object
+      required:
+        - vin
+        - title
+        - vehicleId
+        - price
+      properties:
+        vin:
+          type: string
+          minLength: 17
+          maxLength: 17
+          pattern: ^[A-HJ-NPR-Z0-9]{17}$
+          description: VIN of the vehicle to add.
+        vehicleId:
+          type: string
+          maxLength: 50
+          description: Vehicle identifier supplied by the client.
+        title:
+          type: string
+          maxLength: 255
+          description: Display title (e.g. "2025 Toyota RAV4 Hybrid XLE").
+        price:
+          type: number
+          minimum: 0
+          description: Vehicle price supplied by the client.
+    WatchlistResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/WatchlistVehicle"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    SearchSession:
+      type: object
+      required:
+        - searchId
+        - isSaved
+      properties:
+        searchId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 200
+          description: Custom label for saved searches (e.g. "SUVs under $35k")
+        query:
+          type: string
+          maxLength: 500
+          description: Original search query text
+        filters:
+          type: array
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/FilterEntry"
+        isSaved:
+          type: boolean
+          description: Whether this search is pinned (saved) by the visitor
+        createdAt:
+          type: string
+          format: date-time
+        lastActiveAt:
+          type: string
+          format: date-time
+    UpdateSearchRequest:
+      type: object
+      description: |
+        Partial update — only provided fields are changed.
+        Set isSaved to pin/unpin; set name to rename.
+      properties:
+        isSaved:
+          type: boolean
+          description: Pin (true) or unpin (false) the search
+        name:
+          type: string
+          maxLength: 200
+          description: Custom label for the saved search
+    SearchesResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/SearchSession"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    SearchSessionResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: "#/components/schemas/SearchSession"
+        meta:
+          $ref: "#/components/schemas/Meta"
+    DeviceSummary:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        firstSeenAt:
+          type: string
+          format: date-time
+        lastSeenAt:
+          type: string
+          format: date-time
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - service
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum:
+            - Ok
+            - Degraded
+        service:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        database:
+          type: string
+          enum:
+            - Ok
+            - Error
+        dynamodb:
+          type: string
+          enum:
+            - Ok
+            - Error
+        redis:
+          type: string
+          enum:
+            - Ok
+            - Error
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
