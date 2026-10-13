@@ -1,5 +1,21 @@
 # ADR-0001: App Router structure, search URL strategy, VDP path, and cache profile mapping
 
+Hello Abhinay,
+
+I will be administering your code test.
+
+The location will be at Toyota Financial Services
+6565 Headquarters Dr, Plano, TX 75024
+
+WHERE TO PARK:
+Park on the west side of the campus in between W1 and W2 parking garages.  There are visitor spaces.  If these are full, go into a parking garage and press the intercom button when entering - tell them you are her for an interview.
+
+WHERE TO ENTER:
+Enter into the West lobby between building W2 and W3 (Do not enter through the main entrance on Headquarters Dr). 
+
+CONTACT ME:
+Text or call my cell phone when you arrive so I can meet you in the lobby.  My cell number is 682-465-1153.
+
 | | |
 | --- | --- |
 | **Status** | Proposed |
