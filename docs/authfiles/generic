@@ -1,1 +1,70 @@
 mvZYcWIcl8nqnjyGc61_A_qG_7ABLEaOGK1Cu7t59HA
+
+
+{
+    "identityProfileId": "ea914be1-57be-40d9-a5c8-157e1e4757aa",
+    "principalSubject": "auth0|6ad0f05824fefce348d034be",
+    "principalBoundAt": "2026-10-15T15:25:12.793330Z",
+    "previousPrincipalSubject": null,
+    "deviceHashes": [],
+    "identities": [
+        {
+            "provider": "auth0",
+            "connection": "auth0",
+            "subject": "auth0|6ad0f05824fefce348d034be",
+            "providerUserId": "6ad0f05824fefce348d034be",
+            "recipientNormalized": "salaikrishnan@gmail.com",
+            "primary": true,
+            "verifiedAt": "2026-10-15T16:44:58Z",
+            "linkedAt": "2026-10-15T15:25:12.793330Z"
+        },
+        {
+            "provider": "auth0",
+            "connection": "email",
+            "subject": "email|6ad0f03f8b9ccf69386c0b52",
+            "providerUserId": "6ad0f03f8b9ccf69386c0b52",
+            "recipientNormalized": "salaikrishnan@gmail.com",
+            "primary": false,
+            "verifiedAt": "2026-10-15T15:25:11Z",
+            "linkedAt": "2026-10-15T15:25:12.793465Z"
+        }
+    ],
+    "createdAt": "2026-10-15T15:25:12.793258Z",
+    "updatedAt": "2026-10-15T16:44:58.682418Z"
+}
+
+{
+    "authn_params_public_key": {
+        "challenge": "X60xaSfMV0ZCiMCvn61R6-V0Kim9bJgieMMMxUO9QZE",
+        "timeout": 60000,
+        "rp": {
+            "id": "autharrowpoc.toyotafinancial.com",
+            "name": "autharrowpoc.toyotafinancial.com"
+        },
+        "pubKeyCredParams": [
+            {
+                "type": "public-key",
+                "alg": -8
+            },
+            {
+                "type": "public-key",
+                "alg": -7
+            },
+            {
+                "type": "public-key",
+                "alg": -257
+            }
+        ],
+        "authenticatorSelection": {
+            "residentKey": "required",
+            "userVerification": "preferred"
+        },
+        "user": {
+            "id": "QOoFYq88HlzOVFoPIqfROVctncO41VJujIfwSgLAnVz0uLMMWawGPsGPMpj2Bs6Nt4jjNwlx93xZZ3HdeMKVTw",
+            "name": "+14154907023",
+            "displayName": "+14154907023"
+        }
+    },
+    "auth_session": "GWufl_qTQTW6cGlh90xExRvTbqBiDR-pO-nXQ_5q4EyJ1AumUtZG0XnqlPRNWIyP",
+    "authentication_method_id": null
+}
