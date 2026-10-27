@@ -1,0 +1,68 @@
+Subject: Native Passkeys API – configuration questions for web passkey registration and sign-in
+
+Hi Auth0 team,
+
+We’re the team building the shopper-facing web app for [Toyota Financial Services / programme name]. We use the Auth0 Native Passkeys API through our EDI identity layer, and the WebAuthn ceremony runs in the browser on our own web origin. The EDI team asked us to bring the following questions to you, as they depend on Auth0’s settings or behaviour.
+
+For reference, this is the register challenge we currently receive from the [tenant name] tenant (values shortened):
+
+json
+{
+  "authn_params_public_key": {
+    "challenge": "X60x…QZE",
+    "timeout": 60000,
+    "rp": { "id": "autharrowpoc.toyotafinancial.com", "name": "autharrowpoc.toyotafinancial.com" },
+    "pubKeyCredParams": [{ "type": "public-key", "alg": -8 }, { "type": "public-key", "alg": -7 }, { "type": "public-key", "alg": -257 }],
+    "authenticatorSelection": { "residentKey": "required", "userVerification": "preferred" },
+    "user": { "id": "QOoF…VKTw", "name": "+1415…", "displayName": "+1415…" }
+  },
+  "auth_session": "GWuf…WIyP",
+  "authentication_method_id": null
+}
+
+Relying party and origins
+
+Is the Native Passkeys API supported for browser-based (web) clients, where navigator.credentials.create() and get() run on our own web origin rather than in a native app? If so, what do you recommend?
+Can the RP ID be set to the parent domain our web app is served from, separately from the Auth0 custom domain? We plan one RP ID per environment (preprod and prod, separate tenants).
+How does Auth0 check clientDataJSON.origin on register and authenticate, and where do we configure the allowed web origins for each tenant?
+If our web app spans more than one registrable domain, does Auth0 support Related Origin Requests, either by hosting /.well-known/webauthn or by honouring one we host?
+Can rp.name be set to our brand name (e.g. “Toyota Financial Services”) independently of rp.id?
+
+User verification
+
+Can userVerification be set to required for both registration and authentication options? The passkey policy page doesn’t list this setting.
+When it is required, do the complete endpoints reject a response whose UV flag is not set? If not, can that be enforced?
+
+Registration options
+
+Can the register challenge include excludeCredentials listing the user’s existing passkeys, so the same authenticator can’t register twice? If not, is this on your roadmap?
+Can timeout be configured? We’d like 300,000 ms, in line with WebAuthn Level 3 §15.1 when user verification is required.
+Can requireResidentKey: true and extensions.credProps: true be included?
+
+User identity in the passkey
+
+How are user.name and user.displayName derived from the user_profile sent on register start (name, email, phone)? With a phone signup, the raw phone number appears in the browser’s passkey prompt and the saved-passkey list.
+Can we control these two values, for example a masked contact (•••-•••-7023) for user.name and the customer’s first name for user.displayName?
+Is user.id stable for a user across devices and registrations, and how is it derived?
+
+Challenge and session lifecycle
+
+What is the lifetime of auth_session, and can it be configured or returned as an expires_at?
+Is auth_session single use, and is a replayed auth_session rejected on the complete call?
+
+Request and response formats
+
+Do the register and authenticate complete endpoints accept the browser’s unmodified PublicKeyCredential.toJSON() output? That output includes the Level 3 fields authenticatorData, publicKey, publicKeyAlgorithm and transports, as well as authenticatorAttachment and clientExtensionResults. Today the completion is rejected unless we remove the first four fields, and we’d like to confirm whether that comes from Auth0 or from the layer in front of it.
+What does authentication_method_id contain, why is it null on register start, and is it returned after the complete call?
+
+Managing passkeys
+
+Which API lists a user’s passkeys? Does it return the credential ID, AAGUID, backup eligibility and state, transports, and created and last-used dates? We need the credential IDs and the user handle to keep password managers in sync using the WebAuthn Signal API.
+Which API deletes a single passkey, and what happens to the user’s active sessions when one is deleted?
+Where are the error codes for these endpoints documented? We’d like to tell apart an expired or reused auth_session, missing user verification, an origin or RP ID mismatch, an already-registered credential and an invalid signature.
+
+If a short call would be easier, we’re happy to set one up. Thanks for your help.
+
+Best regards,
+[Your name]
+[Title, team]
