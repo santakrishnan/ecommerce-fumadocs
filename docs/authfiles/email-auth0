@@ -1,5 +1,46 @@
 Subject: Native Passkeys API – configuration questions for web passkey registration and sign-in
 
+Note: This is not marketing templates. These are transactional notification templates related to authentication activity.
+
+We need to identify the authentication notification templates. Add to the list below for any new templates, and come up with a sample body for each template. 
+
+We will review these templates with Andy Baldwin. 
+
+Product Requirements:
+
+https://github.com/TMCC-Project-Arrow/ecommerce-arch/blob/feat/auth-flow-diagrams/13-authentication/10-requirements/requirements-notifications.mdConnect your Github account 
+
+Auth0 Templates:
+
+Research what Auth0 provides out of the box. Make sure we cover those templates and body as part of this story.
+
+Ecommerce Templates:
+
+First time registered
+
+Contact channel added
+
+Contact channel removed
+
+Primary sign-in identifier changed
+
+Passkey enrolled
+
+Passkey removed (single or all)
+
+New device recognized
+
+Account recovered via passkey on a new device
+
+Customer name changed
+
+…any other templates we can find
+
+Acceptance Criteria
+
+
+Create a two column table of template name → template body for at least the identified templates. 
+
 Hi Auth0 team,
 
 We’re the team building the shopper-facing web app for [Toyota Financial Services / programme name]. We use the Auth0 Native Passkeys API through our EDI identity layer, and the WebAuthn ceremony runs in the browser on our own web origin. The EDI team asked us to bring the following questions to you, as they depend on Auth0’s settings or behaviour.
