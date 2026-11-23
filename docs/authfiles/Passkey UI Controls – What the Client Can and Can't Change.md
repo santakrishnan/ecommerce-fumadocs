@@ -1,5 +1,48 @@
 # Passkey UI Controls – What the Client Can and Can't Change
 
+
+Domain​
+
+Tech M Staff Name​
+
+Initiatives​
+
+Accomplishments​
+
+Customer Impact/Benefits​
+
+TFSB Unique Customer Identity (UCID)​
+
+Saravanan Desingh​
+
+UCID backend implementation for identity resolution across Fiserv deposit and Cenlar mortgage feeds​
+
+Built a Lambda-based batch service to validate and process source files, generate configured customer IDs, and maintain customer, account, relationship, and contact data in PostgreSQL. Added exception review for invalid or mismatched records, lifecycle reconciliation, audit and batch tracking, file archiving, and operational notifications.​
+
+Enables a more consistent view of customers and their deposit and mortgage accounts across source systems; helps reduce duplicate or manual identity reconciliation and gives operations a clearer path to review data issues.​
+
+TIBCO to Camel Migration​
+
+Akash SIngh​
+
+TIBCO to Camel Migration​
+
+Successfully completed QA validation and testing for TIBCO to Apache Camel migration, including functional, integration, regression, and end-to-end testing. Identified and resolved migration-related defects, validated message routing and data transformation logic, and ensured feature parity between TIBCO and Camel implementations.​
+
+Improved platform stability and maintainability by enabling the transition to a modern integration framework. Reduced dependency on legacy TIBCO infrastructure, supporting faster deployment cycles, lower operational costs, and enhanced system performance with minimal impact to business users during migration.​
+
+BCL domain - OriginX​
+
+Asit Kumar Satpathy​
+
+Supported BCL-related process improvements and data handling within OriginX.​
+
+Worked on loading DCOLA data into OriginX and validating data quality.Contributed to EDP-related data integration and support activities.Supported franchise value data preparation and reporting readiness.Managed/validated UCC data loads. Worked on new design on Collateral & Security – UCC, Audit screen, etc.​
+
+Improved domain workflow consistency and helped streamline business data usage​
+
+
+
 Oct 29, 2026 · @Someone
 
 ## Summary
