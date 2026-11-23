@@ -1,5 +1,30 @@
 # Passkey UI Controls – What the Client Can and Can't Change
 
+Row 1: Ecommerce journeys and integration
+
+Domain: TFS UCMP – Ecommerce Platform
+
+Tech M Staff Name: [Your name / team members]
+
+Initiatives: Core delivery team for the Project 331 initiation and the continued Arrow program. Built the initial UCMP ecommerce customer journeys and integrated them with the BED APIs.
+
+Accomplishments: Was the core Tech M team that helped complete the Project 331 initiation, and kept Tech M on the Arrow program as part of the ecommerce team. Delivered the first end-to-end journeys: Landing Page, Search, Vehicle Detail Page and Customer Profile. Built them in Next.js/React and integrated them with the BED APIs through a BFF proxy layer, setting up front-end patterns that later journeys can reuse.
+
+Customer Impact/Benefits: Gives TFS customers a modern digital path to find vehicles, view details and manage their profile. Sets up a reusable front-end and API integration base that speeds up later ecommerce releases. Keeps Tech M a trusted delivery partner on TFS's strategic digital programs.
+
+Row 2: Authentication and passkeys
+
+Domain: TFS UCMP – Customer Authentication
+
+Tech M Staff Name: [Your name / team members]
+
+Initiatives: Built the customer authentication flow into the UCMP ecommerce platform, integrated with EDI Auth0, and led passwordless sign-in using passkeys (biometric/fingerprint).
+
+Accomplishments: Built the auth flow into the UCMP ecommerce front end and completed the integration with EDI Auth0. Was the first team to integrate and test the passkey (WebAuthn) flow end to end, including biometric (fingerprint) registration and sign-in. Set up the pattern where most of the site stays open to anonymous users and protected routes go through the backend auth service. Session management stays in the backend.
+
+Customer Impact/Benefits: Lets customers sign in more securely and quickly, with no password, which lowers the risk of phishing and stolen credentials. Gives TFS a proven, reusable passkey pattern that other teams can adopt. Tech M was the first team to deliver this capability on the program.
+
+
 
 Domain​
 
